@@ -1,0 +1,128 @@
+Views:
+	Users:
+		Register Supervisor or admin:
+			- allowed for: 
+				- user type admin
+			- required: 
+				- name, phone number, email, user type
+				- password: through email; no direct access;
+		Register School:
+			- allowed for:
+				- user type supervisor; same directorate
+				- user type admin
+			- required: 
+				- user account:
+					- name, phone number, email
+					- password: through email; no direct access;
+				- School info:
+					- school_number
+					- youngest_class
+					- oldest_class
+					- number_of_classrooms
+			- optional: 
+				- School info:
+					- total_male_students
+					- total_female_students
+					- total_male_staff
+					- total_female_staff
+			- Editing: allowed
+		School Info Editable:
+			- allowed for: 
+				- user type school; self only
+				- user type supervisor; same directorate
+			- optional: 
+				- total_male_students
+				- total_female_students
+				- total_male_staff
+				- total_female_staff
+	Incident Resource:
+		- Index:
+			- accepts filter:
+				- school_id
+			- allowed for: 
+				- user type school; self only
+				- user type supervisor; same directorate
+				- admin; all
+			- reports and printing:
+				- printable
+		- Create:
+			- constraints:
+				- SchoolInfo must be complete
+			- allowed for: 
+				- user type school; self only
+			- required: 
+				- Student ID
+				- Student Name
+				- Grade (validation in range)
+				- School ID (auto detect; uneditable)
+				- Student Phone primary
+				- one of (suspected_at || confirmed_at)
+			- optional:
+				- student phone secondary
+				- suspected at
+				- confirmed at
+				- Notes
+		- Update:
+			- allowed for: 
+				- user type school; self only
+			- constraints:
+				- record must exist
+				- record must be suspected or confirmed
+				- dynamic view according to state
+				- if closed at not null, close type
+			- required: 
+				- Student ID
+				- Student Name
+				- Grade (validation in range)
+				- School ID (auto detect; uneditable)
+				- Student Phone primary
+				- if closed at not null, close type
+			- optional:
+				- student phone secondary
+				- confirmed at
+				- closed at
+					- if closed at; close type required
+				- Notes
+		- Delete:
+			- allowed for: 
+				- user type supervisor; same directorate
+			- action:
+				- mark as deleted; no delete
+	Analytics & Reports:
+		- printable
+		- read only
+		- allowed for: 
+			- user type supervisor; same directorate
+			- admin
+		- Contains:
+			- schools:
+				- total
+				- active cases
+				- alltime total confirmed
+				- no active cases
+				- no confirmed cases
+			- covid students / staff (filter available):
+				- suspected
+				- confirmed
+				- closed as recovered
+				- closed as dead
+				- active cases
+	Show logs:
+		- printable?
+		- read only
+		- allowed for: 
+			- user type admin
+
+				
+				
+
+			
+					
+				
+				
+		
+			
+		
+			
+				
+		

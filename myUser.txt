@@ -1,0 +1,5 @@
+# insert my user
+
+INSERT INTO covid_db.users (name,email,email_verified_at,password,remember_token,created_at,updated_at) VALUES 
+('Abdalrahim Fakhouri','abdilra7eem@yahoo.com',NULL,'$2y$10$.PVQJcQtEegUNalAGWvaSe/8oDOM2IJE7lclXBeObltAJrwRvGw2K',NULL,'2020-08-22 12:19:24.000','2020-08-22 12:19:24.000')
+;
