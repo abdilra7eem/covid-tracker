@@ -11,6 +11,6 @@ class DirectorateTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Directorate::class, 2)->create();
+        factory(App\Directorate::class, 10)->create();
     }
 }

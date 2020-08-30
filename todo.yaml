@@ -7,19 +7,4 @@ Todo:
 			- notes
 			-incident_id
 		Users:
-			- status: active || locked
-			- gov. ID: هوية المشرف او المدرسة
 			- image: (مؤجل، غير هام)
-		School:
-			- building: own / rent
-			- building year: 4 digit number || 1900 - 2025
-			- time: صباحي / مسائي
-			- head of school: name
-			- *: remove school id -> moved to users table
-		School Closure:
-			complete rework; 
-			grade & section;
-			staff & school
-			
-		
-			

@@ -23,14 +23,16 @@ $factory->define(User::class, function (Faker $faker) {
 
     return [
         'name' => $faker->name,
+        'gov_id' => $faker->unique()->randomNumber(9),
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),
         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
         'remember_token' => Str::random(10),
         'phone_primary' => $faker->phoneNumber,
         'phone_secondary' => $faker->phoneNumber,
-        'image' => $faker->image('public/storage/images', 400, 300, null, false),
+        // 'image' => $faker->image('public/storage/images', 400, 300, null, false),
         'account_type' => $faker->randomElement([1, 2, 3]),
+        'active' => $faker->boolean($chanceOfGettingTrue = 90),
         'directorate_id' => $faker->unique()->numberBetween(1, App\Directorate::count()),
     ];
 });

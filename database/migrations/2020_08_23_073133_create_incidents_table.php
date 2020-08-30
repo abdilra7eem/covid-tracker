@@ -21,16 +21,16 @@ class CreateIncidentsTable extends Migration
             $table->string('person_name');
             $table->tinyinteger('grade'); // for students: 1 - 12, teacher: 13, manager: 14, directorate: 15
             $table->foreignId('user_id'); // foreign key from the users table
-            $table->date('suspected_at'); // dateTime can be used instead
-            $table->tinyinteger('suspect_type');
+            $table->date('suspected_at')->nullable(); // dateTime can be used instead
+            $table->tinyinteger('suspect_type')->nullable();
             // 0: undefined, 1: personal / parent, 2: private doctor, 3: gov.
-            $table->date('confirmed_at');
-            $table->date('closed_at');
-            $table->tinyInteger('close_type'); // 0: not covid, 1: recovered, 2: died
-            $table->boolean('deleted');
+            $table->date('confirmed_at')->nullable();
+            $table->date('closed_at')->nullable();
+            $table->tinyInteger('close_type')->nullable(); // 0: not covid, 1: recovered, 2: died
+            $table->boolean('deleted')->nullable();
             $table->string('student_phone_primary');
-            $table->string('student_phone_secondary');
-            $table->text('notes'); // if grade is 13, 14 or 15, input is recommended; suspect type notes here;
+            $table->string('student_phone_secondary')->nullable();
+            $table->text('notes')->nullable(); // if grade is 13, 14 or 15, input is recommended; suspect type notes here;
             // $table->string('files'); // array of file records, connected to files
         });
     }
