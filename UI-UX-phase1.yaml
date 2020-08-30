@@ -1,11 +1,11 @@
 Views:
 	Users:
-		Register Supervisor or admin:
+		Register Supervisor:
 			- allowed for: 
 				- user type admin
 			- required: 
 				- name, phone number, email, user type
-				- password: through email; no direct access;
+				- password: through email; no direct access; || random
 		Register School:
 			- allowed for:
 				- user type supervisor; same directorate
@@ -13,7 +13,7 @@ Views:
 			- required: 
 				- user account:
 					- name, phone number, email
-					- password: through email; no direct access;
+					- password: through email; no direct access;|| random
 				- School info:
 					- school_number
 					- youngest_class
@@ -59,15 +59,15 @@ Views:
 				- one of (suspected_at || confirmed_at)
 			- optional:
 				- student phone secondary
-				- suspected at
-				- confirmed at
+				- suspected at (date, default now, editable)
+				- confirmed at (date, default now, editable)
 				- Notes
 		- Update:
 			- allowed for: 
 				- user type school; self only
 			- constraints:
 				- record must exist
-				- record must be suspected or confirmed
+				# - record must be suspected or confirmed
 				- dynamic view according to state
 				- if closed at not null, close type
 			- required: 
@@ -99,8 +99,8 @@ Views:
 				- total
 				- active cases
 				- alltime total confirmed
-				- no active cases
-				- no confirmed cases
+				- number of active cases
+				- number of confirmed cases
 			- covid students / staff (filter available):
 				- suspected
 				- confirmed

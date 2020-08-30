@@ -18,8 +18,7 @@ class CreateSchoolsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId('user_id');
-            $table->integer('school_number')->unsigned(); // for schools only, unique? 
-            
+
             $table->smallInteger('total_male_students');
             $table->smallInteger('total_female_students');
             // Total number of students is calculated
@@ -33,6 +32,15 @@ class CreateSchoolsTable extends Migration
             // School age group; also used for input validation
 
             $table->tinyInteger('number_of_classrooms'); // عدد الشعب الصفية
+
+            $table->boolean('rented'); // true: مستأجر
+            $table->boolean('second_shift'); // true: مسائي
+
+            $table->tinyInteger('building_year')->unsigned(); // number of years after 1780;
+            // used to calculate the building (year of construction) and (how old);
+
+            $table->string('head_of_school'); // name of the head of staff (manager)
+
             $table->foreign('user_id')->references('id')->on('users');
         });
     }

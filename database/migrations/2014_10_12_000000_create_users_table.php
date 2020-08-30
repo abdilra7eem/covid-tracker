@@ -17,15 +17,17 @@ class CreateUsersTable extends Migration
             // Users table
             $table->id(); //autoincrement
             $table->string('name'); //required
+            $table->integer('gov_id')->unsigned()->unique();
             $table->string('email')->unique(); // required, unique
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password'); //required
             $table->rememberToken(); //optional
             $table->string('phone_primary'); // required, unique?
             $table->string('phone_secondary'); //not required
-            $table->string('image'); //optional. supervisor photo or school logo
+            // $table->string('image'); //optional. supervisor photo or school logo
             $table->tinyInteger('account_type')->unsigned();
             // 0:root, 1:admin, 2:supervisor, 3:school
+            $table->boolean('active'); // false: locked account; true: active account;
             
             $table->timestamps();
             $table->foreignId('directorate_id');

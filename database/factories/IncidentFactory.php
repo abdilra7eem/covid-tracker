@@ -7,8 +7,8 @@ use Faker\Generator as Faker;
 
 $factory->define(Incident::class, function (Faker $faker) {
     return [
-        'student_id' => $faker->randomNumber(9),
-        'student_name' => $faker->name,
+        'person_id' => $faker->randomNumber(9),
+        'person_name' => $faker->name,
         'grade' => $faker->numberBetween(1, 12),
         'user_id' => $faker->unique()->numberBetween(1, App\User::count()),
         'suspected_at' => $faker->date,

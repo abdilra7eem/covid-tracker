@@ -18,6 +18,11 @@ class CreateSchoolClosuresTable extends Migration
             $table->timestamps();
             $table->date('closure_date');
             $table->date('reopening_date');
+            $table->tinyInteger('grade'); // 1-12: grade, 13: teachers, 14: school
+            // grade closure depends on school, teachers and grade
+            // teachers presence depends on school
+            
+            $table->tinyInteger('grade_section');
             $table->foreignId('user_id'); // foreign key from the users table
             $table->foreign('user_id')->references('id')->on('users');
         });
