@@ -10,6 +10,6 @@ class Incident extends Model
         'deleted' => false,
      ];
     public function user(){
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\User', 'user_id');
     }
 }

@@ -43,7 +43,7 @@ class User extends Authenticatable
      ];
 
     public function directorate(){
-        return $this->belongsTo('App\Directorate');
+        return $this->belongsTo('App\Directorate', 'directorate_id');
     }
 
     public function school(){
