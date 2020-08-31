@@ -10,7 +10,4 @@ class School extends Model
         return $this->belongsTo('App\User');
     }
 
-    public function schoolClosure(){
-        return $this->hasMany('App\SchoolClosure');
-    }
 }

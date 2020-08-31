@@ -19,19 +19,19 @@ class CreateSchoolsTable extends Migration
             $table->timestamps();
             $table->foreignId('user_id');
 
-            $table->smallInteger('total_male_students');
-            $table->smallInteger('total_female_students');
+            $table->smallInteger('total_male_students')->unsigned();
+            $table->smallInteger('total_female_students')->unsigned();
             // Total number of students is calculated
             
-            $table->smallInteger('total_male_staff');
-            $table->smallInteger('total_female_staff');
+            $table->smallInteger('total_male_staff')->unsigned();
+            $table->smallInteger('total_female_staff')->unsigned();
             // Total number of staff is calculated
             
-            $table->tinyInteger('youngest_class');
-            $table->tinyInteger('oldest_class');
+            $table->tinyInteger('youngest_class')->unsigned();
+            $table->tinyInteger('oldest_class')->unsigned();
             // School age group; also used for input validation
 
-            $table->tinyInteger('number_of_classrooms'); // عدد الشعب الصفية
+            $table->tinyInteger('number_of_classrooms')->unsigned(); // عدد الشعب الصفية
 
             $table->boolean('rented'); // true: مستأجر
             $table->boolean('second_shift'); // true: مسائي

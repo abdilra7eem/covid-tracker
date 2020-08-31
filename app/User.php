@@ -37,12 +37,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function directorate_id(){
+    public function directorate(){
         return $this->belongsTo('App\Directorate');
     }
 
     public function school(){
         return $this->hasOne('App\School');
+    }
+
+    public function schoolClosure(){
+        return $this->hasMany('App\SchoolClosure');
     }
 
     public function incident(){
