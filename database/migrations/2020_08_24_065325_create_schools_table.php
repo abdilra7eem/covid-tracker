@@ -33,10 +33,10 @@ class CreateSchoolsTable extends Migration
 
             $table->tinyInteger('number_of_classrooms')->unsigned(); // عدد الشعب الصفية
 
-            $table->boolean('rented'); // true: مستأجر
-            $table->boolean('second_shift'); // true: مسائي
+            $table->boolean('rented')->default(false); // true: مستأجر
+            $table->boolean('second_shift')->default(false); // true: مسائي
 
-            $table->tinyInteger('building_year')->unsigned(); // number of years after 1780;
+            $table->tinyInteger('building_year')->default(0)->unsigned(); // number of years after 1780;
             // used to calculate the building (year of construction) and (how old);
 
             $table->string('head_of_school'); // name of the head of staff (manager)

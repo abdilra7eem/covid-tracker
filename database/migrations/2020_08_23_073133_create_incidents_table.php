@@ -27,7 +27,7 @@ class CreateIncidentsTable extends Migration
             $table->date('confirmed_at')->nullable();
             $table->date('closed_at')->nullable();
             $table->tinyInteger('close_type')->nullable(); // 0: not covid, 1: recovered, 2: died
-            $table->boolean('deleted')->nullable();
+            $table->boolean('deleted')->default(false)->nullable();
             $table->string('person_phone_primary');
             $table->string('person_phone_secondary')->nullable();
             $table->text('notes')->nullable(); // if grade is 13, 14 or 15, input is recommended; suspect type notes here;

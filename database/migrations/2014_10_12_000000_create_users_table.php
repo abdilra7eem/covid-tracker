@@ -27,9 +27,9 @@ class CreateUsersTable extends Migration
             $table->string('image')->nullable();
             // optional. supervisor photo or school logo
             // controller & view implementation postponed
-            $table->tinyInteger('account_type')->unsigned();
+            $table->tinyInteger('account_type')->default(3)->unsigned();
             // 1:admin, 2:supervisor, 3:school
-            $table->boolean('active')->nullable(); // false: locked account; true: active account;
+            $table->boolean('active')->default(true)->nullable(); // false: locked account; true: active account;
             
             $table->timestamps();
             $table->foreignId('directorate_id');
