@@ -5,6 +5,10 @@ Todo:
 			- name
 			- link
 			- notes
-			-incident_id
+			- incident_id
 		Users:
 			- image: (مؤجل، غير هام)
+
+
+Optimizations:
+	controller db queries: optimize 'where' use

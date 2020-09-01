@@ -18,10 +18,11 @@ class CreateDirectoratesTable extends Migration
             // authentication, authorization and validation
             $table->id();
             $table->timestamps();
-            $table->string('name');
-            $table->string('name_ar');
-            $table->string('phone_number');
-            $table->string('email');
+            $table->string('name')->unique();
+            $table->string('name_ar')->unique();
+            $table->string('phone_number')->unique();
+            $table->string('email')->unique();
+            $table->string('head_of_directorate');
         });
     }
 

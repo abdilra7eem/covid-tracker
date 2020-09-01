@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Directorate;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
+
 class DirectorateController extends Controller
 {
     /**
@@ -12,9 +14,19 @@ class DirectorateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
-        //
+        if(Auth::user()->account_type == 1 || Auth::user()->account_type == 2) {
+            $directorates = Directorate::all();
+            return view('directorate.index')->withDirectorates($directorates);
+        }
+        abort(403, 'Unauthorized action.');
     }
 
     /**

@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\School;
 use App\User;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 
-
-class SchoolController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -24,23 +22,17 @@ class SchoolController extends Controller
 
     public function index()
     {
-        if (Auth::user()->account_type == 1) {
-            $schools = User::with('school')
-                    ->where('account_type', 3)
-                    ->inRandomOrder()->paginate(25);
-        } elseif (Auth::user()->account_type == 2) {
-            $schools = User::with('school')
-                    ->where('directorate_id', Auth::user()->directorate_id)
-                    ->where('account_type', 3)
-                    ->inRandomOrder()->paginate(25);
-        // } elseif (Auth::user()->account_type == 3) {
-        //     $schools = User::with('school')
-        //             ->where('id', Auth::user()->id)
-        //             ->inRandomOrder()->paginate(25);
-        } else {
-            abort(403, 'Unauthorized action.');
+        if(Auth::user()->account_type == 1) {
+            $users = User::where('account_type', '!=', 3)->paginate(25);
+            return view('user.index')->withUsers($users);
+        } elseif(Auth::user()->account_type == 2){
+            $users = User::where('account_type', '!=', 3)->where('directorate_id', Auth::user()->directorate_id)->paginate(25);
+            return view('user.index')->withUsers($users);
+        } elseif(Auth::user()->account_type == 3) {
+            $users = User::where('account_type', '!=', 2)->where('directorate_id', Auth::user()->directorate_id)->paginate(25);
+            return view('user.index')->withUsers($users);
         }
-        return view('school.index')->withSchools($schools);
+        abort(403, 'Unauthorized action.');
     }
 
     /**
@@ -67,10 +59,10 @@ class SchoolController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\School  $school
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(School $school)
+    public function show($id)
     {
         //
     }
@@ -78,10 +70,10 @@ class SchoolController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\School  $school
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(School $school)
+    public function edit($id)
     {
         //
     }
@@ -90,10 +82,10 @@ class SchoolController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\School  $school
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, School $school)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -101,10 +93,10 @@ class SchoolController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\School  $school
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(School $school)
+    public function destroy($id)
     {
         //
     }

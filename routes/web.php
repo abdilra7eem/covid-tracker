@@ -14,10 +14,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+    return redirect('/incident');
 });
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::resource('/directorate', 'DirectorateController');
+Route::resource('/user', 'UserController');
 Route::resource('/incident', 'IncidentController');
+Route::resource('/school', 'SchoolController');
+Route::resource('/schoolClosure', 'SchoolClosureController');
+
+

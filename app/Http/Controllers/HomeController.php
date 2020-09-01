@@ -23,6 +23,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        if(Auth::user()->account_type == 1){
+            return redirect('/incident');
+        } elseif(Auth::user()->account_type == 2) {
+            return redirect('/incident');
+        } elseif(Auth::user()->account_type == 3){
+            return redirect('/incident');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 }

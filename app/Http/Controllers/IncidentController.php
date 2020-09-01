@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Incident;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
+
+
 class IncidentController extends Controller
 {
     /**
@@ -12,9 +15,29 @@ class IncidentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
-        return view('incident.index');
+        if (Auth::user()->account_type == 1) {
+            $incidents = Incident::join('users', 'incidents.user_id', 'users.id')
+                    ->inRandomOrder()->paginate(25);
+        } elseif (Auth::user()->account_type == 2) {
+            $incidents = Incident::join('users', 'incidents.user_id', 'users.id')
+                    ->where('users.directorate_id', Auth::user()->directorate_id)
+                    ->inRandomOrder()->paginate(25);
+        } elseif (Auth::user()->account_type == 3) {
+            $incidents = Incident::join('users', 'incidents.user_id', 'users.id')
+                    ->where('users.id', Auth::user()->id)
+                    ->inRandomOrder()->paginate(25);
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
+        return view('incident.index')->withIncidents($incidents);
     }
 
     /**
@@ -25,7 +48,6 @@ class IncidentController extends Controller
     public function create()
     {
         return 'incident create';
-
     }
 
     /**

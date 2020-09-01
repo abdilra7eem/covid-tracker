@@ -9,7 +9,8 @@ $factory->define(Directorate::class, function (Faker $faker) {
     return [
         'name' => $faker->unique()->lastName,
         'email' => $faker->unique()->safeEmail,
-        'name_ar' => $faker->unique()->name,
+        'name_ar' => $faker->unique()->lastName,
         'phone_number' => $faker->unique()->phoneNumber,
+        'head_of_directorate' => $faker->unique()->name,
     ];
 });
