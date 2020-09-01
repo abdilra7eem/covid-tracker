@@ -19,26 +19,78 @@ class SchoolClosureController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::user()->account_type == 1) {
-            $schoolclosures = User::where('users.account_type', 3)
-                    ->join('school_closures', 'school_closures.user_id', 'users.id')
-                    ->join('schools', 'schools.user_id', 'users.id')
-                    ->inRandomOrder()->paginate(25);
-        } elseif (Auth::user()->account_type == 2) {
-            $schoolclosures = User::where('directorate_id', Auth::user()->directorate_id)
-                ->where('users.account_type', 3)
-                ->join('school_closures', 'school_closures.user_id', 'users.id')
-                ->join('schools', 'schools.user_id', 'users.id')
-                ->inRandomOrder()->paginate(25);
-        } elseif (Auth::user()->account_type == 3) {
-            $schoolclosures = User::where('id', Auth::user()->id)
-                    ->join('school_closures', 'school_closures.user_id', 'users.id')
-                    ->join('schools', 'schools.user_id', 'users.id')
-                    ->inRandomOrder()->paginate(25);
+        $type = "all";
+        if($request->input('type') == 'complete'){
+            $schools = SchoolClosure::where('grade', '>', 12)
+                ->where('reopening_date', null)
+                // ->where('school_closures.user_id', 98)
+                ->inRandomOrder()
+                ->orderBy('grade', 'DESC')
+                ->join('users', 'school_closures.user_id', 'users.id')
+                ->join('schools', 'school_closures.user_id', 'schools.user_id')
+                ->get()->unique('user_id');
+            $type = 'complete';
         } else {
-            abort(403, 'Unauthorized action.');
+            $schools = SchoolClosure::where('reopening_date', null)
+                // ->where('school_closures.user_id', 98)
+                ->inRandomOrder()
+                ->orderBy('grade', 'DESC')
+                ->join('users', 'school_closures.user_id', 'users.id')
+                ->join('schools', 'school_closures.user_id', 'schools.user_id')
+                ->get()->unique('user_id');
+                // ->where('grade', '<', 13);
+            if($request->input('type') == 'partial') {
+                $type = 'partial';
+            }
         }
-        return view('schoolClosure.index')->withSchools($schoolClosure);
+        
+        
+        // dd($request->input('type'));
+        // if (Auth::user()->account_type == 1) {
+            // $schools = SchoolClosure::where('grade', 14)
+            //     ->where('reopening_date', null)
+            //     ->join('users', 'school_closures.user_id', 'users.id')
+            //     ->join('schools', 'school_closures.user_id', 'schools.user_id')
+            //     ->inRandomOrder()->paginate(25);
+
+            // $schools = SchoolClosure::where('grade', '>', 12)
+            //     ->where('reopening_date', null)
+            //     ->where('school_closures.user_id', 98)
+            //     ->orderBy('grade', 'DESC')
+            //     ->join('users', 'school_closures.user_id', 'users.id')
+            //     // ->join('schools', 'school_closures.user_id', 'schools.user_id')
+            //     ->inRandomOrder()
+            //     ->get()->unique('user_id');
+            
+            // $schools = SchoolClosure::where('grade', '<', 13)
+            //     ->where('reopening_date', null)
+            //     ->distinct('user_id')
+            //     ->join('users', 'school_closures.user_id', 'users.id')
+            //     ->join('schools', 'school_closures.user_id', 'schools.user_id')
+            //     ->inRandomOrder()->paginate(25);
+
+        //     $partialClosure = 
+
+
+        //     $schoolclosures = User::where('users.account_type', 3)
+        //             ->join('school_closures', 'school_closures.user_id', 'users.id')
+        //             ->join('schools', 'schools.user_id', 'users.id')
+        //             ->inRandomOrder()->paginate(25);
+        // } elseif (Auth::user()->account_type == 2) {
+        //     $schoolclosures = User::where('directorate_id', Auth::user()->directorate_id)
+        //         ->where('users.account_type', 3)
+        //         ->join('school_closures', 'school_closures.user_id', 'users.id')
+        //         ->join('schools', 'schools.user_id', 'users.id')
+        //         ->inRandomOrder()->paginate(25);
+        // } elseif (Auth::user()->account_type == 3) {
+        //     $schoolclosures = User::where('id', Auth::user()->id)
+        //             ->join('school_closures', 'school_closures.user_id', 'users.id')
+        //             ->join('schools', 'schools.user_id', 'users.id')
+        //             ->inRandomOrder()->paginate(25);
+        // } else {
+        //     abort(403, 'Unauthorized action.');
+        // }
+        return view('schoolClosure.index')->withSchools($schools)->withType($type);
     }
 
     /**
