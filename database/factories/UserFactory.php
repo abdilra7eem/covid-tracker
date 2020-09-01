@@ -33,6 +33,6 @@ $factory->define(User::class, function (Faker $faker) {
         // 'image' => $faker->image('public/storage/images', 400, 300, null, false),
         'account_type' => $faker->randomElement([1, 2, 3]),
         'active' => $faker->boolean($chanceOfGettingTrue = 90),
-        'directorate_id' => $faker->unique()->numberBetween(1, App\Directorate::count()),
+        'directorate_id' => $faker->numberBetween(1, App\Directorate::count()),
     ];
 });

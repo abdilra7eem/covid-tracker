@@ -19,6 +19,7 @@ class CreateIncidentsTable extends Migration
             $table->timestamps();
             $table->integer('person_id')->unsigned(); // Government isssued ID / birth cert. number.
             $table->string('person_name');
+            $table->boolean('male'); // true if male, false if female, optional
             $table->tinyinteger('grade'); // for students: 1 - 12, teacher: 13, manager: 14, directorate: 15
             $table->foreignId('user_id'); // foreign key from the users table
             $table->date('suspected_at')->nullable(); // dateTime can be used instead

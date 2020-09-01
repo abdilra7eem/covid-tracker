@@ -21,6 +21,7 @@ class CreateDirectoratesTable extends Migration
             $table->string('name');
             $table->string('name_ar');
             $table->string('phone_number');
+            $table->string('email');
         });
     }
 

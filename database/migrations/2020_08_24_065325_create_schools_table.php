@@ -17,7 +17,7 @@ class CreateSchoolsTable extends Migration
             // School specific information. Other information is in the 'users' table
             $table->id();
             $table->timestamps();
-            $table->foreignId('user_id');
+            $table->foreignId('user_id')->unique();
 
             $table->smallInteger('total_male_students')->unsigned();
             $table->smallInteger('total_female_students')->unsigned();

@@ -7,9 +7,9 @@ use Faker\Generator as Faker;
 
 $factory->define(Directorate::class, function (Faker $faker) {
     return [
-        'name' => $faker->lastName,
-        // 'email' => $faker->unique()->safeEmail,
-        'name_ar' => $faker->name,
-        'phone_number' => $faker->phoneNumber,
+        'name' => $faker->unique()->lastName,
+        'email' => $faker->unique()->safeEmail,
+        'name_ar' => $faker->unique()->name,
+        'phone_number' => $faker->unique()->phoneNumber,
     ];
 });
