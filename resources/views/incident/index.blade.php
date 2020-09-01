@@ -26,6 +26,8 @@
                     @php $condition = 'confirmed' @endphp
                 @elseif(isset($incident->suspected_at))
                     @php $condition = 'suspected' @endphp
+                @else
+                    @php $condition = '' @endphp
                 @endif
                 <tr class="@switch($condition)
                                 @case('recovered')

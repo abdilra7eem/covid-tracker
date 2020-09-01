@@ -20,16 +20,47 @@ class UserController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $type = 'all';
+        if($request->input('type') == 'admins'){
+            $type = 'admins';
+        } elseif($request->input('type') == 'supervisors'){
+            $type = 'supervisors';
+        }
+
         if(Auth::user()->account_type == 1) {
-            $users = User::where('account_type', '!=', 3)->paginate(25);
+            if($type == 'admins'){
+                $users = User::where('account_type', 1)
+                ->paginate(25);
+            } elseif($type == 'supervisors') {
+                $users = User::where('account_type', 2)
+                ->paginate(25);
+            } else {
+                $users = User::where('account_type', '!=', 3)
+                ->paginate(25);
+            }
             return view('user.index')->withUsers($users);
         } elseif(Auth::user()->account_type == 2){
-            $users = User::where('account_type', '!=', 3)->where('directorate_id', Auth::user()->directorate_id)->paginate(25);
+            if($type == 'admins'){
+                $users = User::where('account_type', 1)
+                    ->paginate(25);
+            } elseif($type == 'supervisors') {
+                $users = User::where('account_type', 2)
+                ->where('directorate_id', Auth::user()->directorate_id)
+                ->paginate(25);
+            } else {
+                $users = User::where('account_type', '!=', 3)
+                ->where('directorate_id', Auth::user()->directorate_id)
+                ->orWhere('account_type', 1)
+                ->orderBy('account_type', 'DESC')
+                ->paginate(25);
+            }
             return view('user.index')->withUsers($users);
         } elseif(Auth::user()->account_type == 3) {
-            $users = User::where('account_type', '!=', 2)->where('directorate_id', Auth::user()->directorate_id)->paginate(25);
+            $users = User::where('account_type', 2)
+                ->where('directorate_id', Auth::user()->directorate_id)
+                ->paginate(25);
             return view('user.index')->withUsers($users);
         }
         abort(403, 'Unauthorized action.');

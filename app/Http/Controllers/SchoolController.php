@@ -33,13 +33,10 @@ class SchoolController extends Controller
                     ->where('directorate_id', Auth::user()->directorate_id)
                     ->where('account_type', 3)
                     ->inRandomOrder()->paginate(25);
-        // } elseif (Auth::user()->account_type == 3) {
-        //     $schools = User::with('school')
-        //             ->where('id', Auth::user()->id)
-        //             ->inRandomOrder()->paginate(25);
         } else {
-            abort(403, 'Unauthorized action.');
+            return redirect('/schoolClosure/' . Auth::user()->id);
         }
+        
         return view('school.index')->withSchools($schools);
     }
 
