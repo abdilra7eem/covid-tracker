@@ -26,7 +26,7 @@ class DirectorateController extends Controller
             $directorates = Directorate::all();
             return view('directorate.index')->withDirectorates($directorates);
         }
-        abort(403, 'Unauthorized action.');
+        return redirect('/directorate/' . Auth::user()->directorate_id);
     }
 
     /**
@@ -58,7 +58,13 @@ class DirectorateController extends Controller
      */
     public function show(Directorate $directorate)
     {
-        //
+        if( (Auth::user()->account_type != 3) || 
+            (Auth::user()->directorate_id == $directorate->id) )
+        {            
+            return view('directorate.show')->withDirectorate($directorate);
+        } else {
+            abort(403, 'Not Authorized');
+        }
     }
 
     /**

@@ -95,7 +95,28 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::where('id', $id)->first();
+
+        // get('id', 'name', 'gov_id', 'email', 'phone_primary', 'phone_secondary', 'account_type', 'active', 'directorate_id')->
+        // where('id', $id)->first();
+
+        if($user->account_type == 3){
+            return redirect('/school/'. $user->school->id);
+        } elseif(Auth::user()->account_type == 3) {
+            if($user->active == false){
+                abort(403, 'Not Authorized');
+            } elseif(($user->account_type == 2) && ($user->directorate_id == Auth::user()->directorate_id)){
+                return view('user.show')->withUser($user);
+            } else {
+                abort(403, 'Not Authorized');
+            }
+        } elseif(Auth::user()->account_type == 1) {
+            return view('user.show')->withUser($user);
+        } elseif((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $user->directorate_id)) {
+            return view('user.show')->withUser($user);
+        } else {
+            abort(403, 'Not Authorized');
+        }
     }
 
     /**

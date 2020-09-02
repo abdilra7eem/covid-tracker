@@ -24,9 +24,9 @@ class HomeController extends Controller
     public function index()
     {
         if(Auth::user()->account_type == 1){
-            return redirect('/incident');
+            return redirect('/user');
         } elseif(Auth::user()->account_type == 2) {
-            return redirect('/incident');
+            return redirect('/school');
         } elseif(Auth::user()->account_type == 3){
             return redirect('/incident');
         } else {

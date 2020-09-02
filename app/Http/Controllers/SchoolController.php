@@ -25,16 +25,16 @@ class SchoolController extends Controller
     public function index()
     {
         if (Auth::user()->account_type == 1) {
-            $schools = User::with('school')
-                    ->where('account_type', 3)
+            $schools = User::where('account_type', 3)
+                    ->with('school')
                     ->inRandomOrder()->paginate(25);
         } elseif (Auth::user()->account_type == 2) {
-            $schools = User::with('school')
-                    ->where('directorate_id', Auth::user()->directorate_id)
+            $schools = User::where('directorate_id', Auth::user()->directorate_id)
                     ->where('account_type', 3)
+                    ->with('school')
                     ->inRandomOrder()->paginate(25);
         } else {
-            return redirect('/schoolClosure/' . Auth::user()->id);
+            return redirect('/school/' . Auth::user()->school->id);
         }
         
         return view('school.index')->withSchools($schools);
@@ -69,7 +69,19 @@ class SchoolController extends Controller
      */
     public function show(School $school)
     {
-        //
+        if(Auth::user()->account_type == 1){
+            return view('school.show')->withSchool($school);
+        }
+        
+        if(Auth::user()->id == $school->user_id){
+            return view('school.show')->withSchool($school);
+        }
+        
+        if((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $school->user->directorate_id)){
+            return view('school.show')->withSchool($school);
+        }
+
+        abort(403, 'Not Authorized');
     }
 
     /**

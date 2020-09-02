@@ -31,8 +31,8 @@ class IncidentController extends Controller
                     ->where('users.directorate_id', Auth::user()->directorate_id)
                     ->inRandomOrder()->paginate(25);
         } elseif (Auth::user()->account_type == 3) {
-            $incidents = Incident::join('users', 'incidents.user_id', 'users.id')
-                    ->where('users.id', Auth::user()->id)
+            $incidents = Incident::where('user_id', Auth::user()->id)
+                    ->join('users', 'incidents.user_id', 'users.id')
                     ->inRandomOrder()->paginate(25);
         } else {
             abort(403, 'Unauthorized action.');

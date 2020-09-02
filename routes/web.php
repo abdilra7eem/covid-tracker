@@ -22,10 +22,10 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::resource('/directorate', 'DirectorateController');
-Route::resource('/user', 'UserController');
-Route::resource('/incident', 'IncidentController');
-Route::resource('/school', 'SchoolController');
-Route::resource('/schoolClosure', 'SchoolClosureController');
+Route::resource('/directorate', 'DirectorateController')->middleware('throttle:60,1');
+Route::resource('/user', 'UserController')->middleware('throttle:60,1');
+Route::resource('/incident', 'IncidentController')->middleware('throttle:60,1');
+Route::resource('/school', 'SchoolController')->middleware('throttle:60,1');
+Route::resource('/schoolClosure', 'SchoolClosureController')->middleware('throttle:60,1');
 
 
