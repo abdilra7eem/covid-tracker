@@ -10918,3 +10918,18 @@ a.text-dark:focus {
   top: 0;
 }
 
+h1,
+h2 {
+  text-align: center;
+}
+
+h3,
+h4 {
+  text-align: start;
+}
+
+section {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+

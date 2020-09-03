@@ -107,7 +107,7 @@ class UserController extends Controller
         // get('id', 'name', 'gov_id', 'email', 'phone_primary', 'phone_secondary', 'account_type', 'active', 'directorate_id')->
         // where('id', $id)->first();
 
-        if($user->account_type == 3){
+        if($user['account_type'] == 3){
             return redirect('/school/'. $user->school['id']);
         } elseif(Auth::user()->account_type == 3) {
             if($user->active == false){
