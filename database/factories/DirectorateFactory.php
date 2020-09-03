@@ -12,5 +12,6 @@ $factory->define(Directorate::class, function (Faker $faker) {
         'name_ar' => $faker->unique()->lastName,
         'phone_number' => $faker->unique()->phoneNumber,
         'head_of_directorate' => $faker->unique()->name,
+        'school_count' => $faker->numberBetween(50, 250),
     ];
 });

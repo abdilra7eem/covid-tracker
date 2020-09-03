@@ -24,6 +24,10 @@
             <td scope="row">اسم مدير المديرية</td>
             <td>{{$directorate->head_of_directorate}}</td>
         </tr>
+        <tr>
+            <td scope="row">عدد المدارس</td>
+            <td>{{$directorate->school_count}}</td>
+        </tr>
     </table>
 </section>
 

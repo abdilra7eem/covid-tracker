@@ -23,6 +23,7 @@ class CreateDirectoratesTable extends Migration
             $table->string('phone_number')->unique();
             $table->string('email')->unique();
             $table->string('head_of_directorate');
+            $table->tinyInteger('school_count')->unsigned();
         });
     }
 
