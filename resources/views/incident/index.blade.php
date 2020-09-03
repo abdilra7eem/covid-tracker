@@ -4,6 +4,7 @@
     <section class="container">
         <table class="table table-hover text-right">
             <tr>
+                <th scope="col">رقم السجل</th>
                 <th scope="col">رقم الهوية</th>
                 <th scope="col">الاسم</th>
                 <th scope="col">رقم الهاتف</th>
@@ -15,11 +16,11 @@
             </tr>
             @foreach($incidents as $incident)
                 @if(isset($incident->closed_at))
-                    @if($incident->close_type == 0)
+                    @if($incident->close_type == 1)
                         @php $condition = 'not_covid' @endphp
-                    @elseif($incident->close_type == 1)
-                        @php $condition = 'recovered' @endphp
                     @elseif($incident->close_type == 2)
+                        @php $condition = 'recovered' @endphp
+                    @elseif($incident->close_type == 3)
                         @php $condition = 'died' @endphp
                     @endif
                 @elseif(isset($incident->confirmed_at))
@@ -29,7 +30,7 @@
                 @else
                     @php $condition = '' @endphp
                 @endif
-                <tr class="@switch($condition)
+                <tr class="@switch($condition ?? '')
                                 @case('recovered')
                                     table-success
                                     @break
@@ -42,8 +43,11 @@
                                 @case('suspected')
                                     table-info
                                     @break
+                                @default
+                                    @break
                             @endswitch
                 ">
+                    <td>{{$incident->id}}</td>
                     <td>{{$incident->person_id}}</td>
                     <td>{{$incident->person_name}}</td>
                     <td>{{$incident->person_phone_primary}}</td>

@@ -27,7 +27,7 @@ class CreateIncidentsTable extends Migration
             // 0: undefined, 1: personal / parent, 2: private doctor, 3: gov.
             $table->date('confirmed_at')->nullable();
             $table->date('closed_at')->nullable();
-            $table->tinyInteger('close_type')->nullable(); // 0: not covid, 1: recovered, 2: died
+            $table->tinyInteger('close_type')->nullable(); // 0: undefined, 1: not covid, 2: recovered, 3: died
             $table->boolean('deleted')->default(false)->nullable();
             $table->string('person_phone_primary');
             $table->string('person_phone_secondary')->nullable();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Incident;
+use App\User;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
@@ -24,16 +25,16 @@ class IncidentController extends Controller
     public function index()
     {
         if (Auth::user()->account_type == 1) {
-            $incidents = Incident::join('users', 'incidents.user_id', 'users.id')
-                    ->inRandomOrder()->paginate(25);
+            $incidents = Incident::with('user')
+                ->inRandomOrder()->paginate(25);
         } elseif (Auth::user()->account_type == 2) {
-            $incidents = Incident::join('users', 'incidents.user_id', 'users.id')
-                    ->where('users.directorate_id', Auth::user()->directorate_id)
-                    ->inRandomOrder()->paginate(25);
+            $incidents = User::where('directorate_id', Auth::user()->directorate_id)
+                ->join('incidents', 'users.id', 'incidents.user_id')
+                ->inRandomOrder()->paginate(25);
         } elseif (Auth::user()->account_type == 3) {
             $incidents = Incident::where('user_id', Auth::user()->id)
-                    ->join('users', 'incidents.user_id', 'users.id')
-                    ->inRandomOrder()->paginate(25);
+                ->with('user')
+                ->inRandomOrder()->paginate(25);
         } else {
             abort(403, 'Unauthorized action.');
         }
@@ -69,7 +70,44 @@ class IncidentController extends Controller
      */
     public function show(Incident $incident)
     {
-        return 'incident show';
+        $allowed = false;
+
+        if(Auth::user()->account_type == 1){
+            $allowed = true;
+            // dd([
+            //     "allowed" => $allowed,
+            //     "user type" => 1
+            // ]);
+        } elseif(Auth::user()->id == $incident->user_id){
+            $allowed = true;
+            // dd([
+            //     "allowed" => $allowed,
+            //     "user type" => 3,
+            //     "user_id" => $incident->user_id,
+            // ]);
+        } elseif((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $incident->user->directorate_id)){
+            $allowed = true;
+            // dd([
+            //     "allowed" => $allowed,
+            //     "user type" => 2,
+            //     "directorate_id" => $incident->user->directorate_id,
+            // ]);
+        } else {
+            $allowed = false;
+            // dd('Not Authorized');
+        }
+
+        if($allowed == true) {
+            $other = Incident::where('person_id', $incident->person_id)
+                ->where('id', '!=', $incident->id)
+                ->orderBy('id', 'DESC')->get();
+            return view('incident.show')
+                ->withIncident($incident)
+                ->withOther($other);
+        }
+
+        abort(403, 'Not Authorized');
+
     }
 
     /**
@@ -81,7 +119,6 @@ class IncidentController extends Controller
     public function edit(Incident $incident)
     {
         return 'incident edit';
-
     }
 
     /**

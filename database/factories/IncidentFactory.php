@@ -16,7 +16,7 @@ $factory->define(Incident::class, function (Faker $faker) {
         'suspect_type' => $faker->numberBetween(1,3),
         'confirmed_at' => $faker->randomElement([$faker->date, null]),
         'closed_at' => $faker->randomElement([$faker->date, null]),
-        'close_type' => $faker->randomElement([0, 1, 2]),
+        'close_type' => $faker->randomElement([1, 2, 3]),
         'deleted' => $faker->boolean($chanceOfGettingTrue = 5),
         'person_phone_primary' => $faker->phoneNumber,
         'person_phone_secondary' => $faker->phoneNumber,
