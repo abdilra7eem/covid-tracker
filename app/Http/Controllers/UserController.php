@@ -109,6 +109,10 @@ class UserController extends Controller
 
         if($user['account_type'] == 3){
             return redirect('/school/'. $user->school['id']);
+        } elseif(Auth::user()->account_type == 1) {
+            return view('user.show')->withUser($user);
+        } elseif((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $user->directorate_id)) {
+            return view('user.show')->withUser($user);
         } elseif(Auth::user()->account_type == 3) {
             if($user->active == false){
                 abort(403, 'Not Authorized');
@@ -117,10 +121,6 @@ class UserController extends Controller
             } else {
                 abort(403, 'Not Authorized');
             }
-        } elseif(Auth::user()->account_type == 1) {
-            return view('user.show')->withUser($user);
-        } elseif((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $user->directorate_id)) {
-            return view('user.show')->withUser($user);
         } else {
             abort(403, 'Not Authorized');
         }

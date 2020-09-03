@@ -1,12 +1,10 @@
-#mutaz52@example.com
-#incident index
-
-schoolClosure: show, grade students
-
-#directorate: school count - static field
-#user index: 
-#	account id
-#	directorate filter for supervisors (used by admins)
-	
-#incident show : hide section 3 if no data
-
+Incident Controller:
+	- show: clean up
+	- index: Filters for
+		- directorate @admin
+		- school [@admin & @supervisor]
+SchoolClosure Controller:
+	- index: filters for
+		- directorate @admin
+		- school [@admin & @supervisor]
+		- close_type: admin, staff, partial

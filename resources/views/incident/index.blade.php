@@ -63,7 +63,7 @@
                     <td>@if($incident->male) ذكر @else أنثى @endif</td>
                     <td>{{isset($incident->user['name'])?$incident->user['name']:""}}</td>
                     <td>
-                        @switch($condition)
+                        @switch($condition ?? '')
                             @case('not_covid')
                                 اشتباه خاطئ
                                 @break

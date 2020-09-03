@@ -29,3 +29,30 @@ Route::resource('/school', 'SchoolController')->middleware('throttle:60,1');
 Route::resource('/schoolClosure', 'SchoolClosureController')->middleware('throttle:60,1');
 
 
+
+
+
+Route::prefix('test')->group(function () {
+
+    Route::get('1', function () {
+        $incidents = App\Incident::with('user')
+            ->inRandomOrder()->paginate(25);
+
+        return view('incident.index')->withIncidents($incidents);
+    });
+
+    Route::get('2', function () {
+        $schools = App\SchoolClosure::where('grade', '>', 12)
+            ->where('reopening_date', null)
+            ->orderBy('grade', 'DESC')
+            ->with('user')->with('user.school')
+            ->get()->unique('user_id');
+
+            return view('schoolClosure.index')->withSchools($schools)->withType('');
+    });
+
+    Route::get('3', function () {
+        $school = App\School::where('id', 5)->with('user')->get();
+        return view('school.show')->withSchool($school);
+    });
+});
