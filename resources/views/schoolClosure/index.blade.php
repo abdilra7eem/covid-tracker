@@ -12,7 +12,7 @@
                 <th scope="col">اسم مدير المدرسة</th>
                 <th scope="col">الدوام</th>
                 <th scope="col">نوع الإغلاق</th>
-                <th scope="col">عدد الطلبة</th>
+                <th scope="col">الطلبة المتأثرون</th>
             </tr>
             @foreach($schools as $school)
                 @if( ($type != 'partial') || ($school->grade < 13) )
@@ -22,14 +22,14 @@
                         @endif
                     ">
                         <td>{{$school->id}}</td>
-                        <td>{{$school->gov_id}}</td>
-                        <td>{{$school->name}}</td>
-                        <td>{{$school->phone_primary}}</td>
+                        <td>{{$school->user['gov_id']}}</td>
+                        <td>{{$school->user['name']}}</td>
+                        <td>{{$school->user['phone_primary']}}</td>
                         <td>
-                            {{$school->head_of_school}}
+                            {{$school->user->school['head_of_school']}}
                         </td>
                         <td>
-                            @if($school->second_shift == true) مسائي
+                            @if($school->user->school['second_shift'] == true) مسائي
                             @else صباحي @endif
                         </td>
                         <td>
