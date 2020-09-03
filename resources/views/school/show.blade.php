@@ -9,7 +9,7 @@
             <td>{{$school->user->id}}</td>
         </tr>
         <tr>
-            <td scope="row">الرقم التسلسلي للمدرسة</td>
+            <td scope="row">الرقم ملف المدرسة</td>
             <td>{{$school->id}}</td>
         </tr>
         <tr>
@@ -131,9 +131,9 @@
             <td>
                 @if($school->oldest_class > 9)
                     ثانوي
-                @elseif($school->oldest_class > 5)
+                @elseif($school->oldest_class > 4)
                     أساسية عليا
-                @elseif(($school->oldest_class < 6) && ($school->oldest_class >0))
+                @elseif(($school->oldest_class < 5) && ($school->oldest_class > 0))
                     أساسية دنيا
                 @else
                     غير معروف
