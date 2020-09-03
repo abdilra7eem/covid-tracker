@@ -5,12 +5,14 @@
     <section class="container">
         <table class="table table-hover text-right">
             <tr>
+                <th scope="col">رقم السجل</th>
                 <th scope="col">الرقم الوطني</th>
                 <th scope="col">الاسم</th>
                 <th scope="col">الهاتف الرئيسي</th>
                 <th scope="col">اسم مدير المدرسة</th>
                 <th scope="col">الدوام</th>
                 <th scope="col">نوع الإغلاق</th>
+                <th scope="col">عدد الطلبة</th>
             </tr>
             @foreach($schools as $school)
                 @if( ($type != 'partial') || ($school->grade < 13) )
@@ -19,6 +21,7 @@
                         @else table-warning
                         @endif
                     ">
+                        <td>{{$school->id}}</td>
                         <td>{{$school->gov_id}}</td>
                         <td>{{$school->name}}</td>
                         <td>{{$school->phone_primary}}</td>
@@ -35,6 +38,7 @@
                             @else جزئي
                             @endif
                         </td>
+                        <td>{{$school->affected_students ?? ''}}</td>
                     </tr>
                 @endif
             @endforeach 

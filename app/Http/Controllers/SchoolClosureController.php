@@ -24,22 +24,17 @@ class SchoolClosureController extends Controller
             if($request->input('type') == 'complete'){
                 $schools = SchoolClosure::where('grade', '>', 12)
                     ->where('reopening_date', null)
-                    // ->where('school_closures.user_id', 98)
-                    ->inRandomOrder()
                     ->orderBy('grade', 'DESC')
-                    ->join('users', 'school_closures.user_id', 'users.id')
-                    ->join('schools', 'school_closures.user_id', 'schools.user_id')
+                    ->with('user.school')
+                    // ->join('users', 'school_closures.user_id', 'users.id')
+                    // ->join('schools', 'school_closures.user_id', 'schools.user_id')
                     ->get()->unique('user_id');
                 $type = 'complete';
             } else {
                 $schools = SchoolClosure::where('reopening_date', null)
-                    // ->where('school_closures.user_id', 98)
-                    ->inRandomOrder()
                     ->orderBy('grade', 'DESC')
-                    ->join('users', 'school_closures.user_id', 'users.id')
-                    ->join('schools', 'school_closures.user_id', 'schools.user_id')
+                    ->with('user.school')
                     ->get()->unique('user_id');
-                    // ->where('grade', '<', 13);
                 if($request->input('type') == 'partial') {
                     $type = 'partial';
                 }
@@ -48,32 +43,36 @@ class SchoolClosureController extends Controller
             if($request->input('type') == 'complete'){
                 $schools = SchoolClosure::where('grade', '>', 12)
                     ->where('reopening_date', null)
-                    // ->where('school_closures.user_id', 98)
-                    ->inRandomOrder()
                     ->orderBy('grade', 'DESC')
-                    ->join('users', 'school_closures.user_id', 'users.id')
-                    ->where('users.directorate_id', Auth::user()->directorate_id)
-                    ->join('schools', 'school_closures.user_id', 'schools.user_id')
+                    ->join('users', 'users.id', 'school_closures.user_id')
+                    // ->with(['user' => function($x){
+                    //     $x->where('directorate_id',  Auth::user()->directorate_id);
+                    // }])
+                    ->where('directorate_id', Auth::user()->directorate_id)
+                    ->with('user.school')
                     ->get()->unique('user_id');
                 $type = 'complete';
             } else {
                 $schools = SchoolClosure::where('reopening_date', null)
-                    // ->where('school_closures.user_id', 98)
-                    ->inRandomOrder()
-                    ->join('users', 'school_closures.user_id', 'users.id')
-                    ->where('users.directorate_id', Auth::user()->directorate_id)
                     ->orderBy('school_closures.grade', 'DESC')
-                    ->join('schools', 'school_closures.user_id', 'schools.user_id')
+                    ->with(['user' => function($x){
+                        $x->where('directorate_id',  Auth::user()->directorate_id);
+                    }])
+                    ->with('user.school')
                     ->get()->unique('user_id');
-                    // ->where('grade', '<', 13);
                 if($request->input('type') == 'partial') {
                     $type = 'partial';
                 }
             }
         } else {
-            return redirect('/schoolClosure/' . Auth::user()->id);
+            $schools = SchoolClosure::where('reopening_date', null)
+                ->where('user_id', Auth::user()->id)
+                ->with('user.school')
+                ->orderBy('school_closures.grade', 'DESC')
+                ->get()->unique('user_id');
         }
-    
+
+        dd($schools);
         return view('schoolClosure.index')->withSchools($schools)->withType($type);
     }
 
@@ -106,7 +105,36 @@ class SchoolClosureController extends Controller
      */
     public function show(SchoolClosure $schoolClosure)
     {
-        //
+        $allowed = false;
+        // dd($schoolClosure->user['directorate_id']);
+        if(Auth::user()->account_type == 1) {
+            $allowed = true;
+        }
+
+        if(Auth::user()->id == $schoolClosure->user_id){
+            $allowed = true;
+        }
+
+        if((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $schoolClosure->user['directorate_id'])){
+            $allowed = true;
+        }
+
+        if($allowed == true) {
+            $other = SchoolClosure::where('user_id', $schoolClosure->user_id)
+                ->where('id', '!=', $schoolClosure->id)
+                ->get();
+            $current = SchoolClosure::where('user_id', $schoolClosure->user_id)
+                ->where('reopening_date', null)
+                ->orderBy('grade', 'DESC')
+                ->first();
+            return view('schoolClosure.show')
+                ->withClosure($schoolClosure)
+                ->withOther($other)
+                ->withCurrent($current);
+        }
+
+        abort(403, 'Not Authorized');
+
     }
 
     /**
