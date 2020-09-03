@@ -23,6 +23,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $type = 'all';
+        $directorate = (int) $request->input('directorate') ?? 0;
         if($request->input('type') == 'admins'){
             $type = 'admins';
         } elseif($request->input('type') == 'supervisors'){
@@ -34,8 +35,14 @@ class UserController extends Controller
                 $users = User::where('account_type', 1)
                 ->paginate(25);
             } elseif($type == 'supervisors') {
-                $users = User::where('account_type', 2)
-                ->paginate(25);
+                if($directorate == 0) {
+                    $users = User::where('account_type', 2)
+                    ->paginate(25);
+                } else {
+                    $users = User::where('account_type', 2)
+                    ->where('directorate_id', $directorate)
+                    ->paginate(25);
+                }
             } else {
                 $users = User::where('account_type', '!=', 3)
                 ->paginate(25);
@@ -101,7 +108,7 @@ class UserController extends Controller
         // where('id', $id)->first();
 
         if($user->account_type == 3){
-            return redirect('/school/'. $user->school->id);
+            return redirect('/school/'. $user->school['id']);
         } elseif(Auth::user()->account_type == 3) {
             if($user->active == false){
                 abort(403, 'Not Authorized');

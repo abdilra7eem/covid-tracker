@@ -24,10 +24,18 @@ class SchoolController extends Controller
 
     public function index()
     {
+        $directorate = (int) $request->input('directorate') ?? 0;
         if (Auth::user()->account_type == 1) {
-            $schools = User::where('account_type', 3)
+            if($directorate = 0){
+                $schools = User::where('account_type', 3)
                     ->with('school')
                     ->inRandomOrder()->paginate(25);
+            } else {
+                $schools = User::where('account_type', 3)
+                    ->where('directorate_id', $directorate)
+                    ->with('school')
+                    ->inRandomOrder()->paginate(25);
+            }
         } elseif (Auth::user()->account_type == 2) {
             $schools = User::where('directorate_id', Auth::user()->directorate_id)
                     ->where('account_type', 3)
