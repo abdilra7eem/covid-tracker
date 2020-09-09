@@ -11,6 +11,6 @@ class SchoolClosureTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\SchoolClosure::class, 10)->create();
+        factory(App\SchoolClosure::class, 1000)->create();
     }
 }

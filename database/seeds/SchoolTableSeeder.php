@@ -11,6 +11,6 @@ class SchoolTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\School::class, 85)->create();
+        factory(App\School::class, 350)->create();
     }
 }

@@ -24,8 +24,7 @@ class CreateDirectoratesTable extends Migration
             $table->string('email')->unique();
             $table->string('head_of_directorate');
             $table->tinyInteger('school_count')->unsigned();
-            $table->foreignId('last_editor'); // foreign key from the users table
-            $table->foreign('last_editor')->references('id')->on('users');
+            $table->mediumInteger('last_editor');
         });
     }
 

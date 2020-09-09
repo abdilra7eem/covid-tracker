@@ -11,6 +11,6 @@ class IncidentTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Incident::class, 200)->create();
+        factory(App\Incident::class, 800)->create();
     }
 }

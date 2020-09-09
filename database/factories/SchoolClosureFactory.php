@@ -12,7 +12,7 @@ $factory->define(SchoolClosure::class, function (Faker $faker) {
         'grade' => $faker->numberBetween(1,14),
         'grade_section' => $faker->numberBetween(1,14),    
         'affected_students' => $faker->numberBetween(15, 600),
-        'user_id' => $faker->unique()->numberBetween(1, App\User::count()),
+        'user_id' => $faker->numberBetween(1, App\User::count()),
         'notes' => $faker->paragraph($nbSentences = 3, $variableNbSentences = true),
     ];
 });
