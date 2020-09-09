@@ -36,7 +36,11 @@ class DirectorateController extends Controller
      */
     public function create()
     {
-        //
+        if(Auth::user()->account_type == 1) {
+            return view('directorate.create');
+        }
+
+        abort(403, 'Not Authorized');
     }
 
     /**
@@ -47,7 +51,29 @@ class DirectorateController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if(Auth::user()->account_type == 1){
+
+            $request->validate([
+                'name' => ['bail','required','min:3','max:15', 'regex:/^[a-z]+$/','unique:directorates'],
+                'name_ar' => ['bail', 'required','min:3','max:15'],
+                'email' => ['bail', 'required','min:10','max:50', 'regex:/^[a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,4}$/'],
+                'phone_number' => ['bail', 'required', 'min:9','max:10', 'regex:/^0[0-9()-]+$/'],
+                'head_of_directorate' => ['bail', 'required', 'min:7','max:100'],
+                'school_count' => ['bail', 'required', 'min:2', 'max:3', 'regex:/^[0-9]+$/'],
+            ]);
+
+            $directorate = new Directorate;
+            $directorate->name = $request->name;
+            $directorate->name_ar = $request->name_ar;
+            $directorate->email = $request->email;
+            $directorate->phone_number = $request->phone_number;
+            $directorate->head_of_directorate = $request->head_of_directorate;
+            $directorate->school_count = $request->school_count;
+            $directorate->save();
+            return redirect('/directorate')->with('success', 'Directorate Created');
+        }
+
+        abort(403, 'Not authorized');
     }
 
     /**
@@ -75,7 +101,17 @@ class DirectorateController extends Controller
      */
     public function edit(Directorate $directorate)
     {
-        //
+        //Check if directorate exists before deleting
+        if (!isset($directorate)){
+            return redirect('/directorate')->with('error', 'Not Found');
+        }
+
+        // Check for correct user
+        if(Auth::user()->account_type !== 1){
+            return redirect('/directorate')->with('error', 'Unauthorized');
+        }
+
+        return view('directorate.edit')->with('directorate', $directorate);
     }
 
     /**

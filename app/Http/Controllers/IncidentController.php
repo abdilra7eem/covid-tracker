@@ -48,7 +48,12 @@ class IncidentController extends Controller
      */
     public function create()
     {
-        return 'incident create';
+        // if(Auth::user()->account_type == 3) {
+
+            return view('incident.create');
+        // }
+
+        abort(403, 'Not Authorized');
     }
 
     /**
@@ -59,7 +64,94 @@ class IncidentController extends Controller
      */
     public function store(Request $request)
     {
-        return 'incident store';
+        // dd($request->notes);
+        // $notes = htmlspecialchars(filter_input(INPUT_GET, $request->notes), ENT_COMPAT, 'UTF-8');
+        // dd($notes);
+        $request->validate([
+            'sex'           => ['bail', 'required','in:male,female'],
+            'job'           => ['bail', 'required','in:student,teacher,admin'],
+            'type'          => ['bail', 'required','in:suspected,confirmed'],
+
+            'person_name'   => ['bail', 'required','min:10','max:50'],
+            'person_id'     => ['bail', 'required', 'integer', 'min:100000000','max:4299999999'],
+            
+            'person_phone_primary'     => ['bail', 'required', 'min:9','max:10', 'regex:/^0[0-9()-]+$/'],
+            'person_phone_secondary'   => ['bail', 'max:10', 'regex:/^0[0-9()-]+$/'],
+
+            // 'date'  => ['bail', 'required','regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
+            'date'  => ['bail', 'required', 'date_format:Y-m-d', 'regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
+            'notes' => ['bail', 'max:255'],
+        ]);
+
+        if($request->job == "teacher"){
+            $grade = 13;
+            $grade_section = 0;
+        }elseif($request->job == "admin"){
+            $grade = 14;
+            $grade_section = 0;
+        }else{
+            $request->validate([
+                'grade'         => ['bail', 'required_if:job,==,student', 'integer', 'between:1,12'],
+                'grade_section' => ['bail', 'required_if:job,==,student', 'integer', 'between:1,15'],
+            ]);
+            $grade = $request->grade;
+            $grade_section = $request->grade_section;
+        }
+
+        if($request->type == 'suspected'){
+            $request->validate([
+                'suspect_type'  => ['bail', 'required','in:personal,doc,gov'],
+            ]);
+            if($request->suspect_type == 'personal') {
+                $suspect_type = 1;
+            }elseif($request->suspect_type == 'doc'){
+                $suspect_type = 2;
+            } else {
+                $suspect_type = 3;
+            }
+        } else {
+            $suspect_type = null;
+        }
+
+
+        if($request->sex == "male"){
+            $male = true;
+        } else {
+            $male = false;
+        }
+
+        // if(isset($request->notes)){
+        //     $request->validate([
+        //         'notes' => ['bail', 'max:255', 'regex:/^[\u0600-\u06FF ]+$/'],
+        //     ]);
+        // }
+
+        $incident = new Incident;
+        $incident->user_id = Auth::user()->id;
+        $incident->male = $male;
+        $incident->grade = $grade;
+        // $incident->grade_section = $grade_section;
+        $incident->person_name = $request->person_name;
+        $incident->person_id = $request->person_id;
+        $incident->person_phone_primary = $request->person_phone_primary;
+        $incident->person_phone_secondary = $request->person_phone_secondary;
+        $incident->grade = $grade;
+
+        if($request->type == 'suspected'){
+            $incident->suspected_at = $request->date;
+            $incident->suspect_type = $suspect_type;
+        } else {
+            $incident->confirmed_at = $request->date;
+        }
+
+        $incident->notes = $request->notes;
+
+
+        $incident->save();
+        return redirect('/incident')->with('success', 'Incident Created');
+
+        dd($incident);
+        // return 'incident store';
     }
 
     /**
@@ -118,7 +210,17 @@ class IncidentController extends Controller
      */
     public function edit(Incident $incident)
     {
-        return 'incident edit';
+        //Check if directorate exists before deleting
+        if (!isset($incident)){
+            return redirect('/incident')->with('error', 'Not Found');
+        }
+
+        // Check for correct user
+        if(Auth::user()->id !== $incident->user_id){
+            return redirect('/incident')->with('error', 'Unauthorized');
+        }
+
+        return view('incident.edit')->with('incident', $incident);
     }
 
     /**

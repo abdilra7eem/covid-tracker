@@ -98,7 +98,27 @@ class SchoolClosureController extends Controller
      */
     public function create()
     {
-        //
+        // if(Auth::user()->account_type == 3) {
+            $closure = SchoolClosure::where('user_id', Auth::user()->id)
+                ->where('reopening_date', null)
+                ->orderBy('grade', 'DESC')
+                ->first();
+            if($closure != null){
+                if($closure->grade == 15){
+                    return redirect('/schoolClosure')->withError('المدرسة مغلقة بالكامل. لا يمكن إنشاء سجل إغلاق جديد');
+                } else {
+                    return view('schoolClosure.create')
+                        ->withCurrent($closure->grade)
+                        ->withUser(Auth::user())
+                        ->withSchool(Auth::user()->school);
+                }
+            } else {
+                return view('schoolClosure.create')
+                    ->withCurrent(0)
+                    ->withUser(Auth::user())
+                    ->withSchool(Auth::user()->school);
+            }
+        // }
     }
 
     /**
@@ -109,7 +129,61 @@ class SchoolClosureController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'closure_date'      => ['bail', 'required', 'date_format:Y-m-d', 'regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
+            'type'              => ['bail', 'required', 'integer', 'in:13,14,15,1'],
+        ]);
+
+        $prev = SchoolClosure::where('user_id', Auth::user()->id)
+            ->where('reopening_date', null)
+            ->orderBy('grade', 'DESC')
+            ->first();
+
+        if($prev->grade > 12){
+            if($prev->grade >= $request->type){
+                return back()->withError('عُذرًا، لا يمكن تسجيل هذا الإغلاق. تأكد من إدخال معلومات صحيحة.');
+            }
+        }
+        
+        if($request->type == 1){
+            $request->validate([
+                'grade'             => ['bail', 'required', 'integer', 'min:1', 'max:12'],
+                'grade_section'     => ['bail', 'required', 'integer', 'min:1', 'max:15'],
+                'affected_students' => ['bail', 'required', 'integer', 'min:5', 'max:999'],
+            ]);
+
+            $prev = SchoolClosure::where('user_id', Auth::user()->id)
+                ->where('reopening_date', null)
+                ->where('grade', $request->grade)
+                ->where('grade_section', $request->grade_section)
+                ->orderBy('grade', 'DESC')
+                ->first();
+
+            if($prev != null){
+                return back()->withError('عُذرًا، هذه الشعبة مغلقة من قبل. تأكد من إدخال معلومات صحيحة.');
+            }
+    
+            $grade = $request->grade;
+            $grade_section = $request->grade_section;
+            $affected_students = $request->affected_students;
+
+        }else{
+            $grade = $request->type;
+            $grade_section = null;
+            $school = School::where('id', Auth::user()->id)->first();
+            $affected_students = $school->total_male_students + $school->total_female_students;
+        }
+
+        $closure = new SchoolClosure;
+        $closure->grade = $grade;
+        $closure->grade_section = $grade_section;
+        $closure->closure_date = $request->closure_date;
+        $closure->user_id = Auth::user()->id;
+        // $closure->affected_students = $affected_students;
+
+        $closure->save();
+        return redirect('/schoolClosure/'.$closure->id)->withSuccess('success', 'تم إنشاء سجل الإغلاق');
+
     }
 
     /**
@@ -168,7 +242,17 @@ class SchoolClosureController extends Controller
      */
     public function edit(SchoolClosure $schoolClosure)
     {
-        //
+        //Check if directorate exists before deleting
+        if (!isset($schoolClosure)){
+            return redirect('/schoolClosure')->with('error', 'Not Found');
+        }
+
+        // Check for correct user
+        if(Auth::user()->id !== $schoolClosure->user_id){
+            return redirect('/schoolClosure')->with('error', 'Unauthorized');
+        }
+
+        return view('schoolClosure.edit')->with('schoolClosure', $schoolClosure);
     }
 
     /**

@@ -80,7 +80,11 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        if((Auth::user()->account_type == 1) || (Auth::user()->account_type == 2)) {
+            return view('user.create');
+        }
+
+        abort(403, 'Not Authorized');
     }
 
     /**
@@ -91,7 +95,39 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if((Auth::user()->account_type == 1) || (Auth::user()->account_type == 2)){
+            if(Auth::user()->account_type == 1) {
+                $request->validate([
+                    'directorate_id' => ['bail','required','min:1','max:2', 'regex:/^[1-9]+$/','exists:directorates,id'],
+                ]);
+                $directorate_id = $request->directorate_id;
+                $account_type = 2;
+            } else {
+                $directorate_id = Auth::user()->directorate_id;
+                $account_type = 3;
+            }
+            $request->validate([
+                'name' => ['bail', 'required','min:10','max:50'],
+                'email' => ['bail', 'required','min:10','max:50', 'regex:/^[a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,4}$/', 'unique:users'],
+                'phone_primary' => ['bail', 'required', 'min:9','max:10', 'regex:/^0[0-9()-]+$/'],
+                'phone_secondary' => ['bail', 'max:10', 'regex:/^0[0-9()-]+$/'],
+                'gov_id' => ['bail', 'required', 'min:9','max:10', 'regex:/^[0-9]+$/', 'unique:users'],
+            ]);
+
+            $user = new User;
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->phone_primary = $request->phone_primary;
+            $user->phone_secondary = $request->phone_secondary;
+            $user->gov_id = $request->gov_id;
+            $user->directorate_id = $directorate_id;
+            $user->account_type = $account_type;
+            $user->password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
+            // dd($user);
+            $user->save();
+            return redirect('/user')->with('success', 'User Created');
+        }
+        abort(403, 'Not authorized');
     }
 
     /**
