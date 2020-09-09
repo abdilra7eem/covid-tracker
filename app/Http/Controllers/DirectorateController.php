@@ -69,6 +69,7 @@ class DirectorateController extends Controller
             $directorate->phone_number = $request->phone_number;
             $directorate->head_of_directorate = $request->head_of_directorate;
             $directorate->school_count = $request->school_count;
+            $directorate->last_editor = Auth::user()->id;
             $directorate->save();
             return redirect('/directorate')->with('success', 'Directorate Created');
         }

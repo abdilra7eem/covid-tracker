@@ -124,6 +124,7 @@ class UserController extends Controller
             $user->account_type = $account_type;
             $user->password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
             // dd($user);
+            $user->last_editor = Auth::user()->id;
             $user->save();
             return redirect('/user')->with('success', 'User Created');
         }

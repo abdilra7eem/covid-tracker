@@ -34,5 +34,6 @@ $factory->define(User::class, function (Faker $faker) {
         'account_type' => $faker->randomElement([1, 2, 3]),
         'active' => $faker->boolean($chanceOfGettingTrue = 90),
         'directorate_id' => $faker->numberBetween(1, App\Directorate::count()),
+        'last_editor' => $faker->numberBetween(1, App\User::count()),
     ];
 });

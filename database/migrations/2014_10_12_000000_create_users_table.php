@@ -34,6 +34,8 @@ class CreateUsersTable extends Migration
             $table->timestamps();
             $table->foreignId('directorate_id');
             $table->foreign('directorate_id')->references('id')->on('directorates');
+            $table->foreignId('last_editor');
+            $table->foreign('last_editor')->references('id')->on('users');
         });
     }
 
