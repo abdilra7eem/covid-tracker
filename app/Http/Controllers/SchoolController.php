@@ -17,13 +17,22 @@ class SchoolController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+
     public function __construct()
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+        
         $this->middleware('auth');
     }
 
     public function index()
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
         $directorate = 0;
         if(isset($request)){
             if($request->input('directorate') !== null){
@@ -61,16 +70,20 @@ class SchoolController extends Controller
      */
     public function create()
     {
-        // if(Auth::user()->account_type == 3) {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
+        if(Auth::user()->account_type == 3) {
             $school = School::where('user_id', Auth::user()->id)->first();
             if($school == null){
                 return view('school.create')->withUser(Auth::user());
             } else {
                 return redirect('/school/edit/'.$school->id);
             }
-        // }
+        }
 
-        // abort(403, 'Not Authorized');
+        return redirect('/school')->withError('فقط حسابات المدارس يمكنها إنشاء ملف مدرسة');
     }
 
     /**
@@ -81,6 +94,19 @@ class SchoolController extends Controller
      */
     public function store(Request $request)
     {   
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
+        if(Auth::user()->account_type != 3) {
+            return redirect('/school')->withError('فقط حسابات المدارس يمكنها إنشاء ملف مدرسة');
+        }
+
+        $old_school = School::where('user_id', Auth::user()->id)->first();
+        if($old_school != null){
+            return redirect('/school/edit/'.Auth::user()->school->id)->withError('هناك ملف مدرسة مسجل مسبقًا لمدرستك. يمكنك تعديله، لكن لا يمكنك إنشاء ملف جديد');
+        }
+
         $request->validate([
             'rented'                => ['bail', 'required', 'in:true,false'],
             'second_shift'          => ['bail', 'required', 'in:true,false'],
@@ -156,6 +182,10 @@ class SchoolController extends Controller
      */
     public function show(School $school)
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+        
         if(Auth::user()->account_type == 1){
             return view('school.show')->withSchool($school);
         }

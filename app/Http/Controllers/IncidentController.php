@@ -19,11 +19,19 @@ class IncidentController extends Controller
     
     public function __construct()
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+        
         $this->middleware('auth');
     }
 
     public function index()
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+        
         if (Auth::user()->account_type == 1) {
             $incidents = Incident::with('user')
                 ->inRandomOrder()->paginate(25);
@@ -48,12 +56,15 @@ class IncidentController extends Controller
      */
     public function create()
     {
-        // if(Auth::user()->account_type == 3) {
-
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+        
+        if(Auth::user()->account_type == 3) {
             return view('incident.create');
-        // }
+        }
 
-        abort(403, 'Not Authorized');
+        return redirect()->withError('يمكن فقط لحساب مدرسة إنشاء سجل حالة');
     }
 
     /**
@@ -64,6 +75,14 @@ class IncidentController extends Controller
      */
     public function store(Request $request)
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+        
+        if(Auth::user()->account_type != 3) {
+            return redirect()->withError('يمكن فقط لحساب مدرسة إنشاء سجل حالة');
+        }
+
         // dd($request->notes);
         // $notes = htmlspecialchars(filter_input(INPUT_GET, $request->notes), ENT_COMPAT, 'UTF-8');
         // dd($notes);
@@ -162,6 +181,10 @@ class IncidentController extends Controller
      */
     public function show(Incident $incident)
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+        
         $allowed = false;
 
         if(Auth::user()->account_type == 1){
@@ -210,6 +233,10 @@ class IncidentController extends Controller
      */
     public function edit(Incident $incident)
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
         //Check if directorate exists before deleting
         if (!isset($incident)){
             return redirect('/incident')->with('error', 'Not Found');

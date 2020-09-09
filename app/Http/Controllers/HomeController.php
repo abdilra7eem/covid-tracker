@@ -13,6 +13,10 @@ class HomeController extends Controller
      */
     public function __construct()
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+        
         $this->middleware('auth');
     }
 
@@ -23,6 +27,10 @@ class HomeController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+        
         if(Auth::user()->account_type == 1){
             return redirect('/user');
         } elseif(Auth::user()->account_type == 2) {

@@ -18,8 +18,22 @@ class SchoolClosureController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+        
+        $this->middleware('auth');
+    }
+    
     public function index(Request $request)
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
         $type = "all";
         if (Auth::user()->account_type == 1) {
             if($request->input("type") == "complete"){
@@ -97,8 +111,12 @@ class SchoolClosureController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        // if(Auth::user()->account_type == 3) {
+    {        
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+        
+        if(Auth::user()->account_type == 3) {
             $closure = SchoolClosure::where('user_id', Auth::user()->id)
                 ->where('reopening_date', null)
                 ->orderBy('grade', 'DESC')
@@ -118,7 +136,9 @@ class SchoolClosureController extends Controller
                     ->withUser(Auth::user())
                     ->withSchool(Auth::user()->school);
             }
-        // }
+        }
+
+        return redirect('/schoolClosure')->withError('Error', 'فقط حسابات المدارس يمكنها إنشاء سجل إغلاق مدرسة');
     }
 
     /**
@@ -129,6 +149,14 @@ class SchoolClosureController extends Controller
      */
     public function store(Request $request)
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
+        if(Auth::user()->id != 3){
+            return redirect()->withError('لا يمكنك إنشاء سجل إغلاق لأن حسابك ليس حساب مدرسة');
+        }
+
         $request->validate([
             'closure_date'      => ['bail', 'required', 'date_format:Y-m-d', 'regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
             'type'              => ['bail', 'required', 'integer', 'in:13,14,15,1'],
@@ -197,6 +225,10 @@ class SchoolClosureController extends Controller
      */
     public function show(SchoolClosure $schoolClosure)
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
         $allowed = false;
         // dd($schoolClosure->user["directorate_id"]);
         if(Auth::user()->account_type == 1) {
@@ -245,6 +277,10 @@ class SchoolClosureController extends Controller
      */
     public function edit(SchoolClosure $schoolClosure)
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
         //Check if directorate exists before deleting
         if (!isset($schoolClosure)){
             return redirect('/schoolClosure')->with('error', 'Not Found');

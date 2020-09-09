@@ -17,11 +17,19 @@ class DirectorateController extends Controller
 
     public function __construct()
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+        
         $this->middleware('auth');
     }
 
     public function index()
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
         if(Auth::user()->account_type == 1 || Auth::user()->account_type == 2) {
             $directorates = Directorate::all();
             return view('directorate.index')->withDirectorates($directorates);
@@ -36,6 +44,10 @@ class DirectorateController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
         if(Auth::user()->account_type == 1) {
             return view('directorate.create');
         }
@@ -51,6 +63,10 @@ class DirectorateController extends Controller
      */
     public function store(Request $request)
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
         if(Auth::user()->account_type == 1){
 
             $request->validate([
@@ -85,6 +101,10 @@ class DirectorateController extends Controller
      */
     public function show(Directorate $directorate)
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
         if( (Auth::user()->account_type != 3) || 
             (Auth::user()->directorate_id == $directorate->id) )
         {            
@@ -102,6 +122,10 @@ class DirectorateController extends Controller
      */
     public function edit(Directorate $directorate)
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+        
         //Check if directorate exists before deleting
         if (!isset($directorate)){
             return redirect('/directorate')->with('error', 'Not Found');

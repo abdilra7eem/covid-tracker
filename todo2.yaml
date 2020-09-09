@@ -12,7 +12,10 @@ SchoolClosure Controller:
 		
 Bugs: 
 	#- school controller line 27
-	- Account type in SchoolClosure
+	#- Check Account type in SchoolClosure
+	#- last_editor nullable
+	#- !Auth redirect to /login
+	- abort(403) to Soft-error messages with redirect
 
 	
 Accountability:

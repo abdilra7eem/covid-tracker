@@ -17,11 +17,19 @@ class UserController extends Controller
 
     public function __construct()
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+        
         $this->middleware('auth');
     }
 
     public function index(Request $request)
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
         $type = 'all';
         $directorate = (int) $request->input('directorate') ?? 0;
         if($request->input('type') == 'admins'){
@@ -80,6 +88,10 @@ class UserController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
         if((Auth::user()->account_type == 1) || (Auth::user()->account_type == 2)) {
             return view('user.create');
         }
@@ -95,6 +107,10 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
         if((Auth::user()->account_type == 1) || (Auth::user()->account_type == 2)){
             if(Auth::user()->account_type == 1) {
                 $request->validate([
@@ -139,6 +155,10 @@ class UserController extends Controller
      */
     public function show($id)
     {
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+        
         $user = User::where('id', $id)->first();
 
         // get('id', 'name', 'gov_id', 'email', 'phone_primary', 'phone_secondary', 'account_type', 'active', 'directorate_id')->
