@@ -1,18 +1,18 @@
 .text-center {
-    text-align: center;
+    text-align: center !important;
 }
 
 .text-right {
-    text-align: right;
+    text-align: right !important;
 }
 
 .sticky {
-    position: sticky;
+    position: sticky !important;
     top: 0;
 }
 
 h1, h2 {
-    text-align: center;
+    text-align: center !important;
 }
 
 h3, h4 {
@@ -22,4 +22,45 @@ h3, h4 {
 section {
     margin-top: 15px;
     margin-bottom: 15px
+}
+
+label {
+    font-size: larger;
+    font-weight: 500;
+}
+
+* {
+    text-align: start;
+}
+
+.covid-form-container {
+    max-width: 500px;
+    text-align: start;
+}
+
+.covid-center {
+    text-align: center !important;
+}
+
+.covid-form-button {
+    width: 40%;
+    margin: auto;
+    display: block;
+    text-align: center;
+}
+
+.covid-school-radio-grid {
+    width: 100px;
+}
+
+.form-check-input {
+    margin-left: 0.3125rem !important;
+}
+
+.form-check-label {
+    width: 110px;
+}
+
+.school-radio-label {
+    width: 150px;
 }
