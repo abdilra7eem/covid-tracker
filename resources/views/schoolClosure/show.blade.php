@@ -4,6 +4,23 @@
 
 <section class="container">
     <h1>سجل الإغلاق</h1>
+    @if($incident->deleted == true)
+        <p class="text-danger">هذا السجل محذوف ولن يظهر في أيّ من الإحصائيات أو الجداول.</p>
+    @endif
+    @if(Auth::user()->account_type == 3)
+        <a href="/schoolClosure/edit/{{$closure->id}}" class="btn btn-warning">تعديل</a>
+        <form action="{{route('schoolClosure.destroy', $closure->id)}}" method="POST"
+            style="display:inline;">
+            @method('DELETE')
+            @csrf
+            <button type="submit" class="btn 
+                @if($closure->deleted == false) btn-danger">حذف 
+                @else btn-primary">استعادة 
+                @endif
+            </button>
+        </form>
+        <br/><br/>
+    @endif
     <table class="table table-hover text-right table-striped">
         <tr>
             <td scope="row">رقم سجل الإغلاق</td>
@@ -15,7 +32,7 @@
                 @if($closure->grade == 15) إغلاق كامل
                 @elseif($closure->grade == 14) إغلاق مع تواجد الإدارة
                 @elseif($closure->grade == 13) إغلاق مع تواجد الإدارة والمعلمين
-                @else إغلاق الصف رقم {{$closure->grade}} شعبة رقم {{$closure->grade_section}}
+                @else إغلاق صف {{$closure->grade}} شعبة رقم {{$closure->grade_section}}
                 @endif
             </td>
         </tr>

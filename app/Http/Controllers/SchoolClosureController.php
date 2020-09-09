@@ -314,6 +314,21 @@ class SchoolClosureController extends Controller
      */
     public function destroy(SchoolClosure $schoolClosure)
     {
-        //
+        if (!Auth::user()){
+            abort(403, 'Not Authorized');
+        }
+
+        if(Auth::user()->id == $schoolClosure->user_id){
+            if($schoolClosure->deleted == false){
+                $schoolClosure->deleted = true;
+                $message = 'تم حذف سجل الإغلاق.';
+            } else {
+                $schoolClosure->deleted = false;
+                $message = 'تم استرجاع السجل المحذوف';
+            }
+            $schoolClosure->save();
+            return back()->withSuccess($message);
+        }
+        return back()->withError('يمكن فقط لحساب المدرسة ذات العلاقة حذف سجل الإغلاق');
     }
 }

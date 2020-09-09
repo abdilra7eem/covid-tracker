@@ -214,6 +214,27 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (!Auth::user()){
+            abort(403, 'Not Authorized');
+        }
+
+        if(Auth::user()->account_type == 3) {
+            abort(403, 'Not Authorized');
+        }
+
+        if((Auth::user()->account_type == 1) || ((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $user->directorate_id)) ){
+            $user = User::find($id);
+            if($user->active == true){
+                $user->active = false;
+                $message = 'تم تعطيل الحساب ولن يتمكن من إنشاء أو تعديل أيّ بيانات';
+            } else {
+                $user->active = true;
+                $message = 'تم تفعيل الحساب وسيتمكن من إنشاء و تعديل البيانات';
+            }
+            $user->save();
+            return back()->withSuccess($message);
+        }
+
+        abort(403, 'Not Authorized');
     }
 }

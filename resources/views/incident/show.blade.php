@@ -6,6 +6,23 @@
 
 <section class="container">
     <h1>معلومات الحالة</h1>
+    @if($incident->deleted == true)
+        <p class="text-danger">هذا السجل محذوف ولن يظهر في أيّ من الإحصائيات أو الجداول.</p>
+    @endif
+    {{-- @if(Auth::user()->account_type == 3) --}}
+        <a href="/incident/create" class="btn btn-success">سجل جديد</a>
+        <a href="/incident/edit/{{$incident->id}}" class="btn btn-warning">تعديل</a>
+        @if($incident->deleted == false)
+            <form action="{{route('incident.destroy', $incident->id)}}" method="POST"
+                style="display:inline;">
+                @method('DELETE')
+                @csrf
+                <button type="submit" class="btn btn-danger">حذف</button>
+            </form>
+        @endif
+        <br/><br/>
+    {{-- @endif --}}
+
     <table class="table table-hover text-right table-striped">
         <tr>
             <td scope="row">رقم سجل الحالة</td>

@@ -159,6 +159,23 @@ class DirectorateController extends Controller
      */
     public function destroy(Directorate $directorate)
     {
-        //
+        if (!Auth::user()){
+            abort(403, 'Not Authorized');
+        }
+
+        if(Auth::user()->account_type == 1) {
+            if($directorate->deleted == false){
+                $directorate->deleted = true;
+                $message = 'تم حذف سجل المديرية.';
+            } else {
+                $directorate->deleted = false;
+                $message = 'تم استرجاع السجل المحذوف';
+            }
+            $directorate->save();
+            return back()->withSuccess($message);
+        } else {
+            return back()->withError('لا يمكنك حذف سجل مديرية');
+        }
+
     }
 }

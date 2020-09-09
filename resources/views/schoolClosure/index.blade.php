@@ -3,6 +3,10 @@
 @section('content')
     {{-- {{dd($schools)}} --}}
     <section class="container">
+        @if(Auth::user()->account_type == 3)
+            <a href="/schoolClosure/create" class="btn btn-success covid-form-button">إنشاء سجل إغلاق جديد</a>
+            <br/>
+        @endif
         <table class="table table-hover text-right">
             <tr>
                 <th scope="col">رقم السجل</th>

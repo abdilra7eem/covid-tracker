@@ -3,6 +3,8 @@
 @section('content')
 
 <section class="container">
+    <a href="/directorate/create" class="btn btn-success covid-form-button">إنشاء مديرية جديدة</a>
+    <br/>
     <table class="table table-hover text-right table-striped">
         <tr>
             <th scope="col">الرقم</th>

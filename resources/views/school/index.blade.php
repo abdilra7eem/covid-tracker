@@ -2,9 +2,14 @@
 
 @section('content')
     <section class="container">
+        @if(Auth::user()->school == null)
+            <a href="/school/create" class="btn btn-success covid-form-button">إنشاء سجل إغلاق جديد</a>
+            <br/>
+        @endif
         <table class="table table-hover text-right">
             <tr>
                 <th scope="col">#</th>
+                <th scope="col">رقم الحساب</th>
                 <th scope="col">الرقم الوطني</th>
                 <th scope="col">الاسم</th>
                 <th scope="col">Email</th>
@@ -23,6 +28,7 @@
                     @if(!isset($school->school['user_id'])) table-danger @endif
                 ">
                     <td>{{$school->school['id']}}</td>
+                    <td>{{$school->id}}</td>
                     <td>{{$school->gov_id}}</td>
                     <td>{{$school->name}}</td>
                     <td>{{$school->email}}</td>

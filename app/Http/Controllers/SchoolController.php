@@ -242,6 +242,6 @@ class SchoolController extends Controller
      */
     public function destroy(School $school)
     {
-        //
+        return back()->withError('لا يمكن حذف معلومات مدرسة، يمكنك فقط تعديلها.');
     }
 }

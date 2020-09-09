@@ -25,6 +25,7 @@ class CreateDirectoratesTable extends Migration
             $table->string('head_of_directorate');
             $table->tinyInteger('school_count')->unsigned();
             $table->mediumInteger('last_editor')->nullable();
+            $table->boolean('deleted')->default(false);
         });
     }
 

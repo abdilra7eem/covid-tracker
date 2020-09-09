@@ -2,6 +2,10 @@
 
 @section('content')
     <section class="container">
+        @if(Auth::user()->account_type == 3)
+            <a href="/incident/create" class="btn btn-success covid-form-button">إنشاء سجل حالة جديد</a>
+            <br/>
+        @endif
         <table class="table table-hover text-right">
             <tr>
                 <th scope="col">رقم السجل</th>

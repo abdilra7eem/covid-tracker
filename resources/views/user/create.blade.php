@@ -4,7 +4,7 @@
     <section class="container covid-form-container" dir="rtl">
         <h1 class="covid-center">إنشاء حساب مستخدم جديد</h1>
         @if(Auth::user()->account_type == 2)
-            <small class="text-danger">يمكنك إنشاء حسابات من نوع "مدرسة" فقط. لإنشاء حساب مشرف، تواصل مع إدارة البرنامج. معلومات المديرية ستؤخد تلقائيًا من معلومات حسابك.</small>
+            <small class="text-danger">يمكنك فقط إنشاء حسابات من نوع "مدرسة" في مديريتك. لإنشاء حساب مشرف، تواصل مع إدارة البرنامج. معلومات المديرية ستؤخد تلقائيًا من معلومات حسابك.</small>
         @endif
         @if(Auth::user()->account_type == 1)
             <small class="text-danger">يمكنك إنشاء حسابات من نوع "مشرف" فقط. لإنشاء حساب مدرسة تواصل مع أحد المشرفين</small>

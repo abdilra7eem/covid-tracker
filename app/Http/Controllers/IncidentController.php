@@ -64,7 +64,7 @@ class IncidentController extends Controller
             return view('incident.create');
         }
 
-        return redirect()->withError('يمكن فقط لحساب مدرسة إنشاء سجل حالة');
+        return redirect('/incident')->withError('يمكن فقط لحساب مدرسة إنشاء سجل حالة');
     }
 
     /**
@@ -271,7 +271,21 @@ class IncidentController extends Controller
      */
     public function destroy(Incident $incident)
     {
-        return 'incident destroy';
+        if (!Auth::user()){
+            abort(403, 'Not Authorized');
+        }
 
+        if(Auth::user()->id == $schoolClosure->user_id){
+            if($incident->deleted == false){
+                $schoolClosure->deleted = true;
+                $message = 'تم حذف سجل الحالة.';
+            } else {
+                $incident->deleted = false;
+                $message = 'تم استرجاع السجل المحذوف';
+            }
+            $incident->save();
+            return back()->withSuccess($message);
+        }
+        return back()->withError('يمكن فقط لحساب المدرسة ذات العلاقة حذف سجل الإغلاق');
     }
 }

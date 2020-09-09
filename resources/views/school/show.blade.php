@@ -3,6 +3,25 @@
 @section('content')
 
 <section class="container">
+    <h1>معلومات المدرسة</h1>
+    @if((Auth::user()->account_type == 1) || ( (Auth::user()->account_type == 2) && ($school->user->directorate_id == Auth::user()->directorate_id) ))
+        <form action="{{route('user.destroy', $school->user->id)}}" method="POST"
+            style="display:inline;">
+            @method('DELETE')
+            @csrf
+            @if($school->user->active == true)
+                <button type="submit" class="btn btn-secondary">تعطيل الحساب</button>
+            @else
+                <button type="submit" class="btn btn-primary">تفعيل الحساب</button>
+            @endif
+        </form>
+    @endif
+    @if(Auth::user()->account_type == 3)
+        <a href="/school/edit/{{$school->id}}" class="btn btn-warning">تعديل</a>
+        {{-- <a href="/school/delete/{{$school->id}}" class="btn btn-danger">حذف</a> --}}
+    @endif
+    <br/><br/>
+
     <table class="table table-hover text-right table-striped">
         <tr>
             <td scope="row">الرقم التسلسلي للحساب</td>
