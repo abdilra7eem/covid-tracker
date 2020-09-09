@@ -179,7 +179,10 @@ class SchoolClosureController extends Controller
         $closure->grade_section = $grade_section;
         $closure->closure_date = $request->closure_date;
         $closure->user_id = Auth::user()->id;
-        // $closure->affected_students = $affected_students;
+        $closure->affected_students = $affected_students;
+        if(isset($request->notes)){
+            $closure->notes = $request->notes;
+        }
 
         $closure->save();
         return redirect('/schoolClosure/'.$closure->id)->withSuccess('success', 'تم إنشاء سجل الإغلاق');

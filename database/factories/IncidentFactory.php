@@ -11,6 +11,7 @@ $factory->define(Incident::class, function (Faker $faker) {
         'person_name' => $faker->name,
         'male' => $faker->boolean(),
         'grade' => $faker->numberBetween(1, 14),
+        'grade_section' => $faker->numberBetween(1, 14),
         'user_id' => $faker->numberBetween(1, App\User::count()),
         'suspected_at' => $faker->randomElement([$faker->date, null]),
         'suspect_type' => $faker->numberBetween(1,3),

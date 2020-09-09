@@ -33,6 +33,10 @@
                 @endif
             </td>
         </tr>
+        <tr>
+            <td scope="row">ملاحظات</td>
+            <td>{{$closure->notes}}</td>
+        </tr>
     </table>
 </section>
 

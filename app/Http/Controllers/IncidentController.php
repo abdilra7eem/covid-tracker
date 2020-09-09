@@ -130,7 +130,7 @@ class IncidentController extends Controller
         $incident->user_id = Auth::user()->id;
         $incident->male = $male;
         $incident->grade = $grade;
-        // $incident->grade_section = $grade_section;
+        $incident->grade_section = $grade_section;
         $incident->person_name = $request->person_name;
         $incident->person_id = $request->person_id;
         $incident->person_phone_primary = $request->person_phone_primary;
@@ -148,9 +148,9 @@ class IncidentController extends Controller
 
 
         $incident->save();
-        return redirect('/incident')->with('success', 'Incident Created');
+        return redirect('/incident'.$incident->id)->with('success', 'Incident Created');
 
-        dd($incident);
+        // dd($incident);
         // return 'incident store';
     }
 

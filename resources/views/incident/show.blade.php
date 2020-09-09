@@ -46,6 +46,10 @@
                 <td scope="row">الصف</td>
                 <td>{{$incident->grade}}</td>
             </tr>
+            <tr>
+                <td scope="row">الشعبة</td>
+                <td>{{$incident->grade_section}}</td>
+            </tr>
         @endif
         @if(isset($incident->closed_at))
             <tr>

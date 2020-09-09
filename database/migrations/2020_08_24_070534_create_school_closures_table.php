@@ -24,6 +24,8 @@ class CreateSchoolClosuresTable extends Migration
             
             $table->tinyInteger('grade_section')->nullable();
             $table->smallInteger('affected_students')->unsigned()->nullable();
+            $table->text('notes')->nullable();
+
             $table->foreignId('user_id'); // foreign key from the users table
             $table->foreign('user_id')->references('id')->on('users');
         });

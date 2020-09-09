@@ -13,7 +13,11 @@ SchoolClosure Controller:
 Bugs: 
 	#- school controller line 27
 	- Account type in SchoolClosure
-	- grade section in (incident) & (closure)
+	# - grade section in (incident) & (closure)
+	# - notes in (incident) & (closure)
+	# - from save to show
+	# - closure	affected_students
+	
 	
 Accountability:
 	- last edited by (user_id), for items with multiple editors.

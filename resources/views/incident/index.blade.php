@@ -9,6 +9,7 @@
                 <th scope="col">الاسم</th>
                 <th scope="col">رقم الهاتف</th>
                 <th scope="col">الصف</th>
+                {{-- <th scope="col">الشعبة</th> --}}
                 <th scope="col">الجنس</th>
                 <th scope="col">المدرسة</th>
                 <th scope="col">الحالة</th>
@@ -60,6 +61,7 @@
                             {{$incident->grade}}
                         @endif
                     </td>
+                    {{-- <td>{{$incident->grade_section ?? ''}}</td> --}}
                     <td>@if($incident->male) ذكر @else أنثى @endif</td>
                     <td>{{isset($incident->user['name'])?$incident->user['name']:""}}</td>
                     <td>

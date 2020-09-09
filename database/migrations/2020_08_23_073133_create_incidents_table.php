@@ -21,6 +21,7 @@ class CreateIncidentsTable extends Migration
             $table->string('person_name');
             $table->boolean('male'); // true if male, false if female, optional
             $table->tinyinteger('grade'); // for students: 1 - 12, teacher: 13, manager: 14, directorate: 15
+            $table->tinyinteger('grade_section');
             $table->foreignId('user_id'); // foreign key from the users table
             $table->date('suspected_at')->nullable(); // dateTime can be used instead
             $table->tinyinteger('suspect_type')->nullable();
