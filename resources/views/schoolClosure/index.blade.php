@@ -33,8 +33,7 @@
                             @else صباحي @endif
                         </td>
                         <td>
-                            @if($school->grade == 14) كامل
-                            @elseif($school->grade == 13) جميع الصفوف
+                            @if($school->grade  > 12) كلي
                             @else جزئي
                             @endif
                         </td>

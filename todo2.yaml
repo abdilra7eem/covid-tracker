@@ -8,3 +8,12 @@ SchoolClosure Controller:
 		- directorate @admin
 		- school [@admin & @supervisor]
 		- close_type: admin, staff, partial
+		
+		
+Bugs: 
+	#- school controller line 27
+	- Account type in SchoolClosure
+	- grade section in (incident) & (closure)
+	
+Accountability:
+	- last edited by (user_id), for items with multiple editors.

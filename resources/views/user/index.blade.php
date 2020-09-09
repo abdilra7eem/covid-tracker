@@ -11,7 +11,7 @@
                 <th scope="col">الهاتف الرئيسي</th>
                 {{-- <th scope="col">الهاتف الثاني</th> --}}
                 <th scope="col">نوع الحساب</th>
-                <th scope="col">مفعل ✓</th>                
+                {{-- <th scope="col">مفعل ✓</th>                 --}}
             </tr>
             @foreach($users as $user)
                 <tr class="
@@ -30,11 +30,11 @@
                         @else غير معروف
                         @endif
                     </td>
-                    <td>
+                    {{-- <td>
                         @if($user->active == true) ✓
                         @else ✗
                         @endif
-                    </td>
+                    </td> --}}
             @endforeach 
         </table>
     </section>

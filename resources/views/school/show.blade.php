@@ -90,7 +90,7 @@
         </tr>
         <tr>
             <td scope="row">عدد الطلاب الكلي</td>
-            <td>{{$school->total_female_students + $school->total_female_students}}</td>
+            <td>{{$school->total_female_students + $school->total_male_students}}</td>
         </tr>
         <tr>
             <td scope="row">نوع المدرسة</td>

@@ -12,8 +12,9 @@
         <tr>
             <td scope="row">نوع الإغلاق</td>
             <td>
-                @if($closure->grade == 14) إغلاق كامل
-                @elseif($closure->grade == 13) إغلاق مع تواجد الإدارة
+                @if($closure->grade == 15) إغلاق كامل
+                @elseif($closure->grade == 14) إغلاق مع تواجد الإدارة
+                @elseif($closure->grade == 13) إغلاق مع تواجد الإدارة والمعلمين
                 @else إغلاق الصف رقم {{$closure->grade}} شعبة رقم {{$closure->grade_section}}
                 @endif
             </td>
@@ -41,7 +42,7 @@
     <table class="table table-hover text-right table-striped">
         <tr>
             <td scope="row">رقم ملف المدرسة</td>
-            <td>{{$info['user']->school->id}}</td>
+            <td>{{$info['school']->id}}</td>
         </tr>
         <tr>
             <td scope="row">الرقم الوطني</td>
@@ -67,8 +68,9 @@
             <td scope="row">الحالة</td>
             <td>
                 @if(!$current->isEmpty)
-                    @if($current->grade == 14) مغلقة بالكامل
-                    @elseif($current->grade == 13) مغلقة مع تواجد الإدارة
+                    @if($current->grade == 15) مغلقة بالكامل
+                    @elseif($current->grade == 14) مغلقة مع تواجد الإدارة
+                    @elseif($current->grade == 13) مغلقة مع تواجد الإدارة والمعلمين
                     @else مغلقة جزئيًا
                     @endif
                 @else دوام طبيعي
@@ -128,8 +130,7 @@
                 <th scope="col">رقم السجل</th>
                 <th scope="col">تاريخ الإغلاق</th>
                 <th scope="col">تاريخ إنهاء الإغلاق</th>
-                <th scope="col">الصف</th>
-                <th scope="col">الشعبة</th>
+                <th scope="col">معلومات الإغلاق</th>
                 <th scope="col">الحالة</th>
                 <th scope="col">المتأثرون بالإغلاق</th>
             </tr>
@@ -138,8 +139,13 @@
                     <td>{{$x->id}}</td>
                     <td>{{$x->closure_date}}</td>
                     <td>{{$x->reopening_date ?? ''}}</td>
-                    <td>{{$x->grade}}</td>
-                    <td>{{$x->grade_section}}</td>
+                    <td>
+                        @if($closure->grade == 15) إغلاق كامل
+                        @elseif($closure->grade == 14) إغلاق مع تواجد الإدارة
+                        @elseif($closure->grade == 13) إغلاق مع تواجد الإدارة والمعلمين
+                        @else إغلاق صف {{$closure->grade}} شعبة {{$closure->grade_section}}
+                        @endif
+                    </td>
                     <td>
                         @if($x->reopening_date != null) انتهى الإغلاق
                         @else الإغلاق مستمر
