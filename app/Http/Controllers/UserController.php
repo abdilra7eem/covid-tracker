@@ -37,11 +37,16 @@ class UserController extends Controller
             return redirect('/inactive');
         }
 
+        if((Auth::user()->account_type == 1) && ($request->input('type') == 'banned')){
+            $users = User::where('active', false)
+                ->paginate(25);
+        }
+
         $type = 'all';
         $directorate = (int) $request->input('directorate') ?? 0;
         if($request->input('type') == 'admins'){
             $type = 'admins';
-        } elseif($request->input('type') == 'supervisors'){
+        }elseif($request->input('type') == 'supervisors'){
             $type = 'supervisors';
         }
 
@@ -249,10 +254,10 @@ class UserController extends Controller
             $user = User::find($id);
             if($user->active == true){
                 $user->active = false;
-                $message = 'تم تعطيل الحساب ولن يتمكن من إنشاء أو تعديل أيّ بيانات';
+                $message = 'تم تعطيل الحساب ولن يتمكن من إنشاء أو تعديل أو عرض أيّ بيانات';
             } else {
                 $user->active = true;
-                $message = 'تم تفعيل الحساب وسيتمكن من إنشاء و تعديل البيانات';
+                $message = 'تم تفعيل الحساب وسيتمكن من إنشاء و تعديل  وعرض البيانات';
             }
             $user->last_editor = Auth::user()->id;
             $user->save();

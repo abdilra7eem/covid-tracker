@@ -42,6 +42,13 @@ class SchoolClosureController extends Controller
             return redirect('/inactive');
         }
 
+
+        if((Auth::user()->account_type == 1) && ($request->input('type') == 'deleted')){
+            $schools = SchoolClosure::where('deleted', true)
+                ->paginate(25);
+            return view('schoolClosure.index')->withShools($schools);
+        }
+
         $type = "all";
         if (Auth::user()->account_type == 1) {
             if($request->input("type") == "complete"){
@@ -258,14 +265,14 @@ class SchoolClosureController extends Controller
         // dd($schoolClosure->user["directorate_id"]);
         if(Auth::user()->account_type == 1) {
             $allowed = true;
-        }
-
-        if(Auth::user()->id == $schoolClosure->user_id){
+        }elseif($schoolClosure->deleted == true){
+            $allowed = false;
+        }elseif(Auth::user()->id == $schoolClosure->user_id){
             $allowed = true;
-        }
-
-        if((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $schoolClosure->user["directorate_id"])){
+        }elseif((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $schoolClosure->user["directorate_id"])){
             $allowed = true;
+        }else{
+            $allowed = false;
         }
 
         if($allowed == true) {

@@ -1,0 +1,19 @@
+Editing:
+	- Directorate: super-admin (user 1)
+	- Users:
+			email: 
+				supervisor & school: only admins
+				admins: super-admin (user 1)
+			name:
+				supervisor & school: only admins
+				admins: super-admin (user 1)
+			gov_id: super-admin (user 1)
+			phone: self + 1up
+			other details: self + 1up
+	- School: self
+	- Incident: 
+		- same user_id, non destructive
+		- super-admin (user 1)
+	- Closure:
+		- same user_id, non destructive
+		- super-admin (user 1)

@@ -40,6 +40,13 @@ class IncidentController extends Controller
             return redirect('/inactive');
         }
 
+
+        if((Auth::user()->account_type == 1) && ($request->input('type') == 'deleted')){
+            $directorates = Incident::where('deleted', true)
+                ->paginate(25);
+            return view('incident.index')->withIncidents($incidents);
+        }
+
         if (Auth::user()->account_type == 1) {
             $incidents = Incident::where('deleted', false)
                 ->with('user')
@@ -217,6 +224,8 @@ class IncidentController extends Controller
             //     "allowed" => $allowed,
             //     "user type" => 1
             // ]);
+        }elseif($incident->deleted == true){
+            $allowed = false;
         } elseif(Auth::user()->id == $incident->user_id){
             $allowed = true;
             // dd([

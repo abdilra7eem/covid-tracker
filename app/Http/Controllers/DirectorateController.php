@@ -38,6 +38,12 @@ class DirectorateController extends Controller
             return redirect('/inactive');
         }
 
+        if((Auth::user()->account_type == 1) && ($request->input('type') == 'deleted')){
+            $directorates = Directorate::where('deleted', true)
+                ->paginate(25);
+            return view('directorate.index')->withDirectorates($directorates);
+        }
+
         if(Auth::user()->account_type == 1 || Auth::user()->account_type == 2) {
             $directorates = Directorate::where('deleted', false)->get();
             return view('directorate.index')->withDirectorates($directorates);
@@ -128,6 +134,10 @@ class DirectorateController extends Controller
         if( (Auth::user()->account_type != 3) || 
             (Auth::user()->directorate_id == $directorate->id) )
         {            
+            if((Auth::user()->account_type != 1) && ($directorate->deleted == true)){
+                return redirect('/directorate')->withError('غير مصرح لك عرض ملف مديرية محذوفة');
+            }
+
             return view('directorate.show')->withDirectorate($directorate);
         } else {
             abort(403, 'Not Authorized');

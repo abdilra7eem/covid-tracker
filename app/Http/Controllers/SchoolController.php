@@ -213,8 +213,14 @@ class SchoolController extends Controller
         if(Auth::user()->id == $school->user_id){
             return view('school.show')->withSchool($school);
         }
+
+        $user = $school->user;
+
+        // if($user->active == false) {
+        //     return redirect('/school')->withError('غير مصرح لك عرض ملف مدرسة حسابها معطل');
+        // }
         
-        if((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $school->user->directorate_id)){
+        if((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $user->directorate_id)){
             return view('school.show')->withSchool($school);
         }
 
