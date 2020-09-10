@@ -1,5 +1,5 @@
 Incident Controller:
-	- show: clean up
+	# - show: clean up
 	- index: Filters for
 		- directorate @admin
 		- school [@admin & @supervisor]
@@ -21,7 +21,7 @@ Features:
 		- hide/show buttons on 'show'
 
 Security:
-	- Should supervisors activate/deactivate school user accounts?
+	- Should supervisors activate/deactivate school user accounts? YES!
 	- double check user edit permissions
 
 Bugs: 

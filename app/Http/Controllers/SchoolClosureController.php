@@ -80,25 +80,8 @@ class SchoolClosureController extends Controller
                     ->orderBy("school_closures.grade", "DESC")
                     ->with("user")->with("user.school")
                     ->get()->unique("user_id");
-                // $schools = SchoolClosure::where("grade", ">", 12)
-                //     ->where("reopening_date", null)
-                //     ->orderBy("grade", "DESC")
-                //     ->join("users", "users.id", "school_closures.user_id")
-                //     // ->with(["user" => function($x){
-                //     //     $x->where("directorate_id",  Auth::user()->directorate_id);
-                //     // }])
-                //     ->where("directorate_id", Auth::user()->directorate_id)
-                //     ->with("user.school")
-                //     ->get()->unique("user_id");
                 $type = "complete";
             } else {
-                // $schools = User::where("directorate_id", Auth::user()->directorate_id)
-                //     ->join("school_closures", "school_closures.user_id", "users.id")
-                //     ->select("users.id as user_id", "users.*", "school_closures.id as closure_id", "school_closures.*")
-                //     ->where("school_closures.reopening_date", null)
-                //     ->orderBy("school_closures.grade", "DESC")
-                //     ->with("school")->with("schoolClosure")
-                //     ->get()->unique("user_id");
                 $schools = SchoolClosure::where('deleted', false)
                     ->where("school_closures.reopening_date", null)
                     ->join("users", "school_closures.user_id", "users.id")
@@ -120,8 +103,6 @@ class SchoolClosureController extends Controller
                 ->orderBy("school_closures.grade", "DESC")
                 ->get()->unique("user_id");
         }
-
-        // dd($schools);
         return view("schoolClosure.index")->withSchools($schools)->withType($type);
     }
 

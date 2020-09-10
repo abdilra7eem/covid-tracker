@@ -1,6 +1,7 @@
 Editing:
 	- Directorate: super-admin (user 1)
 	- Users:
+			[ not inactive! ]
 			email: 
 				supervisor & school: only admins
 				admins: super-admin (user 1)
@@ -12,8 +13,10 @@ Editing:
 			other details: self + 1up
 	- School: self
 	- Incident: 
+		[ not deleted! ]
 		- same user_id, non destructive
 		- super-admin (user 1)
 	- Closure:
+		[ not deleted! ]
 		- same user_id, non destructive
 		- super-admin (user 1)

@@ -220,29 +220,14 @@ class IncidentController extends Controller
 
         if(Auth::user()->account_type == 1){
             $allowed = true;
-            // dd([
-            //     "allowed" => $allowed,
-            //     "user type" => 1
-            // ]);
         }elseif($incident->deleted == true){
             $allowed = false;
         } elseif(Auth::user()->id == $incident->user_id){
             $allowed = true;
-            // dd([
-            //     "allowed" => $allowed,
-            //     "user type" => 3,
-            //     "user_id" => $incident->user_id,
-            // ]);
         } elseif((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $incident->user->directorate_id)){
             $allowed = true;
-            // dd([
-            //     "allowed" => $allowed,
-            //     "user type" => 2,
-            //     "directorate_id" => $incident->user->directorate_id,
-            // ]);
         } else {
             $allowed = false;
-            // dd('Not Authorized');
         }
 
         if($allowed == true) {
