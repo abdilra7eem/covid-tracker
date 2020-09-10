@@ -32,6 +32,10 @@ class HomeController extends Controller
         if (!Auth::user()){
             return redirect('/login');
         }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
         
         if(Auth::user()->account_type == 1){
             return redirect('/user');
@@ -42,5 +46,16 @@ class HomeController extends Controller
         } else {
             abort(403, 'Unauthorized action.');
         }
+    }
+
+    public function inactive(){
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
+        if (Auth::user()->active == true){
+            return redirect('/');
+        }
+        return view('inactive');
     }
 }

@@ -24,6 +24,10 @@ class SchoolClosureController extends Controller
         if (!Auth::user()){
             return redirect('/login');
         }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
         
         $this->middleware('auth');
     }
@@ -32,6 +36,10 @@ class SchoolClosureController extends Controller
     {
         if (!Auth::user()){
             return redirect('/login');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
         }
 
         $type = "all";
@@ -115,6 +123,10 @@ class SchoolClosureController extends Controller
         if (!Auth::user()){
             return redirect('/login');
         }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
         
         if(Auth::user()->account_type == 3) {
             $closure = SchoolClosure::where('user_id', Auth::user()->id)
@@ -151,6 +163,10 @@ class SchoolClosureController extends Controller
     {
         if (!Auth::user()){
             return redirect('/login');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
         }
 
         if(Auth::user()->id != 3){
@@ -229,6 +245,10 @@ class SchoolClosureController extends Controller
             return redirect('/login');
         }
 
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+
         $allowed = false;
         // dd($schoolClosure->user["directorate_id"]);
         if(Auth::user()->account_type == 1) {
@@ -281,6 +301,10 @@ class SchoolClosureController extends Controller
             return redirect('/login');
         }
 
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+
         //Check if directorate exists before deleting
         if (!isset($schoolClosure)){
             return redirect('/schoolClosure')->with('error', 'Not Found');
@@ -318,6 +342,10 @@ class SchoolClosureController extends Controller
             abort(403, 'Not Authorized');
         }
 
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+        
         if(Auth::user()->id == $schoolClosure->user_id){
             if($schoolClosure->deleted == false){
                 $schoolClosure->deleted = true;

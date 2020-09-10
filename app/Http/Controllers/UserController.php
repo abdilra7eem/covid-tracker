@@ -20,7 +20,10 @@ class UserController extends Controller
         if (!Auth::user()){
             return redirect('/login');
         }
-        
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
         $this->middleware('auth');
     }
 
@@ -28,6 +31,10 @@ class UserController extends Controller
     {
         if (!Auth::user()){
             return redirect('/login');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
         }
 
         $type = 'all';
@@ -92,6 +99,10 @@ class UserController extends Controller
             return redirect('/login');
         }
 
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+
         if((Auth::user()->account_type == 1) || (Auth::user()->account_type == 2)) {
             return view('user.create');
         }
@@ -109,6 +120,10 @@ class UserController extends Controller
     {
         if (!Auth::user()){
             return redirect('/login');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
         }
 
         if((Auth::user()->account_type == 1) || (Auth::user()->account_type == 2)){
@@ -157,6 +172,10 @@ class UserController extends Controller
     {
         if (!Auth::user()){
             return redirect('/login');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
         }
         
         $user = User::where('id', $id)->first();
@@ -216,6 +235,10 @@ class UserController extends Controller
     {
         if (!Auth::user()){
             abort(403, 'Not Authorized');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
         }
 
         if(Auth::user()->account_type == 3) {

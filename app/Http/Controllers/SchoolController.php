@@ -23,6 +23,10 @@ class SchoolController extends Controller
         if (!Auth::user()){
             return redirect('/login');
         }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
         
         $this->middleware('auth');
     }
@@ -31,6 +35,10 @@ class SchoolController extends Controller
     {
         if (!Auth::user()){
             return redirect('/login');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
         }
 
         $directorate = 0;
@@ -74,6 +82,10 @@ class SchoolController extends Controller
             return redirect('/login');
         }
 
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+
         if(Auth::user()->account_type == 3) {
             $school = School::where('user_id', Auth::user()->id)->first();
             if($school == null){
@@ -96,6 +108,10 @@ class SchoolController extends Controller
     {   
         if (!Auth::user()){
             return redirect('/login');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
         }
 
         if(Auth::user()->account_type != 3) {
@@ -185,6 +201,10 @@ class SchoolController extends Controller
         if (!Auth::user()){
             return redirect('/login');
         }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
         
         if(Auth::user()->account_type == 1){
             return view('school.show')->withSchool($school);
@@ -209,6 +229,15 @@ class SchoolController extends Controller
      */
     public function edit(School $school)
     {
+        
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+
         //Check if directorate exists before deleting
         if (!isset($school)){
             return redirect('/school')->with('error', 'Not Found');
@@ -242,6 +271,15 @@ class SchoolController extends Controller
      */
     public function destroy(School $school)
     {
+                
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+        
         return back()->withError('لا يمكن حذف معلومات مدرسة، يمكنك فقط تعديلها.');
     }
 }

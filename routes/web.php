@@ -27,7 +27,7 @@ Route::resource('/user', 'UserController')->middleware('throttle:60,1');
 Route::resource('/incident', 'IncidentController')->middleware('throttle:60,1');
 Route::resource('/school', 'SchoolController')->middleware('throttle:60,1');
 Route::resource('/schoolClosure', 'SchoolClosureController')->middleware('throttle:60,1');
-
+Route::get('/inactive', 'HomeController@inactive');
 
 
 

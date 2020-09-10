@@ -22,6 +22,10 @@ class IncidentController extends Controller
         if (!Auth::user()){
             return redirect('/login');
         }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
         
         $this->middleware('auth');
     }
@@ -32,6 +36,10 @@ class IncidentController extends Controller
             return redirect('/login');
         }
         
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+
         if (Auth::user()->account_type == 1) {
             $incidents = Incident::with('user')
                 ->inRandomOrder()->paginate(25);
@@ -59,6 +67,10 @@ class IncidentController extends Controller
         if (!Auth::user()){
             return redirect('/login');
         }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
         
         if(Auth::user()->account_type == 3) {
             return view('incident.create');
@@ -77,6 +89,10 @@ class IncidentController extends Controller
     {
         if (!Auth::user()){
             return redirect('/login');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
         }
         
         if(Auth::user()->account_type != 3) {
@@ -185,6 +201,11 @@ class IncidentController extends Controller
             return redirect('/login');
         }
         
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+
         $allowed = false;
 
         if(Auth::user()->account_type == 1){
@@ -237,6 +258,10 @@ class IncidentController extends Controller
             return redirect('/login');
         }
 
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+
         //Check if directorate exists before deleting
         if (!isset($incident)){
             return redirect('/incident')->with('error', 'Not Found');
@@ -275,6 +300,10 @@ class IncidentController extends Controller
             abort(403, 'Not Authorized');
         }
 
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+        
         if(Auth::user()->id == $schoolClosure->user_id){
             if($incident->deleted == false){
                 $schoolClosure->deleted = true;

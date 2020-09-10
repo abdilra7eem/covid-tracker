@@ -20,6 +20,10 @@ class DirectorateController extends Controller
         if (!Auth::user()){
             return redirect('/login');
         }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
         
         $this->middleware('auth');
     }
@@ -28,6 +32,10 @@ class DirectorateController extends Controller
     {
         if (!Auth::user()){
             return redirect('/login');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
         }
 
         if(Auth::user()->account_type == 1 || Auth::user()->account_type == 2) {
@@ -48,6 +56,10 @@ class DirectorateController extends Controller
             return redirect('/login');
         }
 
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+
         if(Auth::user()->account_type == 1) {
             return view('directorate.create');
         }
@@ -65,6 +77,10 @@ class DirectorateController extends Controller
     {
         if (!Auth::user()){
             return redirect('/login');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
         }
 
         if(Auth::user()->account_type == 1){
@@ -105,6 +121,10 @@ class DirectorateController extends Controller
             return redirect('/login');
         }
 
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+
         if( (Auth::user()->account_type != 3) || 
             (Auth::user()->directorate_id == $directorate->id) )
         {            
@@ -124,6 +144,10 @@ class DirectorateController extends Controller
     {
         if (!Auth::user()){
             return redirect('/login');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
         }
         
         //Check if directorate exists before deleting
@@ -161,6 +185,10 @@ class DirectorateController extends Controller
     {
         if (!Auth::user()){
             abort(403, 'Not Authorized');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
         }
 
         if(Auth::user()->account_type == 1) {
