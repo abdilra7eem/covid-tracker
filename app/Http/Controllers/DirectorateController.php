@@ -39,7 +39,7 @@ class DirectorateController extends Controller
         }
 
         if(Auth::user()->account_type == 1 || Auth::user()->account_type == 2) {
-            $directorates = Directorate::all();
+            $directorates = Directorate::where('deleted', false)->get();
             return view('directorate.index')->withDirectorates($directorates);
         }
         return redirect('/directorate/' . Auth::user()->directorate_id);
@@ -199,6 +199,7 @@ class DirectorateController extends Controller
                 $directorate->deleted = false;
                 $message = 'تم استرجاع السجل المحذوف';
             }
+            $directorate->last_editor = Auth::user()->id;
             $directorate->save();
             return back()->withSuccess($message);
         } else {

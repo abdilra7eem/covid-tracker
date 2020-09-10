@@ -29,6 +29,7 @@ class CreateSchoolClosuresTable extends Migration
             $table->foreignId('user_id'); // foreign key from the users table
             $table->foreign('user_id')->references('id')->on('users');
 
+            $table->mediumInteger('last_editor')->nullable()->default(null);
             $table->boolean('deleted')->default(false);
         });
     }

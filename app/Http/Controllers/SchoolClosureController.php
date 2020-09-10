@@ -45,14 +45,16 @@ class SchoolClosureController extends Controller
         $type = "all";
         if (Auth::user()->account_type == 1) {
             if($request->input("type") == "complete"){
-                $schools = SchoolClosure::where("grade", ">", 12)
+                $schools = SchoolClosure::where('deleted', false)
+                    ->where("grade", ">", 12)
                     ->where("reopening_date", null)
                     ->orderBy("grade", "DESC")
                     ->with("user")->with("user.school")
                     ->get()->unique("user_id");
                 $type = "complete";
             } else {
-                $schools = SchoolClosure::where("reopening_date", null)
+                $schools = SchoolClosure::where('deleted', false)
+                    ->where("reopening_date", null)
                     ->orderBy("grade", "DESC")
                     ->with("user")->with("user.school")
                     ->get()->unique("user_id");
@@ -62,7 +64,8 @@ class SchoolClosureController extends Controller
             }
         } elseif(Auth::user()->account_type == 2) {
             if($request->input("type") == "complete"){
-                $schools = SchoolClosure::where("grade", ">", 12)
+                $schools = SchoolClosure::where('deleted', false)
+                    ->where("grade", ">", 12)
                     ->where("school_closures.reopening_date", null)
                     ->join("users", "school_closures.user_id", "users.id")
                     ->where("users.directorate_id", Auth::user()->directorate_id)
@@ -89,7 +92,8 @@ class SchoolClosureController extends Controller
                 //     ->orderBy("school_closures.grade", "DESC")
                 //     ->with("school")->with("schoolClosure")
                 //     ->get()->unique("user_id");
-                $schools = SchoolClosure::where("school_closures.reopening_date", null)
+                $schools = SchoolClosure::where('deleted', false)
+                    ->where("school_closures.reopening_date", null)
                     ->join("users", "school_closures.user_id", "users.id")
                     ->where("users.directorate_id", Auth::user()->directorate_id)
                     ->select("users.id as user_id", "users.*", "school_closures.id as closure_id", "school_closures.*")
@@ -101,7 +105,8 @@ class SchoolClosureController extends Controller
                 }
             }
         } else {
-            $schools = SchoolClosure::where("reopening_date", null)
+            $schools = SchoolClosure::where('deleted', false)
+                ->where("reopening_date", null)
                 ->where("user_id", Auth::user()->id)
                 ->with("user")->with("user.school")
                 ->with("user.school")
@@ -227,7 +232,7 @@ class SchoolClosureController extends Controller
         if(isset($request->notes)){
             $closure->notes = $request->notes;
         }
-
+        $closure->last_editor = Auth::user()->id; 
         $closure->save();
         return redirect('/schoolClosure/'.$closure->id)->withSuccess('success', 'تم إنشاء سجل الإغلاق');
 
@@ -346,17 +351,44 @@ class SchoolClosureController extends Controller
             return redirect('/inactive');
         }
         
-        if(Auth::user()->id == $schoolClosure->user_id){
-            if($schoolClosure->deleted == false){
-                $schoolClosure->deleted = true;
-                $message = 'تم حذف سجل الإغلاق.';
-            } else {
-                $schoolClosure->deleted = false;
-                $message = 'تم استرجاع السجل المحذوف';
-            }
-            $schoolClosure->save();
-            return back()->withSuccess($message);
+        if(Auth::user()->account_type == 3){
+            return back()->withError('لحذف السجل تواصل مع مشرف من قسم متابعة الميدان');
         }
-        return back()->withError('يمكن فقط لحساب المدرسة ذات العلاقة حذف سجل الإغلاق');
+
+        if($schoolClosure->deleted == false){
+            if((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $schoolClosure->user->directorate_id)){
+                $schoolClosure->deleted = true;
+                $schoolClosure->last_editor = Auth::user()->id; 
+                $schoolClosure->save();
+                $message = 'تم حذف سجل الإغلاق.';
+                return back()->withSuccess($message);
+            } else {
+                return back()->withError('لا يمكنك حذف هذا السجل. لحذفه، تواصل مع مشرف قسم متابعة الميدان في المديرية التي يتبع لها هذا السجل.');
+            }
+        } else {
+            if(Auth::user()->account_type == 1){
+                $schoolClosure->deleted = false;
+                $schoolClosure->last_editor = Auth::user()->id; 
+                $schoolClosure->save();
+                $message = 'تم استرجاع السجل المحذوف';
+                return back()->withSuccess($message);
+            }else{
+                return back()->withError('لا يمكنك استرجاع هذا السجل. لاسترجاعه، تواصل مع إدارة البرنامج.');
+            }
+        }
+        abort('Not Authorized');
+
+        // if(Auth::user()->id == $schoolClosure->user_id){
+        //     if($schoolClosure->deleted == false){
+        //         $schoolClosure->deleted = true;
+        //         $message = 'تم حذف سجل الإغلاق.';
+        //     } else {
+        //         $schoolClosure->deleted = false;
+        //         $message = 'تم استرجاع السجل المحذوف';
+        //     }
+        //     $schoolClosure->save();
+        //     return back()->withSuccess($message);
+        // }
+        // return back()->withError('يمكن فقط لحساب المدرسة ذات العلاقة حذف سجل الإغلاق');
     }
 }

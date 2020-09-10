@@ -10,12 +10,22 @@ SchoolClosure Controller:
 		- close_type: admin, staff, partial
 		
 Features:
-	- handle deletes
-	- filter deleted in indexes
+	#- handle deletes
+	#- filter deleted from indexes
+	- deleted index filter for admins
+	- block access to deleted (incident, closure, directorate) except for admins
+	- user activate/deactivate:
+		# - handle inactive users
+		- permissions
+		- ACL to show
+		- hide/show buttons on 'show'
 
+Security:
+	- double check user edit permissions
 
 Bugs: 
 	- abort(403) to Soft-error messages with redirect
 	
 Accountability:
-	- soft delete: all
+	#- soft delete: all
+	#- last_editor field: all

@@ -32,7 +32,7 @@ class CreateUsersTable extends Migration
             $table->boolean('active')->default(true)->nullable(); // false: locked account; true: active account;
             
             $table->timestamps();
-            $table->mediumInteger('last_editor')->nullable();
+            $table->mediumInteger('last_editor')->nullable()->default(null);
 
             $table->foreignId('directorate_id'); // foreign key from the directorates table
             $table->foreign('directorate_id')->references('id')->on('directorates');

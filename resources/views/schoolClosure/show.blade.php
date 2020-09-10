@@ -4,23 +4,30 @@
 
 <section class="container">
     <h1>سجل الإغلاق</h1>
-    @if($incident->deleted == true)
+    @if($closure->deleted == true)
         <p class="text-danger">هذا السجل محذوف ولن يظهر في أيّ من الإحصائيات أو الجداول.</p>
+        @if(Auth::user()->account_type == 1)
+            <form action="{{route('schoolClosure.destroy', $closure->id)}}" method="POST"
+                style="display:inline;">
+                @method('DELETE')
+                @csrf
+                <button type="submit" class="btn btn-primary">استرجاع</button>
+            </form>
+        @endif
     @endif
-    @if(Auth::user()->account_type == 3)
-        <a href="/schoolClosure/edit/{{$closure->id}}" class="btn btn-warning">تعديل</a>
+    @if(Auth::user->id == $closure->user_id)
+        <a href="/schoolClosure/edit/{{$closure->id}}" class="btn btn-warning">تحديث السجل</a>
+    @endif
+    @if((Auth::user()->account_type == 2) && ($closure->deleted == false) && ($closure->user->directorate_id == Auth::user()->directorate_id))
         <form action="{{route('schoolClosure.destroy', $closure->id)}}" method="POST"
             style="display:inline;">
             @method('DELETE')
             @csrf
-            <button type="submit" class="btn 
-                @if($closure->deleted == false) btn-danger">حذف 
-                @else btn-primary">استعادة 
-                @endif
-            </button>
+            <button type="submit" class="btn btn-danger">حذف</button>
         </form>
-        <br/><br/>
     @endif
+    <br/><br/>
+
     <table class="table table-hover text-right table-striped">
         <tr>
             <td scope="row">رقم سجل الإغلاق</td>

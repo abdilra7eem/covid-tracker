@@ -40,7 +40,7 @@ class CreateSchoolsTable extends Migration
             // used to calculate the building (year of construction) and (how old);
 
             $table->string('head_of_school'); // name of the head of staff (manager)
-
+            
             $table->foreign('user_id')->references('id')->on('users');
         });
     }

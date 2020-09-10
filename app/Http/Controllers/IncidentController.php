@@ -41,14 +41,17 @@ class IncidentController extends Controller
         }
 
         if (Auth::user()->account_type == 1) {
-            $incidents = Incident::with('user')
+            $incidents = Incident::where('deleted', false)
+                ->with('user')
                 ->inRandomOrder()->paginate(25);
         } elseif (Auth::user()->account_type == 2) {
-            $incidents = User::where('directorate_id', Auth::user()->directorate_id)
+            $incidents = User::where('deleted', false)
+                ->where('directorate_id', Auth::user()->directorate_id)
                 ->join('incidents', 'users.id', 'incidents.user_id')
                 ->inRandomOrder()->paginate(25);
         } elseif (Auth::user()->account_type == 3) {
-            $incidents = Incident::where('user_id', Auth::user()->id)
+            $incidents = Incident::where('deleted', false)
+                ->where('user_id', Auth::user()->id)
                 ->with('user')
                 ->inRandomOrder()->paginate(25);
         } else {
@@ -180,7 +183,7 @@ class IncidentController extends Controller
         }
 
         $incident->notes = $request->notes;
-
+        $incident->last_editor = Auth::user()->id; 
 
         $incident->save();
         return redirect('/incident'.$incident->id)->with('success', 'Incident Created');
@@ -297,24 +300,38 @@ class IncidentController extends Controller
     public function destroy(Incident $incident)
     {
         if (!Auth::user()){
-            abort(403, 'Not Authorized');
+            return redirect('/login');
         }
 
         if (Auth::user()->active == false){
             return redirect('/inactive');
         }
-        
-        if(Auth::user()->id == $schoolClosure->user_id){
-            if($incident->deleted == false){
-                $schoolClosure->deleted = true;
-                $message = 'تم حذف سجل الحالة.';
-            } else {
-                $incident->deleted = false;
-                $message = 'تم استرجاع السجل المحذوف';
-            }
-            $incident->save();
-            return back()->withSuccess($message);
+
+        if(Auth::user()->account_type == 3){
+            return back()->withError('لحذف السجل تواصل مع مشرف من قسم متابعة الميدان');
         }
-        return back()->withError('يمكن فقط لحساب المدرسة ذات العلاقة حذف سجل الإغلاق');
+
+        if($incident->deleted == false){
+            if((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $incident->user->directorate_id)){
+                $incident->deleted = true;
+                $incident->last_editor = Auth::user()->id; 
+                $incident->save();
+                $message = 'تم حذف سجل الحالة.';
+                return back()->withSuccess($message);
+            } else {
+                return back()->withError('لا يمكنك حذف هذا السجل. لحذفه، تواصل مع مشرف قسم متابعة الميدان في المديرية التي يتبع لها هذا السجل.');
+            }
+        } else {
+            if(Auth::user()->account_type == 1){
+                $incident->deleted = false;
+                $incident->last_editor = Auth::user()->id; 
+                $incident->save();
+                $message = 'تم استرجاع السجل المحذوف';
+                return back()->withSuccess($message);
+            }else{
+                return back()->withError('لا يمكنك استرجاع هذا السجل. لاسترجاعه، تواصل مع إدارة البرنامج.');
+            }
+        }
+        abort('Not Authorized');
     }
 }

@@ -245,7 +245,7 @@ class UserController extends Controller
             abort(403, 'Not Authorized');
         }
 
-        if((Auth::user()->account_type == 1) || ((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $user->directorate_id)) ){
+        if( (Auth::user()->id == 1) || ((Auth::user()->account_type == 1) && ($user->account_type != 1)) || ((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $user->directorate_id) && ($user->account_type != 2)) ){
             $user = User::find($id);
             if($user->active == true){
                 $user->active = false;
@@ -254,6 +254,7 @@ class UserController extends Controller
                 $user->active = true;
                 $message = 'تم تفعيل الحساب وسيتمكن من إنشاء و تعديل البيانات';
             }
+            $user->last_editor = Auth::user()->id;
             $user->save();
             return back()->withSuccess($message);
         }
