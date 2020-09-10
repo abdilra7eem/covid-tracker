@@ -14,20 +14,20 @@ Features:
 	#- filter deleted from indexes
 	#- "deleted" index filter for admins
 	#- block access to deleted (incident, closure, directorate) except for admins
-	- user activate/deactivate:
-		# - handle inactive users
-		- permissions
-		- ACL to show
-		- hide/show buttons on 'show'
+	#- user activate/deactivate:
+		#- handle inactive users
+		#- permissions
+		#- ACL to show
+		#- hide/show buttons on 'show'
 
 Security:
-	- Should supervisors activate/deactivate school user accounts? YES!
-	- double check user edit permissions
+	# - Should supervisors activate/deactivate school user accounts? YES!
+	- Later: double check user edit permissions
 
 Bugs: 
 	- abort(403) to Soft-error messages with redirect
 	
 Accountability:
-	- last_editor in "show" for admins
+	# - last_editor in "show" for admins
 
 Editing: according to editin-permissions.yaml

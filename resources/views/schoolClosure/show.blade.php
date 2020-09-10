@@ -29,6 +29,12 @@
     <br/><br/>
 
     <table class="table table-hover text-right table-striped">
+        @if((Auth::user()->account_type == 1) && isset($schoolClosure->last_editor))
+            <tr class="text-danger">
+                <td scope="row">أخر تعديل بوساطة</td>
+                <td>حساب رقم {{$schoolClosure->last_editor}}</td>
+            </tr>
+        @endif
         <tr>
             <td scope="row">رقم سجل الإغلاق</td>
             <td>{{$closure->id}}</td>

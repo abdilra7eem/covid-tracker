@@ -31,6 +31,12 @@
     <br/><br/>
 
     <table class="table table-hover text-right table-striped">
+        @if((Auth::user()->account_type == 1) && isset($incident->last_editor))
+            <tr class="text-danger">
+                <td scope="row">أخر تعديل بوساطة</td>
+                <td>حساب رقم {{$incident->last_editor}}</td>
+            </tr>
+        @endif
         <tr>
             <td scope="row">رقم سجل الحالة</td>
             <td>{{$incident->id}}</td>

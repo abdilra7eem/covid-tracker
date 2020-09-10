@@ -19,6 +19,12 @@
     @endif
 
     <table class="table table-hover text-right table-striped">
+        @if((Auth::user()->account_type == 1) && isset($directorate->last_editor))
+            <tr class="text-danger">
+                <td scope="row">أخر تعديل بوساطة</td>
+                <td>حساب رقم {{$directorate->last_editor}}</td>
+            </tr>
+        @endif
         <tr>
             <td scope="row">المعرف الفريد</td>
             <td>{{$directorate->name}}</td>

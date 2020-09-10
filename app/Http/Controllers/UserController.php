@@ -239,6 +239,10 @@ class UserController extends Controller
             abort(403, 'Not Authorized');
         }
 
+        if($id == 1){
+            abort(403, 'Can not deactivate the super-admin');
+        }
+
         if (Auth::user()->active == false){
             return redirect('/inactive');
         }

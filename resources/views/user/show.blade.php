@@ -7,22 +7,29 @@
     @if($user->active == false)
         <p class="text-danger">هذا الحساب معطل، ولن يتمكن من عمل أيّ تعديلات على أيّ من السجلات.</p>
     @endif
-    @if((Auth::user()->account_type == 1) || ( (Auth::user()->account_type == 2) && ($user->directorate_id == Auth::user()->directorate_id) ))
-        <form action="{{route('user.destroy', $user->id)}}" method="POST"
-            style="display:inline;">
-            @method('DELETE')
-            @csrf
-            @if($user->active == true)
-                <button type="submit" class="btn btn-secondary">تعطيل الحساب</button>
-            @else
-                <button type="submit" class="btn btn-primary">تفعيل الحساب</button>
-            @endif
-        </form>
-        <a href="/user/edit/{{$user->id}}" class="btn btn-warning">تعديل</a>
-        <br/><br/>
+    @if ($user->id != 1)
+        @if((Auth::user()->id == 1) || (($user->account_type != 1) && (Auth::user()->account_type == 1)) || ( (Auth::user()->account_type == 2) && ($user->account_type != 2) && ($user->directorate_id == Auth::user()->directorate_id)))
+            <form action="{{route('user.destroy', $user->id)}}" method="POST"
+                style="display:inline;">
+                @method('DELETE')
+                @csrf
+                @if($user->active == true)
+                    <button type="submit" class="btn btn-secondary">تعطيل الحساب</button>
+                @else
+                    <button type="submit" class="btn btn-primary">تفعيل الحساب</button>
+                @endif
+            </form>
+            <a href="/user/edit/{{$user->id}}" class="btn btn-warning">تعديل</a>
+            <br/><br/>
+        @endif
     @endif
     <table class="table table-hover text-right table-striped">
-        {{-- {{dd($user)}} --}}
+        @if((Auth::user()->account_type == 1) && isset($user->last_editor))
+            <tr class="text-danger">
+                <td scope="row">أخر تعديل بوساطة</td>
+                <td>حساب رقم {{$user->last_editor}}</td>
+            </tr>
+        @endif
         <tr>
             <td scope="row">المعرف الفريد</td>
             <td>{{$user->id}}</td>
