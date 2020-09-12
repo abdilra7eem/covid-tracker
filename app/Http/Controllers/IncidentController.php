@@ -189,7 +189,7 @@ class IncidentController extends Controller
             $incident->confirmed_at = $request->date;
         }
 
-        $incident->notes = $request->notes;
+        $incident->notes = strip_tags($request->notes);
         $incident->last_editor = Auth::user()->id; 
 
         $incident->save();

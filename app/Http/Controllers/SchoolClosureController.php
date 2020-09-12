@@ -218,7 +218,7 @@ class SchoolClosureController extends Controller
         $closure->user_id = Auth::user()->id;
         $closure->affected_students = $affected_students;
         if(isset($request->notes)){
-            $closure->notes = $request->notes;
+            $closure->notes = strip_tags($request->notes);
         }
         $closure->last_editor = Auth::user()->id; 
         $closure->save();

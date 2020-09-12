@@ -1,5 +1,4 @@
 Incident Controller:
-	# - show: clean up
 	- index: Filters for
 		- directorate @admin
 		- school [@admin & @supervisor]
@@ -10,39 +9,23 @@ SchoolClosure Controller:
 		- close_type: admin, staff, partial
 		
 Features:
-	#- handle deletes
-	#- filter deleted from indexes
-	#- "deleted" index filter for admins
-	#- block access to deleted (incident, closure, directorate) except for admins
-	#- user activate/deactivate:
-		#- handle inactive users
-		#- permissions
-		#- ACL to show
-		#- hide/show buttons on 'show'
 	- Later: link on "phone_number" & "email"
 
 Security:
-	# - Should supervisors activate/deactivate school user accounts? YES!
 	- Later: double check user edit permissions
 
 Bugs: 
 	- abort(403) to Soft-error messages with redirect
-	# - broken edit link: {thing}/edit/{id} should be {thing}/{id}/edit
-	- validation:
-		#- email: 
-			#- accept capital letters
-			#- change backend validator to use 'email' rule instead of regex
-		# - phone number: 
-			# - allow "x" for extensions & " " (spacebar) in user & directorate primary_phone
-			# - change max length to 18 in user & directorate primary_phone
-			# - more permissive spacebar & length for user secondary_phone, and incident phones
-		# - directorate->name: accept capital letters & numbers
+	- delete is a toggle; multiple calls could result in undesireable effect. Should have a status.
 	- display:
 		- "dir=ltr" attribute for phone numbers
+	- on user.update validation for uniqueness:
+		- it fails if item not changed;
+		- fix: validate only if changed;
+		- check for similar bugs elsewhere
 		
 	
 Accountability:
-	# - last_editor in "show" for admins
 	- last_editor_ip: migration, factory, show (for admins), create & update save.
 
 Editing: according to editin-permissions.yaml

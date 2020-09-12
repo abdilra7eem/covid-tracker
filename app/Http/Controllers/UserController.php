@@ -146,8 +146,8 @@ class UserController extends Controller
             $request->validate([
                 'name' => ['bail', 'required','min:10','max:50'],
                 'email' => ['bail', 'required','min:10','max:50', 'email', 'unique:users'],
-                'phone_primary' => ['bail', 'required', 'min:9','max:18', 'regex:/^0[0-9()-x+ ]+$/'],
-                'phone_secondary' => ['bail', 'max:13', 'regex:/^0[0-9()- ]+$/'],
+                'phone_primary' => ['bail', 'required', 'min:9','max:18', 'regex:/^0[0-9\-x\.]+$/'],
+                'phone_secondary' => ['bail', 'max:13', 'regex:/^0[0-9\-x\.]+$/'],
                 'gov_id' => ['bail', 'required', 'min:9','max:10', 'regex:/^[0-9]+$/', 'unique:users'],
             ]);
 
@@ -221,7 +221,40 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+        
+        // Check if user exists before editing
+        $user = User::where('id', $id)->first();
+
+        if ($user == null){
+            return redirect('/user')->with('error', 'هذا الحساب غير موجود');
+        }
+
+        if($user->id == Auth::user()->id){
+            return view('user.edit')->withUser($user);
+        }elseif($user->account_type == 1){
+            if(Auth::user()->id == 1){
+                return view('user.edit')->withUser($user);
+            } else {
+                return back()->withError('غير مصرح لك بتعديل معلومات هذا الحساب.');
+            }
+        }elseif($user->account_type == 2){
+            if(Auth::user()->account_type == 1){
+                return view('user.edit')->withUser($user);
+            } else {
+                return back()->withError('غير مصرح لك بتعديل معلومات هذا الحساب.');
+            }
+        }elseif( ($user->account_type == 3) && (Auth::user()->directorate_id == $user->directorate_id) ){
+            return view('user.edit')->withUser($user);
+        }else{
+            return back()->withError('غير مصرح لك بتعديل معلومات هذا الحساب.');
+        }
     }
 
     /**
@@ -233,7 +266,52 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+        
+        // Check if user exists before editing
+        $user = User::find($id);
+        if ($user == null){
+            return redirect('/user')->with('error', 'هذا الحساب غير موجود');
+        }
+
+        if( (Auth::user()->id == 1) || 
+            ( (Auth::user()->account_type == 1) && ($user->account_type != 1) ) ||
+            ( (Auth::user()->account_type == 2) && ($user->account_type == 3) && ($user->directorate_id == Auth::user()->directorate_id) )
+        ){
+            // dd($request);
+            $request->validate([
+                'phone_primary' => ['bail', 'required', 'min:9','max:18', 'regex:/^0[0-9\-x\.]+$/'],
+                'phone_secondary' => ['bail', 'max:13', 'regex:/^0[0-9\-x\.]+$/'],
+            ]);
+
+            if(Auth::user()->id == 1){
+                $request->validate([
+                    'name' => ['bail', 'required','min:10','max:50'],
+                    'email' => ['bail', 'required','min:10','max:50', 'email', 'unique:users'],
+                    'gov_id' => ['bail', 'required', 'min:9','max:10', 'regex:/^[0-9]+$/', 'unique:users'],
+                ]);
+
+                $user->name = $request->name;
+                $user->email = $request->email;
+                $user->gov_id = $request->gov_id;
+            }
+
+            $user->phone_primary = $request->phone_primary;
+            $user->phone_secondary = $request->phone_secondary;
+            $user->last_editor = Auth::user()->id;
+            $user->save();
+
+            return redirect('/user/'.$user->id)->withSuccess('تم تحديث معلومات المستخدم بنجاح.');
+
+        } else {
+            abort(403, 'Not Authorized');
+        }
     }
 
     /**

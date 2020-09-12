@@ -111,7 +111,7 @@ class DirectorateController extends Controller
                 'name' => ['bail','required','min:3','max:15', 'regex:/^[a-zA-Z1-9]+$/','unique:directorates'],
                 'name_ar' => ['bail', 'required','min:3','max:15'],
                 'email' => ['bail', 'required','min:10','max:50', 'email'],
-                'phone_number' => ['bail', 'required', 'min:9','max:18', 'regex:/^0[0-9()-x+ ]+$/'],
+                'phone_number' => ['bail', 'required', 'min:9','max:18', 'regex:/^0[0-9\-x\.]+$/'],
                 'head_of_directorate' => ['bail', 'required', 'min:7','max:100'],
                 'school_count' => ['bail', 'required', 'min:2', 'max:3', 'regex:/^[0-9]+$/'],
             ]);
@@ -176,9 +176,9 @@ class DirectorateController extends Controller
             return redirect('/inactive');
         }
         
-        //Check if directorate exists before deleting
+        //Check if directorate exists before editing
         if (!isset($directorate)){
-            return redirect('/directorate')->with('error', 'Not Found');
+            return redirect('/directorate')->with('error', 'هذه المديرية غير موجودة');
         }
 
         // The code is written this way to facilitate editing the code & 
@@ -225,7 +225,7 @@ class DirectorateController extends Controller
 
             $request->validate([
                 'email' => ['bail', 'required','min:10','max:50', 'email'],
-                'phone_number' => ['bail', 'required', 'min:9','max:18', 'regex:/^0[0-9()-x+ ]+$/'],
+                'phone_number' => ['bail', 'required', 'min:9','max:18', 'regex:/^0[0-9\-x\.]+$/'],
                 'head_of_directorate' => ['bail', 'required', 'min:7','max:100'],
                 'school_count' => ['bail', 'required', 'min:2', 'max:3', 'regex:/^[0-9]+$/'],
             ]);

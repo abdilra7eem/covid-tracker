@@ -40,8 +40,8 @@
                 <label for='phone_number'>رقم هاتف المديرية</label>
                 <input dir="ltr" class="form-control" name="phone_number" type="tel"
                     inputmode="numeric" placeholder="02-XXX-XXXX" 
-                    minlength="9" maxlength="18"
-                    pattern="^0[0-9()-x+ ]+$"
+                    minlength="9" maxlength="15"
+                    pattern="^0[0-9\-x\.]+$"
                     required>
                 <small class="form-text text-muted">أدخل رقم الهاتف الأرضي الرسمي للمديرية شاملاً مقدمة المدينة</small>
                 <div class="valid-tooltip">✓</div>
