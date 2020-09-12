@@ -232,9 +232,14 @@ class DirectorateController extends Controller
 
             if(Auth::user()->id == 1){
                 $request->validate([
-                    'name' => ['bail','required','min:3','max:15', 'regex:/^[a-zA-Z1-9]+$/','unique:directorates'],
                     'name_ar' => ['bail', 'required','min:3','max:15'],
                 ]);
+
+                if($request->name != $directorate->name){
+                    $request->validate([
+                        'name' => ['bail','required','min:3','max:15', 'regex:/^[a-zA-Z1-9]+$/','unique:directorates'],
+                    ]);
+                }
 
                 $directorate->name = $request->name;
                 $directorate->name_ar = $request->name_ar;

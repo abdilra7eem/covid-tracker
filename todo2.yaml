@@ -17,12 +17,12 @@ Security:
 Bugs: 
 	- abort(403) to Soft-error messages with redirect
 	- delete is a toggle; multiple calls could result in undesireable effect. Should have a status.
-	- display:
-		- "dir=ltr" attribute for phone numbers
-	- on user.update validation for uniqueness:
-		- it fails if item not changed;
-		- fix: validate only if changed;
-		- check for similar bugs elsewhere
+	#- display:
+		#- "dir=ltr" attribute for phone numbers
+	#- on user.update validation for uniqueness:
+		#- it fails if item not changed;
+		#- fix: validate only if changed;
+		#- check for similar bugs elsewhere
 		
 	
 Accountability:

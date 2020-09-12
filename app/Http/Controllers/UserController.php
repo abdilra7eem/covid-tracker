@@ -293,13 +293,31 @@ class UserController extends Controller
             if(Auth::user()->id == 1){
                 $request->validate([
                     'name' => ['bail', 'required','min:10','max:50'],
-                    'email' => ['bail', 'required','min:10','max:50', 'email', 'unique:users'],
-                    'gov_id' => ['bail', 'required', 'min:9','max:10', 'regex:/^[0-9]+$/', 'unique:users'],
                 ]);
+
+                if($request->email != $user->email){
+                    $request->validate([
+                        'email' => ['bail', 'required','min:10','max:50', 'email', 'unique:users'],
+                    ]);
+                }
+
+                if($request->gov_id != $user->gov_id){
+                    $request->validate([
+                        'gov_id' => ['bail', 'required', 'min:9','max:10', 'regex:/^[0-9]+$/', 'unique:users'],
+                    ]);
+                }
+
+                if($request->directorate_id != $user->directorate_id){
+                    $request->validate([
+                        'directorate_id' => ['bail','required','min:1','max:2', 'regex:/^[1-9]+$/','exists:directorates,id'],
+                    ]);
+                }
 
                 $user->name = $request->name;
                 $user->email = $request->email;
                 $user->gov_id = $request->gov_id;
+                $user->directorate_id = $request->directorate_id;
+
             }
 
             $user->phone_primary = $request->phone_primary;
