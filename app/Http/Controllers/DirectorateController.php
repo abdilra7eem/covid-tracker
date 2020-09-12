@@ -28,7 +28,7 @@ class DirectorateController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         if (!Auth::user()){
             return redirect('/login');
@@ -65,8 +65,16 @@ class DirectorateController extends Controller
         if (Auth::user()->active == false){
             return redirect('/inactive');
         }
+        
+        // The code is written this way to facilitate editing the code & 
+        // giving permissions to all admins to edit in the future, while 
+        // avoiding edits to the name and identifier.
 
-        if(Auth::user()->account_type == 1) {
+        if(Auth::user()->id != 1) {
+            return redirect('/directorate')->withError('Only super-admin (root) can create a directorate');
+        }
+
+        if(Auth::user()->id == 1) {
             return view('directorate.create');
         }
 
@@ -88,14 +96,22 @@ class DirectorateController extends Controller
         if (Auth::user()->active == false){
             return redirect('/inactive');
         }
+        
+        // The code is written this way to facilitate editing the code & 
+        // giving permissions to all admins to edit in the future, while 
+        // avoiding edits to the name and identifier.
+        
+        if(Auth::user()->id != 1) {
+            return redirect('/directorate')->withError('Only super-admin (root) can create a directorate');
+        }
 
-        if(Auth::user()->account_type == 1){
+        if(Auth::user()->id == 1){
 
             $request->validate([
-                'name' => ['bail','required','min:3','max:15', 'regex:/^[a-z]+$/','unique:directorates'],
+                'name' => ['bail','required','min:3','max:15', 'regex:/^[a-zA-Z1-9]+$/','unique:directorates'],
                 'name_ar' => ['bail', 'required','min:3','max:15'],
-                'email' => ['bail', 'required','min:10','max:50', 'regex:/^[a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,4}$/'],
-                'phone_number' => ['bail', 'required', 'min:9','max:10', 'regex:/^0[0-9()-]+$/'],
+                'email' => ['bail', 'required','min:10','max:50', 'email'],
+                'phone_number' => ['bail', 'required', 'min:9','max:18', 'regex:/^0[0-9()-x+ ]+$/'],
                 'head_of_directorate' => ['bail', 'required', 'min:7','max:100'],
                 'school_count' => ['bail', 'required', 'min:2', 'max:3', 'regex:/^[0-9]+$/'],
             ]);
@@ -103,13 +119,13 @@ class DirectorateController extends Controller
             $directorate = new Directorate;
             $directorate->name = $request->name;
             $directorate->name_ar = $request->name_ar;
-            $directorate->email = $request->email;
+            $directorate->email = strtolower($request->email);
             $directorate->phone_number = $request->phone_number;
             $directorate->head_of_directorate = $request->head_of_directorate;
             $directorate->school_count = $request->school_count;
             $directorate->last_editor = Auth::user()->id;
             $directorate->save();
-            return redirect('/directorate')->with('success', 'Directorate Created');
+            return redirect('/directorate')->with('success', 'تم إنشاء مديرية جديدة بنجاح');
         }
 
         abort(403, 'Not authorized');
@@ -165,12 +181,19 @@ class DirectorateController extends Controller
             return redirect('/directorate')->with('error', 'Not Found');
         }
 
-        // Check for correct user
-        if(Auth::user()->account_type !== 1){
-            return redirect('/directorate')->with('error', 'Unauthorized');
+        // The code is written this way to facilitate editing the code & 
+        // giving permissions to all admins to edit in the future, while 
+        // avoiding edits to the name and identifier.
+
+        if(Auth::user()->id != 1) {
+            return redirect('/directorate')->withError('Only super-admin (root) can edit a directorate');
         }
 
-        return view('directorate.edit')->with('directorate', $directorate);
+        if(Auth::user()->id == 1){
+            return view('directorate.edit')->with('directorate', $directorate);
+        }
+
+        return redirect('/directorate')->with('error', 'Unauthorized');
     }
 
     /**
@@ -182,7 +205,51 @@ class DirectorateController extends Controller
      */
     public function update(Request $request, Directorate $directorate)
     {
-        //
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+
+        // The code is written this way to facilitate editing the code & 
+        // giving permissions to all admins to edit in the future, while 
+        // avoiding edits to the name and identifier.
+
+        if(Auth::user()->id != 1) {
+            return redirect('/directorate')->withError('Only super-admin (root) can edit a directorate');
+        }
+
+        if(Auth::user()->id == 1){
+
+            $request->validate([
+                'email' => ['bail', 'required','min:10','max:50', 'email'],
+                'phone_number' => ['bail', 'required', 'min:9','max:18', 'regex:/^0[0-9()-x+ ]+$/'],
+                'head_of_directorate' => ['bail', 'required', 'min:7','max:100'],
+                'school_count' => ['bail', 'required', 'min:2', 'max:3', 'regex:/^[0-9]+$/'],
+            ]);
+
+            if(Auth::user()->id == 1){
+                $request->validate([
+                    'name' => ['bail','required','min:3','max:15', 'regex:/^[a-zA-Z1-9]+$/','unique:directorates'],
+                    'name_ar' => ['bail', 'required','min:3','max:15'],
+                ]);
+
+                $directorate->name = $request->name;
+                $directorate->name_ar = $request->name_ar;
+            }
+
+            $directorate->email = strtolower($request->email);
+            $directorate->phone_number = $request->phone_number;
+            $directorate->head_of_directorate = $request->head_of_directorate;
+            $directorate->school_count = $request->school_count;
+            $directorate->last_editor = Auth::user()->id;
+            $directorate->save();
+            return redirect('/directorate/'.$directorate->id)->with('success', 'تم تحديث معلومات المديرية بنجاح.');
+        }
+
+        abort(403, 'Not authorized');
     }
 
     /**

@@ -2164,11 +2164,6 @@ pre code {
   opacity: 1;
 }
 
-.form-control::-ms-input-placeholder {
-  color: #6c757d;
-  opacity: 1;
-}
-
 .form-control::placeholder {
   color: #6c757d;
   opacity: 1;
@@ -10981,5 +10976,17 @@ label {
 
 td:first-child {
   min-width: 150px;
+}
+
+.swal-footer {
+  text-align: left;
+}
+
+.swal-text {
+  text-align: center !important;
+}
+
+.covid-index-row {
+  cursor: pointer;
 }
 

@@ -1,5 +1,8 @@
 Editing:
-	- Directorate: super-admin (user 1)
+	- Directorate: 
+		- only super-admin (user 1) can create & edit.
+		- permissions can easily be given to all admins by minimal code editing
+
 	- Users:
 			[ not inactive! ]
 			email: 

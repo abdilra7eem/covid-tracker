@@ -31,7 +31,7 @@ class SchoolController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         if (!Auth::user()){
             return redirect('/login');

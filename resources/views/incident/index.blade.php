@@ -51,7 +51,9 @@
                                 @default
                                     @break
                             @endswitch
-                ">
+                    covid-index-row"
+                    onclick="goTo('incident', {{$incident->id}})"
+                >
                     <td>{{$incident->id}}</td>
                     <td>{{$incident->person_id}}</td>
                     <td>{{$incident->person_name}}</td>

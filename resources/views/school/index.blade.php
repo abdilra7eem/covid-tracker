@@ -26,7 +26,13 @@
                 <tr class="
                     @if($school->active == false) table-secondary @endif
                     @if(!isset($school->school['user_id'])) table-danger @endif
-                ">
+                    covid-index-row"
+                    @if(($school->school == null) || ($school->school['id'] == null))
+                        onclick="goTo('user', {{$school->id}})"
+                    @else
+                        onclick="goTo('school', {{$school->school['id']}})"
+                    @endif
+                >
                     <td>{{$school->school['id']}}</td>
                     <td>{{$school->id}}</td>
                     <td>{{$school->gov_id}}</td>

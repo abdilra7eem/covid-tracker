@@ -271,6 +271,14 @@ class SchoolClosureController extends Controller
                 "directorate" => Directorate::where("id", $schoolClosure->user->directorate_id)->first(),
             ];
 
+            if($info['user'] == null){
+                return back()->withError('حساب المدرسة المنشئة لهذا السجل غير صحيح. من فضلك، تواصل مع إدارة البرنامج.');
+            }elseif($info['school'] == null){
+                return back()->withError('ملف المدرسة المنشئة لهذا السجل غير موجود. من فضلك، اطلب من المدرسة تعبئة ملف معلوماتها.');
+            }elseif($info['directorate'] == null){
+                return back()->withError('هذا السجل يتبع لمديرية حسابها غير موجود أو معطل. من فضلك تواصل مع إدارة البرنامج.');
+            }
+
             return view("schoolClosure.show")
                 ->withClosure($schoolClosure)
                 ->withOther($other)

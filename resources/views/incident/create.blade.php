@@ -48,8 +48,8 @@
                 <label for='person_phone_primary'>رقم الهاتف</label>
                 <input dir="ltr" class="form-control" name="person_phone_primary" type="tel"
                     inputmode="numeric" placeholder="02-XXX-XXXX" 
-                    minlength="9" maxlength="10"
-                    pattern="^0[0-9()-]+$"
+                    minlength="9" maxlength="15"
+                    pattern="^0[0-9()- ]+$"
                     required>
                 <small class="form-text text-muted">أدخل رقم هاتف صاحب الحالة أو ولي أمره.</small>
                 <div class="valid-tooltip">✓</div>
@@ -60,7 +60,7 @@
                 <input dir="ltr" class="form-control" name="person_phone_secondary" type="tel"
                     inputmode="numeric" placeholder="05X-XXX-XXXX" 
                     minlength="9" maxlength="10"
-                    pattern="^0[0-9()-]+$"
+                    pattern="^0[0-9()- ]+$"
                     required>
                 <small class="form-text text-muted">أدخل رقم هاتف إضافي لصاحب الحالة أو ولي أمره.</small>
                 <div class="valid-tooltip">✓</div>

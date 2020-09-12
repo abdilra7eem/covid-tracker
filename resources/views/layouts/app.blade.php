@@ -10,5 +10,7 @@
             @yield('content')
         </main>
     </div>
+    <script defer src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script defer src="/js/covid.js"></script>
 </body>
 </html>

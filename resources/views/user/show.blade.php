@@ -7,6 +7,7 @@
     @if($user->active == false)
         <p class="text-danger">هذا الحساب معطل، ولن يتمكن من عمل أيّ تعديلات على أيّ من السجلات.</p>
     @endif
+    <a onclick="goBack()" class="btn btn-info">رجوع</a>
     @if ($user->id != 1)
         @if((Auth::user()->id == 1) || (($user->account_type != 1) && (Auth::user()->account_type == 1)) || ( (Auth::user()->account_type == 2) && ($user->account_type != 2) && ($user->directorate_id == Auth::user()->directorate_id)))
             <form action="{{route('user.destroy', $user->id)}}" method="POST"
@@ -14,12 +15,16 @@
                 @method('DELETE')
                 @csrf
                 @if($user->active == true)
-                    <button type="submit" class="btn btn-secondary">تعطيل الحساب</button>
+                    <button type="button" class="btn btn-secondary"
+                    onclick="accountDisable(this, 'إذا عطّلت الحساب، لن يتمكن صاحب الحساب من إنشاء أو تعديل أو الوصول إلى أيّ بيانات مخزنة في نظام تتبع حالات كورونا.')"
+                    >تعطيل الحساب</button>
                 @else
-                    <button type="submit" class="btn btn-primary">تفعيل الحساب</button>
+                    <button type="button" class="btn btn-primary"
+                    onclick="accountEnable(this, 'إذا فعّلت الحساب، سيتمكن صاحب الحساب من إنشاء و تعديل و الوصول إلى البيانات التي كان باستطاعته الوصول إليها قبل تعطيل حسابه.')"
+                    >تفعيل الحساب</button>
                 @endif
             </form>
-            <a href="/user/edit/{{$user->id}}" class="btn btn-warning">تعديل</a>
+            <a href="/user/{{$user->id}}/edit" class="btn btn-warning">تعديل</a>
             <br/><br/>
         @endif
     @endif

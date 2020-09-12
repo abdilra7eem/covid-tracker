@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\School;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
@@ -144,9 +145,9 @@ class UserController extends Controller
             }
             $request->validate([
                 'name' => ['bail', 'required','min:10','max:50'],
-                'email' => ['bail', 'required','min:10','max:50', 'regex:/^[a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,4}$/', 'unique:users'],
-                'phone_primary' => ['bail', 'required', 'min:9','max:10', 'regex:/^0[0-9()-]+$/'],
-                'phone_secondary' => ['bail', 'max:10', 'regex:/^0[0-9()-]+$/'],
+                'email' => ['bail', 'required','min:10','max:50', 'email', 'unique:users'],
+                'phone_primary' => ['bail', 'required', 'min:9','max:18', 'regex:/^0[0-9()-x+ ]+$/'],
+                'phone_secondary' => ['bail', 'max:13', 'regex:/^0[0-9()- ]+$/'],
                 'gov_id' => ['bail', 'required', 'min:9','max:10', 'regex:/^[0-9]+$/', 'unique:users'],
             ]);
 
@@ -183,10 +184,18 @@ class UserController extends Controller
             return redirect('/inactive');
         }
         
-        $user = User::where('id', $id)->first();
+        $user = User::where('id', $id)->with('school')->first();
+
+        if($user == null){
+            return redirect('/user')->withError('لا يوجد حساب له هذا الرقم');
+        }
 
         if($user['account_type'] == 3){
-            return redirect('/school/'. $user->school['id']);
+            if(($user->school == null)  && (Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $user->directorate_id) ){
+                return view('user.show')->withUser($user)
+                    ->withError('هذا الحساب لمدرسة لم تنشئ ملفًا بعد. اطلب من إدارة المدرسة إنشاء سجل معلومات المدرسة.');
+            }
+            return redirect('/school/'.$user->school['id']);
         } elseif(Auth::user()->account_type == 1) {
             return view('user.show')->withUser($user);
         } elseif((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $user->directorate_id)) {

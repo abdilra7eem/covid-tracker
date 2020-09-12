@@ -3,15 +3,25 @@
 @section('content')
 <section class="container">
     <h1>عرض معلومات المديرية</h1>
-    @if(Auth::user()->account_type == 1)
+    @if($directorate->deleted == true)
+        <p class="text-danger">هذه المديرية محذوفة ولن تظهر في صفحة المديريات.</p>
+    @endif
+    <a onclick="goBack()" class="btn btn-info">رجوع</a>
+    @if(Auth::user()->id == 1)
         <a href="/directorate/create" class="btn btn-success">إنشاء ملف جديد</a>
-        <a href="/directorate/edit/{{$directorate->id}}" class="btn btn-warning">تعديل</a>
+        <a href="/directorate/{{$directorate->id}}/edit" class="btn btn-warning">تعديل</a>
             <form action="{{route('directorate.destroy', $directorate->id)}}" method="POST"
                 style="display:inline;">
                 @method('DELETE')
                 @csrf
-                @if($directorate->active == true)
-                    <button type="submit" class="btn btn-danger">حذف المديرية</button>
+                @if($directorate->deleted == false)
+                    <button class="btn btn-danger" type="button"
+                    onclick="deleter(this, 'هل انت متأكد من رغبتك في حذف هذه المديرية؟')"
+                    >حذف المديرية</button>
+                @else                     
+                    <button class="btn btn-primary" type="button"
+                    onclick="undeleter(this, 'هل انت متأكد من رغبتك في استرجاع هذه المديرية؟')"
+                    >استرجاع المديرية</button>
                 @endif
             </form>
         {{-- <a href="/directorate/delete/{{$directorate->id}}" class="btn btn-danger">حذف</a> --}}
@@ -51,5 +61,4 @@
         </tr>
     </table>
 </section>
-
 @endsection

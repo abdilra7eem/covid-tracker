@@ -30,7 +30,7 @@ class IncidentController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         if (!Auth::user()){
             return redirect('/login');
@@ -120,8 +120,8 @@ class IncidentController extends Controller
             'person_name'   => ['bail', 'required','min:10','max:50'],
             'person_id'     => ['bail', 'required', 'integer', 'min:100000000','max:4299999999'],
             
-            'person_phone_primary'     => ['bail', 'required', 'min:9','max:10', 'regex:/^0[0-9()-]+$/'],
-            'person_phone_secondary'   => ['bail', 'max:10', 'regex:/^0[0-9()-]+$/'],
+            'person_phone_primary'     => ['bail', 'required', 'min:9','max:15', 'regex:/^0[0-9()- ]+$/'],
+            'person_phone_secondary'   => ['bail', 'max:10', 'regex:/^0[0-9()- ]+$/'],
 
             // 'date'  => ['bail', 'required','regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
             'date'  => ['bail', 'required', 'date_format:Y-m-d', 'regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],

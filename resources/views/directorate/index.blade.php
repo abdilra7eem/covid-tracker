@@ -3,8 +3,12 @@
 @section('content')
 
 <section class="container">
-    <a href="/directorate/create" class="btn btn-success covid-form-button">إنشاء مديرية جديدة</a>
-    <br/>
+    @if(Auth::user()->id == 1)
+        <a href="/directorate/create" class="btn btn-success covid-form-button">
+            إنشاء مديرية جديدة
+        </a>
+        <br/>
+    @endif
     <table class="table table-hover text-right table-striped">
         <tr>
             <th scope="col">الرقم</th>
@@ -16,12 +20,12 @@
             <th scope="col">عدد المدارس</th>            
         </tr>
         @foreach($directorates as $directorate)
-            <tr>
+            <tr class="covid-index-row" onclick="goTo('directorate', {{$directorate->id}})">
                 <td>{{$directorate->id}}</td>
                 <td>{{$directorate->name}}</td>
                 <td>{{$directorate->name_ar}}</td>
-                <td>{{$directorate->phone_number}}</td>
-                <td>{{$directorate->email}}</td>
+                <td dir="ltr">{{$directorate->phone_number}}</td>
+                <td dir="ltr">{{$directorate->email}}</td>
                 <td>{{$directorate->head_of_directorate}}</td>
                 <td>{{$directorate->school_count}}</td>
             </tr>

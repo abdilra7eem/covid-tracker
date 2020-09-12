@@ -43,7 +43,7 @@
                 <label for='email'>البريد الإلكتروني</label>
                 <input dir="ltr" class="form-control" name="email" type="email"
                     placeholder="good_email@example.com" 
-                    pattern="^[a-z0-9._-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                    pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$"
                     minlength="10" maxlength="50"
                     required>
                 <small class="form-text text-muted">عنوان البريد الإلكتروني الرسمي</small>
@@ -53,8 +53,8 @@
                     <label for='phone_primary'>رقم الهاتف</label>
                     <input dir="ltr" class="form-control" name="phone_primary" type="tel"
                         inputmode="numeric" placeholder="02-XXX-XXXX" 
-                        minlength="9" maxlength="10"
-                        pattern="^0[0-9()-]+$"
+                        minlength="9" maxlength="18"
+                        pattern="^0[0-9()-x+ ]+$"
                         required>
                     <small class="form-text text-muted">أدخل رقم الهاتف الأرضي الرسمي للمديرية شاملاً مقدمة المدينة</small>
                     <div class="valid-tooltip">✓</div>
@@ -64,8 +64,8 @@
                     <label for='phone_secondary'>رقم هاتف إضافي</label>
                     <input dir="ltr" class="form-control" name="phone_secondary" type="tel"
                         inputmode="numeric" placeholder="05X-XXX-XXXX" 
-                        minlength="9" maxlength="10"
-                        pattern="^0[0-9()-]+$"
+                        minlength="9" maxlength="13"
+                        pattern="^0[0-9()- ]+$"
                         required>
                     <small class="form-text text-muted">أدخل رقم الهاتف الأرضي الرسمي للمديرية شاملاً مقدمة المدينة</small>
                     <div class="valid-tooltip">✓</div>

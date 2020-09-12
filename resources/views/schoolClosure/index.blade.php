@@ -24,7 +24,9 @@
                         @if($school->grade > 12) table-danger 
                         @else table-warning
                         @endif
-                    ">
+                    covid-index-row"
+                    onclick="goTo('schoolClosure', {{$school->id}})"
+                    >
                         <td>{{$school->id}}</td>
                         <td>{{$school->user['gov_id']}}</td>
                         <td>{{$school->user['name']}}</td>

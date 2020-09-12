@@ -6,26 +6,34 @@
     <h1>سجل الإغلاق</h1>
     @if($closure->deleted == true)
         <p class="text-danger">هذا السجل محذوف ولن يظهر في أيّ من الإحصائيات أو الجداول.</p>
+    @endif
+    <a onclick="goBack()" class="btn btn-info">رجوع</a>
+    @if($closure->deleted == true)
         @if(Auth::user()->account_type == 1)
             <form action="{{route('schoolClosure.destroy', $closure->id)}}" method="POST"
                 style="display:inline;">
                 @method('DELETE')
                 @csrf
-                <button type="submit" class="btn btn-primary">استرجاع</button>
+                <button type="button" class="btn btn-primary"
+                onclick="undeleter(this, 'هل انت متأكد من رغبتك في استرجاع هذا السجل؟')"
+                >استرجاع</button>
             </form>
         @endif
     @endif
-    @if(Auth::user->id == $closure->user_id)
-        <a href="/schoolClosure/edit/{{$closure->id}}" class="btn btn-warning">تحديث السجل</a>
+    @if(Auth::user()->id == $closure->user_id)
+        <a href="/schoolClosure/{{$closure->id}}/edit" class="btn btn-warning">تحديث السجل</a>
     @endif
     @if((Auth::user()->account_type == 2) && ($closure->deleted == false) && ($closure->user->directorate_id == Auth::user()->directorate_id))
         <form action="{{route('schoolClosure.destroy', $closure->id)}}" method="POST"
             style="display:inline;">
             @method('DELETE')
             @csrf
-            <button type="submit" class="btn btn-danger">حذف</button>
+            <button type="button" class="btn btn-danger"
+            onclick="deleter(this, 'هل انت متأكد من رغبتك في حذف هذا السجل؟')"
+            >حذف</button>
         </form>
     @endif
+
     <br/><br/>
 
     <table class="table table-hover text-right table-striped">

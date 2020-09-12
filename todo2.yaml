@@ -19,6 +19,7 @@ Features:
 		#- permissions
 		#- ACL to show
 		#- hide/show buttons on 'show'
+	- Later: link on "phone_number" & "email"
 
 Security:
 	# - Should supervisors activate/deactivate school user accounts? YES!
@@ -26,8 +27,22 @@ Security:
 
 Bugs: 
 	- abort(403) to Soft-error messages with redirect
+	# - broken edit link: {thing}/edit/{id} should be {thing}/{id}/edit
+	- validation:
+		#- email: 
+			#- accept capital letters
+			#- change backend validator to use 'email' rule instead of regex
+		# - phone number: 
+			# - allow "x" for extensions & " " (spacebar) in user & directorate primary_phone
+			# - change max length to 18 in user & directorate primary_phone
+			# - more permissive spacebar & length for user secondary_phone, and incident phones
+		# - directorate->name: accept capital letters & numbers
+	- display:
+		- "dir=ltr" attribute for phone numbers
+		
 	
 Accountability:
 	# - last_editor in "show" for admins
+	- last_editor_ip: migration, factory, show (for admins), create & update save.
 
 Editing: according to editin-permissions.yaml

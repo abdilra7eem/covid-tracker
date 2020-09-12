@@ -34,7 +34,6 @@ class CreateIncidentsTable extends Migration
             $table->string('person_phone_secondary')->nullable();
             $table->text('notes')->nullable(); // if grade is 13, 14 or 15, input is recommended; suspect type notes here;
             // $table->string('files'); // array of file records, connected to files
-            $table->boolean('deleted')->default(false);
             $table->mediumInteger('last_editor')->nullable()->default(null);
         });
     }

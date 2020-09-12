@@ -21,7 +21,8 @@
                 <tr class="
                     @if($user->active == false) table-secondary @endif
                     @if($user->account_type == 1) table-primary @endif
-                ">
+                    covid-index-row"
+                    onclick="goTo('user', {{$user->id}})">
                     <td>{{$user->id}}</td>
                     <td>{{$user->gov_id}}</td>
                     <td>{{$user->name}}</td>
