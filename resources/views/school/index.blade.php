@@ -37,8 +37,8 @@
                     <td>{{$school->id}}</td>
                     <td>{{$school->gov_id}}</td>
                     <td>{{$school->name}}</td>
-                    <td>{{$school->email}}</td>
-                    <td>{{$school->phone_primary}}</td>
+                    <td dir="ltr">{{$school->email}}</td>
+                    <td dir="ltr">{{$school->phone_primary}}</td>
                     {{-- <td>{{$school->phone_secondary}}</td> --}}
                     <td>
                         @if(isset($school->school['head_of_school']))

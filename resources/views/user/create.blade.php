@@ -54,7 +54,7 @@
                     <label for='phone_primary'>رقم الهاتف</label>
                     <input dir="ltr" class="form-control" name="phone_primary" type="tel"
                         inputmode="numeric" placeholder="02-XXX-XXXX" 
-                        minlength="9" maxlength="18"
+                        minlength="9" maxlength="15"
                         pattern="^0[0-9\-x\.]+$"
                         required>
                     <small class="form-text text-muted">أدخل رقم الهاتف الأرضي الرسمي للمديرية شاملاً مقدمة المدينة</small>
@@ -65,7 +65,7 @@
                     <label for='phone_secondary'>رقم هاتف إضافي</label>
                     <input dir="ltr" class="form-control" name="phone_secondary" type="tel"
                         inputmode="numeric" placeholder="05X-XXX-XXXX" 
-                        minlength="9" maxlength="13"
+                        minlength="9" maxlength="15"
                         pattern="^0[0-9\-x\.]+$"
                         required>
                     <small class="form-text text-muted">أدخل رقم الهاتف الأرضي الرسمي للمديرية شاملاً مقدمة المدينة</small>

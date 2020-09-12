@@ -45,11 +45,11 @@
         </tr>
         <tr>
             <td scope="row">رقم الهاتف</td>
-            <td>{{$directorate->phone_number}}</td>
+            <td dir="ltr">{{$directorate->phone_number}}</td>
         </tr>
         <tr>
             <td scope="row">البريد الإلكتروني</td>
-            <td>{{$directorate->email}}</td>
+            <td dir="ltr">{{$directorate->email}}</td>
         </tr>
         <tr>
             <td scope="row">اسم مدير المديرية</td>

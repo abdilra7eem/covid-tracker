@@ -96,15 +96,15 @@
         </tr>
         <tr>
             <td scope="row">رقم الهاتف</td>
-            <td>{{$info['user']->phone_primary}}</td>
+            <td dir="ltr">{{$info['user']->phone_primary}}</td>
         </tr>
         <tr>
             <td scope="row">رقم هاتف إضافي</td>
-            <td>{{$info['user']->phone_secondary}}</td>
+            <td dir="ltr">{{$info['user']->phone_secondary}}</td>
         </tr>
         <tr>
             <td scope="row">البريد الإلكتروني</td>
-            <td>{{$info['user']->email}}</td>
+            <td dir="ltr">{{$info['user']->email}}</td>
         </tr>
         <tr>
             <td scope="row">الحالة</td>

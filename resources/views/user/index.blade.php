@@ -26,8 +26,8 @@
                     <td>{{$user->id}}</td>
                     <td>{{$user->gov_id}}</td>
                     <td>{{$user->name}}</td>
-                    <td>{{$user->email}}</td>
-                    <td>{{$user->phone_primary}}</td>
+                    <td dir="ltr">{{$user->email}}</td>
+                    <td dir="ltr">{{$user->phone_primary}}</td>
                     {{-- <td>{{$user->phone_secondary}}</td> --}}
                     <td>
                         @if($user->account_type == 1) إدارة البرنامج

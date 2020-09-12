@@ -42,15 +42,15 @@
         </tr>
         <tr>
             <td scope="row">رقم الهاتف</td>
-            <td>{{$school->user->phone_primary}}</td>
+            <td dir="ltr">{{$school->user->phone_primary}}</td>
         </tr>
         <tr>
             <td scope="row">رقم هاتف إضافي</td>
-            <td>{{$school->user->phone_secondary}}</td>
+            <td dir="ltr">{{$school->user->phone_secondary}}</td>
         </tr>
         <tr>
             <td scope="row">البريد الإلكتروني</td>
-            <td>{{$school->user->email}}</td>
+            <td dir="ltr">{{$school->user->email}}</td>
         </tr>
         <tr>
             <td scope="row">الرقم الوطني</td>

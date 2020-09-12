@@ -57,7 +57,7 @@
                     <td>{{$incident->id}}</td>
                     <td>{{$incident->person_id}}</td>
                     <td>{{$incident->person_name}}</td>
-                    <td>{{$incident->person_phone_primary}}</td>
+                    <td dir="ltr">{{$incident->person_phone_primary}}</td>
                     <td>
                         @if($incident->grade == 14)
                             إدارة

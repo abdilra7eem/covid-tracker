@@ -45,15 +45,15 @@
         </tr>
         <tr>
             <td scope="row">رقم الهاتف</td>
-            <td>{{$user->phone_primary}}</td>
+            <td dir="ltr">{{$user->phone_primary}}</td>
         </tr>
         <tr>
             <td scope="row">رقم هاتف إضافي</td>
-            <td>{{$user->phone_secondary}}</td>
+            <td dir="ltr">{{$user->phone_secondary}}</td>
         </tr>
         <tr>
             <td scope="row">البريد الإلكتروني</td>
-            <td>{{$user->email}}</td>
+            <td dir="ltr">{{$user->email}}</td>
         </tr>
         @if((Auth::user()->account_type == 1) || (Auth::user()->account_type == 2))
             <tr>

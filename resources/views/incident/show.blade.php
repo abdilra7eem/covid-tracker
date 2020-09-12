@@ -136,12 +136,12 @@
         @endif
         <tr>
             <td scope="row">رقم الهاتف</td>
-            <td>{{$incident->person_phone_primary}}</td>
+            <td dir="ltr">{{$incident->person_phone_primary}}</td>
         </tr>
         @if(isset($incident->person_phone_secondary))
             <tr>
                 <td scope="row">رقم هاتف إضافي</td>
-                <td>{{$incident->person_phone_secondary}}</td>
+                <td dir="ltr">{{$incident->person_phone_secondary}}</td>
             </tr>
         @endif
         <tr>
@@ -150,7 +150,7 @@
         </tr>
         <tr>
             <td scope="row">رقم هاتف المدرسة</td>
-            <td>{{$incident->user->phone_primary}}</td>
+            <td dir="ltr">{{$incident->user->phone_primary}}</td>
         </tr>
         @if(isset($incident->notes))
             <tr>

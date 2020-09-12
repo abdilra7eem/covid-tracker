@@ -30,7 +30,7 @@
                         <td>{{$school->id}}</td>
                         <td>{{$school->user['gov_id']}}</td>
                         <td>{{$school->user['name']}}</td>
-                        <td>{{$school->user['phone_primary']}}</td>
+                        <td dir="ltr">{{$school->user['phone_primary']}}</td>
                         <td>
                             {{$school->user->school['head_of_school']}}
                         </td>
