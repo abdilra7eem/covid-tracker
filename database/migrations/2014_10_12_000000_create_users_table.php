@@ -33,6 +33,7 @@ class CreateUsersTable extends Migration
             
             $table->timestamps();
             $table->mediumInteger('last_editor')->nullable()->default(null);
+            $table->ipAddress('last_editor_ip')->nullable()->default(null);
 
             $table->foreignId('directorate_id'); // foreign key from the directorates table
             $table->foreign('directorate_id')->references('id')->on('directorates');

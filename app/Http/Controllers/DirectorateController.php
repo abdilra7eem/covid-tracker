@@ -123,7 +123,10 @@ class DirectorateController extends Controller
             $directorate->phone_number = $request->phone_number;
             $directorate->head_of_directorate = $request->head_of_directorate;
             $directorate->school_count = $request->school_count;
+            
             $directorate->last_editor = Auth::user()->id;
+            $directorate->last_editor_ip = Request::ip();
+
             $directorate->save();
             return redirect('/directorate')->with('success', 'تم إنشاء مديرية جديدة بنجاح');
         }
@@ -249,7 +252,10 @@ class DirectorateController extends Controller
             $directorate->phone_number = $request->phone_number;
             $directorate->head_of_directorate = $request->head_of_directorate;
             $directorate->school_count = $request->school_count;
+
             $directorate->last_editor = Auth::user()->id;
+            $directorate->last_editor_ip = Request::ip();
+
             $directorate->save();
             return redirect('/directorate/'.$directorate->id)->with('success', 'تم تحديث معلومات المديرية بنجاح.');
         }
@@ -282,6 +288,8 @@ class DirectorateController extends Controller
                 $message = 'تم استرجاع السجل المحذوف';
             }
             $directorate->last_editor = Auth::user()->id;
+            $directorate->last_editor_ip = Request::ip();
+            
             $directorate->save();
             return back()->withSuccess($message);
         } else {

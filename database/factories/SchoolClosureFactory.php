@@ -14,5 +14,7 @@ $factory->define(SchoolClosure::class, function (Faker $faker) {
         'affected_students' => $faker->numberBetween(15, 600),
         'user_id' => $faker->numberBetween(1, App\User::count()),
         'notes' => $faker->paragraph($nbSentences = 3, $variableNbSentences = true),
+        'last_editor' => $faker->numberBetween(1, App\User::count()),
+        'last_editor_ip' => $faker->ipv4(),
     ];
 });

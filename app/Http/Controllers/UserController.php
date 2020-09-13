@@ -162,6 +162,8 @@ class UserController extends Controller
             $user->password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
             // dd($user);
             $user->last_editor = Auth::user()->id;
+            $user->last_editor_ip = Request::ip();
+
             $user->save();
             return redirect('/user')->with('success', 'User Created');
         }
@@ -322,7 +324,10 @@ class UserController extends Controller
 
             $user->phone_primary = $request->phone_primary;
             $user->phone_secondary = $request->phone_secondary;
+
             $user->last_editor = Auth::user()->id;
+            $user->last_editor_ip = Request::ip();
+
             $user->save();
 
             return redirect('/user/'.$user->id)->withSuccess('تم تحديث معلومات المستخدم بنجاح.');
@@ -366,6 +371,8 @@ class UserController extends Controller
                 $message = 'تم تفعيل الحساب وسيتمكن من إنشاء و تعديل  وعرض البيانات';
             }
             $user->last_editor = Auth::user()->id;
+            $user->last_editor_ip = Request::ip();
+
             $user->save();
             return back()->withSuccess($message);
         }

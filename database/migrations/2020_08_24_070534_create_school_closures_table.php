@@ -30,6 +30,7 @@ class CreateSchoolClosuresTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
 
             $table->mediumInteger('last_editor')->nullable()->default(null);
+            $table->ipAddress('last_editor_ip')->nullable()->default(null);
             $table->boolean('deleted')->default(false);
         });
     }

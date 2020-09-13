@@ -191,6 +191,7 @@ class IncidentController extends Controller
 
         $incident->notes = strip_tags($request->notes);
         $incident->last_editor = Auth::user()->id; 
+        $incident->last_editor_ip = Request::ip();
 
         $incident->save();
         return redirect('/incident'.$incident->id)->with('success', 'Incident Created');
@@ -309,6 +310,8 @@ class IncidentController extends Controller
             if((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $incident->user->directorate_id)){
                 $incident->deleted = true;
                 $incident->last_editor = Auth::user()->id; 
+                $incident->last_editor_ip = Request::ip();
+
                 $incident->save();
                 $message = 'تم حذف سجل الحالة.';
                 return back()->withSuccess($message);
@@ -319,6 +322,8 @@ class IncidentController extends Controller
             if(Auth::user()->account_type == 1){
                 $incident->deleted = false;
                 $incident->last_editor = Auth::user()->id; 
+                $incident->last_editor_ip = Request::ip();
+
                 $incident->save();
                 $message = 'تم استرجاع السجل المحذوف';
                 return back()->withSuccess($message);

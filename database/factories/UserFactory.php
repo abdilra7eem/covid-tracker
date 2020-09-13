@@ -35,5 +35,6 @@ $factory->define(User::class, function (Faker $faker) {
         'active' => $faker->boolean($chanceOfGettingTrue = 90),
         'directorate_id' => $faker->numberBetween(1, App\Directorate::count()),
         'last_editor' => $faker->numberBetween(1, App\User::count()),
+        'last_editor_ip' => $faker->ipv4(),
     ];
 });

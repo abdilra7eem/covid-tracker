@@ -221,6 +221,8 @@ class SchoolClosureController extends Controller
             $closure->notes = strip_tags($request->notes);
         }
         $closure->last_editor = Auth::user()->id; 
+        $closure->last_editor_ip = Request::ip();
+
         $closure->save();
         return redirect('/schoolClosure/'.$closure->id)->withSuccess('success', 'تم إنشاء سجل الإغلاق');
 
@@ -355,6 +357,8 @@ class SchoolClosureController extends Controller
             if((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $schoolClosure->user->directorate_id)){
                 $schoolClosure->deleted = true;
                 $schoolClosure->last_editor = Auth::user()->id; 
+                $schoolClosure->last_editor_ip = Request::ip();
+
                 $schoolClosure->save();
                 $message = 'تم حذف سجل الإغلاق.';
                 return back()->withSuccess($message);
@@ -365,6 +369,8 @@ class SchoolClosureController extends Controller
             if(Auth::user()->account_type == 1){
                 $schoolClosure->deleted = false;
                 $schoolClosure->last_editor = Auth::user()->id; 
+                $schoolClosure->last_editor_ip = Request::ip();
+
                 $schoolClosure->save();
                 $message = 'تم استرجاع السجل المحذوف';
                 return back()->withSuccess($message);

@@ -10978,6 +10978,10 @@ td:first-child {
   min-width: 150px;
 }
 
+td[dir=ltr] {
+  text-align: right;
+}
+
 .swal-footer {
   text-align: left;
 }

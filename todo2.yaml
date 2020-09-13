@@ -17,15 +17,9 @@ Security:
 Bugs: 
 	- abort(403) to Soft-error messages with redirect
 	- delete is a toggle; multiple calls could result in undesireable effect. Should have a status.
-	#- display:
-		#- "dir=ltr" attribute for phone numbers
-	#- on user.update validation for uniqueness:
-		#- it fails if item not changed;
-		#- fix: validate only if changed;
-		#- check for similar bugs elsewhere
 		
 	
 Accountability:
-	- last_editor_ip: migration, factory, show (for admins), create & update save.
+	# - last_editor_ip: migration, factory, show (for admins), create & update save.
 
 Editing: according to editin-permissions.yaml

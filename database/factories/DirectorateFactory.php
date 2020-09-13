@@ -14,5 +14,6 @@ $factory->define(Directorate::class, function (Faker $faker) {
         'head_of_directorate' => $faker->unique()->name,
         'school_count' => $faker->numberBetween(50, 250),
         'last_editor' => $faker->numberBetween(1, App\User::count()),
+        'last_editor_ip' => $faker->ipv4(),
     ];
 });

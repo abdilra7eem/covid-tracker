@@ -22,5 +22,7 @@ $factory->define(Incident::class, function (Faker $faker) {
         'person_phone_primary' => $faker->phoneNumber,
         'person_phone_secondary' => $faker->phoneNumber,
         'notes' => $faker->paragraph($nbSentences = 3, $variableNbSentences = true),
+        'last_editor' => $faker->numberBetween(1, App\User::count()),
+        'last_editor_ip' => $faker->ipv4(),
     ];
 });
