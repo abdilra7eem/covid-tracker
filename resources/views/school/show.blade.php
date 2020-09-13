@@ -28,6 +28,12 @@
     <br/><br/>
 
     <table class="table table-hover text-right table-striped">
+        @if((Auth::user()->account_type == 1) && isset($user->last_editor))
+            <tr class="text-danger">
+                <td scope="row">أخر تعديل على الحساب بوساطة</td>
+                <td>حساب رقم {{$school->user->last_editor}}</td>
+            </tr>
+        @endif
         <tr>
             <td scope="row">الرقم التسلسلي للحساب</td>
             <td>{{$school->user->id}}</td>
@@ -131,11 +137,11 @@
             </td>
         </tr>
         <tr>
-            <td scope="row">عدد الطاقم الذكور</td>
+            <td scope="row">عدد الموظفين الذكور</td>
             <td>{{$school->total_male_staff}}</td>
         </tr>
         <tr>
-            <td scope="row">عدد الطاقم الإناث</td>
+            <td scope="row">عدد الموظفات الإناث</td>
             <td>{{$school->total_female_staff}}</td>
         </tr>
         <tr>

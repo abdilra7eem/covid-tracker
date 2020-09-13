@@ -38,28 +38,28 @@
                     @if(Auth::user()->id != 1) disabled @endif>
                 <div class="valid-tooltip">✓</div>
                 <div class="invalid-tooltip">يرجى إدخال قيمة مناسبة</div>
-                <div class="form-group">
-                    <label for='phone_primary'>رقم الهاتف</label>
-                    <input dir="ltr" class="form-control" name="phone_primary" type="tel"
-                        inputmode="numeric" value="{{$user->phone_primary}}" 
-                        minlength="9" maxlength="15"
-                        pattern="^0[0-9\-x\.]+$"
-                        required>
-                    <small class="form-text text-muted">أدخل رقم الهاتف الرئيسي لصاحب الحساب</small>
-                    <div class="valid-tooltip">✓</div>
-                    <div class="invalid-tooltip">يرجى إدخال قيمة مناسبة</div>
-                </div>
-                <div class="form-group">
-                    <label for='phone_secondary'>رقم هاتف إضافي</label>
-                    <input dir="ltr" class="form-control" name="phone_secondary" type="tel"
-                        inputmode="numeric" value="{{$user->phone_secondary}}" 
-                        minlength="9" maxlength="15"
-                        pattern="^0[0-9\-x\.]+$"
-                        required>
-                    <small class="form-text text-muted">أدخل رقم الهاتف الإضافي لصاحب الحساب</small>
-                    <div class="valid-tooltip">✓</div>
-                    <div class="invalid-tooltip">يرجى إدخال قيمة مناسبة</div>
-                </div>
+            </div>
+            <div class="form-group">
+                <label for='phone_primary'>رقم الهاتف</label>
+                <input dir="ltr" class="form-control" name="phone_primary" type="tel"
+                    inputmode="numeric" value="{{$user->phone_primary}}" 
+                    minlength="9" maxlength="15"
+                    pattern="^0[0-9\-x\.]+$"
+                    required>
+                <small class="form-text text-muted">أدخل رقم الهاتف الرئيسي لصاحب الحساب</small>
+                <div class="valid-tooltip">✓</div>
+                <div class="invalid-tooltip">يرجى إدخال قيمة مناسبة</div>
+            </div>
+            <div class="form-group">
+                <label for='phone_secondary'>رقم هاتف إضافي</label>
+                <input dir="ltr" class="form-control" name="phone_secondary" type="tel"
+                    inputmode="numeric" value="{{$user->phone_secondary}}" 
+                    minlength="9" maxlength="15"
+                    pattern="^0[0-9\-x\.]+$"
+                    required>
+                <small class="form-text text-muted">أدخل رقم الهاتف الإضافي لصاحب الحساب</small>
+                <div class="valid-tooltip">✓</div>
+                <div class="invalid-tooltip">يرجى إدخال قيمة مناسبة</div>
             </div>
             @if(Auth::user()->account_type == 1)
                 <div class="form-group">

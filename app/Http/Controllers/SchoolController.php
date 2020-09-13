@@ -266,7 +266,134 @@ class SchoolController extends Controller
      */
     public function update(Request $request, School $school)
     {
-        //
+
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+
+        if(Auth::user()->account_type != 3) {
+            return redirect('/school')->withError('فقط حسابات المدارس يمكنها إنشاء ملف مدرسة');
+        }
+
+        if(Auth::user()->id != $school->user_id){
+            return redirect('/school/'.$school->id)->withError('غير مصرح لك تعديل معلومات هذه المدرسة.');
+        }
+
+        $request->validate([
+            'phone_primary'         => ['bail', 'required', 'min:9','max:18', 'regex:/^0[0-9\-x\.]+$/'],
+            'phone_secondary'       => ['bail', 'max:13', 'regex:/^0[0-9\-x\.]+$/'],
+            'rented'                => ['bail', 'required', 'in:true,false'],
+            'second_shift'          => ['bail', 'required', 'in:true,false'],
+            'youngest_class'        => ['bail', 'required', 'integer', 'between:1,12'],
+            'oldest_class'          => ['bail', 'required', 'integer', 'between:1,12'],
+            'building_year'         => ['bail', 'required', 'integer', 'between:1780,2020'],
+            'total_male_students'   => ['bail', 'required', 'integer', 'between:0,900'],
+            'total_female_students' => ['bail', 'required', 'integer', 'between:0,900'],
+            'total_male_staff'      => ['bail', 'required', 'integer', 'between:0,50'],
+            'total_female_staff'    => ['bail', 'required', 'integer', 'between:0,50'],
+            'number_of_classrooms'  => ['bail', 'required', 'integer', 'between:2,40'],
+            'head_of_school'        => ['bail', 'required','min:10','max:50'],
+        ]);
+
+        if(isset($request->rented)){
+            if($request->rented == "true"){
+                $rented = true;
+            }elseif($request->rented == "false"){
+                $rented = false;
+            }
+        }
+
+        if(isset($request->second_shift)){
+            if($request->second_shift == "true"){
+                $second_shift = true;
+            }elseif($request->second_shift == "false"){
+                $second_shift = false;
+            }
+        }
+
+        if($request->oldest_class < $request->youngest_class){
+            return back()->withError('يجب أن يكون "أكبر صف" أكبر من "أصغر صف".');
+        }
+
+        $total_students = $request->total_male_students + $request->total_female_students;
+
+        if( ($total_students < 21) || ($total_students > 1200)){
+            return back()->withError('يجب أن يكون عدد الطلاب منطقيًا.');
+        }
+
+        $total_staff = $request->total_male_staff + $request->total_female_staff;
+        if( ($total_staff < 5) || ($total_staff > 55)){
+            return back()->withError('يجب أن يكون عدد الموظفين منطقيًا.');
+        }
+
+        if( ($request->building_year > 2020) || ($request->building_year < 1781)){
+            return back()->withError('لا يمكن أن تكون سنة البناء '.$request->building_year);
+        }
+
+        $user = $school->user;
+        if( ($request->phone_primary != $user->phone_primary) ||
+            ($request->phone_secondary != $user->phone_secondary) ){
+                $user->phone_primary = $request->phone_primary;
+                $user->phone_secondary = $request->phone_secondary;
+                $user->last_editor = Auth::user()->id;
+                $user->save();
+        }
+
+        if(Auth::user()->id == 1){
+            if($user->name != $request->name) {
+                $request->validate([
+                    'name' => ['bail', 'required','min:10','max:50'],
+                ]);
+                $user->name = $request->name;
+                $user->last_editor = Auth::user()->id;
+            }
+
+            if($request->email != $user->email){
+                $request->validate([
+                    'email' => ['bail', 'required','min:10','max:50', 'email', 'unique:users'],
+                ]);
+                $user->email = $request->email;
+                $user->last_editor = Auth::user()->id;
+            }
+
+            if($request->gov_id != $user->gov_id){
+                $request->validate([
+                    'gov_id' => ['bail', 'required', 'min:9','max:10', 'regex:/^[0-9]+$/', 'unique:users'],
+                ]);
+                $user->gov_id = $request->gov_id;
+                $user->last_editor = Auth::user()->id;
+            }
+
+            if($request->directorate_id != $user->directorate_id){
+                $request->validate([
+                    'directorate_id' => ['bail','required','min:1','max:2', 'regex:/^[1-9]+$/','exists:directorates,id'],
+                ]);
+                $user->directorate_id = $request->directorate_id;
+                $user->last_editor = Auth::user()->id;
+            }
+
+            $user->save();
+        }
+
+        $school->rented = $rented;
+        $school->second_shift = $second_shift;
+        $school->youngest_class = $request->youngest_class;
+        $school->oldest_class = $request->oldest_class;
+        $school->total_male_students = $request->total_male_students;
+        $school->total_female_students = $request->total_female_students;
+        $school->total_male_staff = $request->total_male_staff;
+        $school->total_female_staff = $request->total_female_staff;
+        $school->number_of_classrooms = $request->number_of_classrooms;
+        $school->building_year = (int) ($request->building_year - 1780);
+        $school->head_of_school = $request->head_of_school;
+        $school->user_id = Auth::user()->id;
+        $school->save();
+
+        return redirect('/school/'.$school->id)->withSuccess('تم تحديث معلومات المدرسة بنجاح');
     }
 
     /**
