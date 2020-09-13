@@ -20,9 +20,10 @@
                 >تفعيل الحساب</button>
             @endif
         </form>
+        <a href="/user/{{$school->user->id}}/edit" class="btn btn-warning">تعديل الحساب</a>
     @endif
     @if(Auth::user()->account_type == 3)
-        <a href="/school/{{$school->id}}/edit" class="btn btn-warning">تعديل</a>
+        <a href="/school/{{$school->id}}/edit" class="btn btn-warning">تحديث بيانات المدرسة</a>
         {{-- <a href="/school/delete/{{$school->id}}" class="btn btn-danger">حذف</a> --}}
     @endif
     <br/><br/>

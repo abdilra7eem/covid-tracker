@@ -13,43 +13,47 @@
                     placeholder="{{$school->user->name}}" 
                     @if(Auth::user()->id != 1) readonly @endif>
             </div>
-            <section class="container">
-                <h3 class="text-danger">كن حذرًا عند تعديل هذه المعلومات. أي خطأ قد يؤدي إلى منع الوصول.</h3>
-                @if(Auth::user()->id == 1)
-                    <div class="form-group">
-                        <label for='gov_id'>
-                            رقم الهوية أو الرقم الوطني
-                        </label>
-                        <input dir="ltr" class="form-control" name="gov_id" type="text" 
-                            value="{{$school->user->gov_id}}" inputmode="numeric"
-                            minlength="9" maxlength="10"
-                            pattern="^[0-9]+$">
-                        <div class="valid-tooltip">✓</div>
-                        <div class="invalid-tooltip">يرجى إدخال قيمة مناسبة</div>
-                    </div>
-                    <div class="form-group">
-                        <label for='email'>البريد الإلكتروني</label>
-                        <input dir="ltr" class="form-control" name="email" type="email"
-                            value="{{$user->email}}"
-                            pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$"
-                            minlength="10" maxlength="50">
-                        <div class="valid-tooltip">✓</div>
-                        <div class="invalid-tooltip">يرجى إدخال قيمة مناسبة</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="directorate_id" placeholder="اختر مديرية ...">المديرية:</label>
-                        <select class="form-control form-control-lg" id="directorate_id" name="directorate_id">
-                            @foreach (App\Directorate::all() as $dir)
-                                <option value="{{$dir->id}}" 
-                                    @if($dir->id == $user->directorate_id) selected @endif
-                                    >
-                                    {{$dir->name_ar}}
-                                </option>
-                            @endforeach
-                        </select> 
-                    </div>
-                @endif
-            </section>
+            {{-- The following code is for future-proofing --}}
+            {{-- It can be uncommented after allowing super-admin edits on school --}}
+            {{--             
+                <section class="container">
+                    <h3 class="text-danger">كن حذرًا عند تعديل هذه المعلومات. أي خطأ قد يؤدي إلى منع الوصول.</h3>
+                    @if(Auth::user()->id == 1)
+                        <div class="form-group">
+                            <label for='gov_id'>
+                                رقم الهوية أو الرقم الوطني
+                            </label>
+                            <input dir="ltr" class="form-control" name="gov_id" type="text" 
+                                value="{{$school->user->gov_id}}" inputmode="numeric"
+                                minlength="9" maxlength="10"
+                                pattern="^[0-9]+$">
+                            <div class="valid-tooltip">✓</div>
+                            <div class="invalid-tooltip">يرجى إدخال قيمة مناسبة</div>
+                        </div>
+                        <div class="form-group">
+                            <label for='email'>البريد الإلكتروني</label>
+                            <input dir="ltr" class="form-control" name="email" type="email"
+                                value="{{$user->email}}"
+                                pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$"
+                                minlength="10" maxlength="50">
+                            <div class="valid-tooltip">✓</div>
+                            <div class="invalid-tooltip">يرجى إدخال قيمة مناسبة</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="directorate_id" placeholder="اختر مديرية ...">المديرية:</label>
+                            <select class="form-control form-control-lg" id="directorate_id" name="directorate_id">
+                                @foreach (App\Directorate::all() as $dir)
+                                    <option value="{{$dir->id}}" 
+                                        @if($dir->id == $user->directorate_id) selected @endif
+                                        >
+                                        {{$dir->name_ar}}
+                                    </option>
+                                @endforeach
+                            </select> 
+                        </div>
+                    @endif
+                </section>
+             --}}
             <div class="form-group">
                 <label for='phone_primary'>رقم الهاتف</label>
                 <input dir="ltr" class="form-control" name="phone_primary" type="tel"

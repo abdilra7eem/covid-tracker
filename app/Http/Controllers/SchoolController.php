@@ -343,6 +343,9 @@ class SchoolController extends Controller
                 $user->save();
         }
 
+        // ===== The following code is for future-proofing ===== //
+        // It can be uncommented if the super-admin is to be allowed to edit school info //
+        /*
         if(Auth::user()->id == 1){
             if($user->name != $request->name) {
                 $request->validate([
@@ -378,6 +381,7 @@ class SchoolController extends Controller
 
             $user->save();
         }
+        */
 
         $school->rented = $rented;
         $school->second_shift = $second_shift;
