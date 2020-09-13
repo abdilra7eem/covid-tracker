@@ -42,6 +42,12 @@
                 <td scope="row">أخر تعديل بوساطة</td>
                 <td>حساب رقم {{$schoolClosure->last_editor}}</td>
             </tr>
+            @if(isset($schoolClosure->last_editor_ip))
+                <tr class="text-danger">
+                    <td scope="row">أخر تعديل بوساطة</td>
+                    <td>عنوان إنترنت {{$schoolClosure->last_editor_ip}}</td>
+                </tr>
+            @endif
         @endif
         <tr>
             <td scope="row">رقم سجل الإغلاق</td>

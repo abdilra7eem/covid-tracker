@@ -34,6 +34,12 @@
                 <td scope="row">أخر تعديل على الحساب بوساطة</td>
                 <td>حساب رقم {{$school->user->last_editor}}</td>
             </tr>
+            @if(isset($school->user->last_editor_ip))
+                <tr class="text-danger">
+                    <td scope="row">أخر تعديل بوساطة</td>
+                    <td>عنوان إنترنت {{$school->user->last_editor_ip}}</td>
+                </tr>
+            @endif
         @endif
         <tr>
             <td scope="row">الرقم التسلسلي للحساب</td>

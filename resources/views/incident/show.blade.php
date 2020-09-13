@@ -43,6 +43,12 @@
                 <td scope="row">أخر تعديل بوساطة</td>
                 <td>حساب رقم {{$incident->last_editor}}</td>
             </tr>
+            @if(isset($incident->last_editor_ip))
+                <tr class="text-danger">
+                    <td scope="row">أخر تعديل بوساطة</td>
+                    <td>عنوان إنترنت {{$incident->last_editor_ip}}</td>
+                </tr>
+            @endif
         @endif
         <tr>
             <td scope="row">رقم سجل الحالة</td>
