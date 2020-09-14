@@ -17,6 +17,7 @@ Security:
 Bugs: 
 	- abort(403) to Soft-error messages with redirect
 	- delete is a toggle; multiple calls could result in undesireable effect. Should have a status.
+	- delete is preventing back button; should be Ajax.
 		
 	
 Accountability:

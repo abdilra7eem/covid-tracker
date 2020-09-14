@@ -260,17 +260,21 @@ class IncidentController extends Controller
             return redirect('/inactive');
         }
 
-        //Check if directorate exists before deleting
+        //Check if directorate exists before updating
         if (!isset($incident)){
             return redirect('/incident')->with('error', 'Not Found');
         }
 
         // Check for correct user
-        if(Auth::user()->id !== $incident->user_id){
-            return redirect('/incident')->with('error', 'Unauthorized');
+        if(Auth::user()->id == $incident->user_id){
+            return view('incident.edit')->with('incident', $incident);
         }
 
-        return view('incident.edit')->with('incident', $incident);
+        if(Auth::user()->id == 1){
+            return view('incident.edit')->with('incident', $incident);
+        }
+
+        return redirect('/incident')->with('error', 'Unauthorized');
     }
 
     /**
@@ -282,8 +286,144 @@ class IncidentController extends Controller
      */
     public function update(Request $request, Incident $incident)
     {
-        return 'incident update';
+        if (!Auth::user()){
+            return redirect('/login');
+        }
 
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+
+        //Check if directorate exists before updating
+        if (!isset($incident)){
+            return redirect('/incident')->with('error', 'Not Found');
+        }
+
+        // Check for correct user & handle request
+        if( (Auth::user()->id == $incident->user_id) ||
+            (Auth::user()->id == 1))
+        {
+            // Person name change if super-admin
+            if(Auth::user()->id == 1){
+                if($incident->person_name != $request->person_name){
+                    $request->validate([
+                        'person_name'   => ['bail', 'required','min:10','max:50'],
+                    ]);
+                    $incident->person_name = $request->person_name;
+
+                    $incident->last_editor = Auth::user()->id;
+                    $incident->last_editor_ip = Request::ip();
+                }
+            }
+
+            // Check, Validate and Handle personal info
+            if( ($incident->person_id != $request->person_id) ||
+                ($incident->person_phone_primary != $request->person_phone_primary) ||
+                ($incident->person_phone_secondary != $request->person_phone_secondary) ||
+                ($incident->date != $request->date) ||
+                ($incident->notes != $request->notes)
+                ){
+                    $request->validate([    
+                        'person_id'     => ['bail', 'required', 'integer', 'min:100000000','max:4299999999'],
+                        
+                        'person_phone_primary'     => ['bail', 'required', 'min:9','max:15', 'regex:/^0[0-9()- ]+$/'],
+                        'person_phone_secondary'   => ['bail', 'max:10', 'regex:/^0[0-9()- ]+$/'],
+            
+                        // 'date'  => ['bail', 'required','regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
+                        'date'  => ['bail', 'required', 'date_format:Y-m-d', 'regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
+                        'notes' => ['bail', 'max:255'],
+                    ]);
+
+                    $incident->person_id = $request->person_id;
+                    $incident->person_phone_secondary = $request->person_phone_secondary;
+                    $incident->person_phone_primary = $request->person_phone_primary;
+                    $incident->date = $request->date;
+                    $incident->notes = $request->notes;
+
+                    $incident->last_editor = Auth::user()->id;
+                    $incident->last_editor_ip = Request::ip();
+            }
+
+            // Check old status
+
+            if($incident->closed_at != null){
+                $old_status = "closed";
+            }elseif($incident->confirmed_at != null){
+                $old_status = "confirmed";
+            }else{
+                $old_status = "suspected";
+            }
+
+            // Status change check & handling
+
+            if($request->type != $old_status) {
+
+                // Validating input
+                $request->validate([    
+                    'date'  => ['bail', 'required', 'date_format:Y-m-d', 'regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
+                ]);
+
+                if($old_status == "suspected"){
+                    $request->validate([    
+                        'type' => ['bail', 'required','in:confirmed,closed'],
+                    ]);
+                    $type = $request->type;
+                }elseif($old_status == "confirmed"){
+                    $request->validate([    
+                        'type' => ['bail', 'required','in:closed'],
+                    ]);
+                    $type = $request->type;
+                }else{
+                    abort(500, 'Unknown error in case type');
+                }
+
+                // handling input
+                if($type == 'confirmed'){
+                    $incident->confirmed_at = $request->date;
+                }elseif($type == 'closed'){
+                    $request->validate([
+                        'close_type' => ['bail', 'required','in:falsepositive,recovery,death'],
+                    ]);
+                    if("close_type" == 'falsepositive'){
+                        $incident->close_type = 1;
+                    }elseif("close_type" == 'recovery'){
+                        $incident->close_type = 2;
+                    }elseif("close_type" == "death"){
+                        $incident->close_type = 3;
+                    }else{
+                        abort(500, 'Unknown Error in close_type');
+                    }
+
+                    $incident->closed_at = $request->date;
+                }
+
+                $incident->last_editor = Auth::user()->id;
+                $incident->last_editor_ip = Request::ip();
+
+            // === the following code is for future proofing === //
+            // === uncomment if suspected type can be changed === //
+            /*
+                }elseif( ($old_status == "suspected") && ($request->type == "suspected") ){
+                    if($request->suspect_type == "personal"){
+                        $sustype = 1;
+                    }elseif($request->suspect_type == "doc"){
+                        $sustype = 2;
+                    }elseif($request->suspect_type == "gov"){
+                        $sustype = 3;
+                    }else{
+                        abort(500, 'Unknown Error in suspect_type');
+                    }
+                
+                    $incident->last_editor = Auth::user()->id;
+                    $incident->last_editor_ip = Request::ip();
+            */
+            }
+
+            $incident->save();
+            return redirect('/incident/'.$incident->id)->withSuccess('تم تحديث معلومات الحالة بنجاح.');
+        }
+
+        return redirect('/incident')->with('error', 'Unauthorized');
     }
 
     /**
