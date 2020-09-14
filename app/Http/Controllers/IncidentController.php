@@ -194,7 +194,7 @@ class IncidentController extends Controller
         $incident->last_editor_ip = Request::ip();
 
         $incident->save();
-        return redirect('/incident'.$incident->id)->with('success', 'Incident Created');
+        return redirect('/incident/'.$incident->id)->with('success', 'Incident Created');
 
         // dd($incident);
         // return 'incident store';
@@ -294,7 +294,7 @@ class IncidentController extends Controller
             return redirect('/inactive');
         }
 
-        //Check if directorate exists before updating
+        //Check if incident exists before updating
         if (!isset($incident)){
             return redirect('/incident')->with('error', 'Not Found');
         }

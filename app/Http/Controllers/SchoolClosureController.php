@@ -308,7 +308,7 @@ class SchoolClosureController extends Controller
             return redirect('/inactive');
         }
 
-        //Check if directorate exists before deleting
+        //Check if closure exists before deleting
         if (!isset($schoolClosure)){
             return redirect('/schoolClosure')->with('error', 'Not Found');
         }
@@ -318,7 +318,7 @@ class SchoolClosureController extends Controller
             return redirect('/schoolClosure')->with('error', 'Unauthorized');
         }
 
-        return view('schoolClosure.edit')->with('schoolClosure', $schoolClosure);
+        return view('schoolClosure.edit')->with('closure', $schoolClosure);
     }
 
     /**
@@ -330,7 +330,55 @@ class SchoolClosureController extends Controller
      */
     public function update(Request $request, SchoolClosure $schoolClosure)
     {
-        //
+        if (!Auth::user()){
+            return redirect('/login');
+        }
+
+        if (Auth::user()->active == false){
+            return redirect('/inactive');
+        }
+
+        //Check if closure exists before updating
+        if (!isset($schoolClosure)){
+            return redirect('/incident')->with('error', 'Not Found');
+        }
+
+        // Check for correct user & handle request
+        if(Auth::user()->id == $schoolClosure->user_id){
+
+            if($schoolClosure->reopening_date == null){
+                $request->validate([
+                    'reopening' => ['bail', 'required', 'in:false, true'],
+                ]);
+
+                if($request->reopening == 'true'){
+                    $request->validate([
+                        'date'      => ['bail', 'required', 'date_format:Y-m-d', 'regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
+                    ]);
+
+                    $schoolClosure->reopening_date = $request->date;
+                    $incident->last_editor = Auth::user()->id; 
+                    $incident->last_editor_ip = Request::ip();
+                }
+            }
+
+            if($schoolClosure->notes != $request->notes){
+                $request->validate([
+                    'notes'     => ['bail', 'max:255'],
+                ]);
+
+                $schoolClosure->notes = strip_tags($request->notes);
+                $incident->last_editor = Auth::user()->id; 
+                $incident->last_editor_ip = Request::ip();
+            }
+
+            $schoolClosure->save();
+            return redirect('/schoolClosure/'.$schoolClosure->id)
+                ->withSuccess('تم تحديث معلومات الإغلاق بنجاح.');
+
+        }
+
+        Abort(500, 'Unknown error');
     }
 
     /**

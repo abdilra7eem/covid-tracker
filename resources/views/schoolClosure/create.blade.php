@@ -108,6 +108,14 @@
                     </div>
                 </div>
             @endif
+            <div class="form-group">
+                <h3>ملاحظات</h3>
+                <small class="form-text text-muted">سجل أيّ ملاحظات أخرى هنا ...</small>
+                <textarea class="form-control" name="notes" rows="4"></textarea>
+                {{-- <small class="form-text text-muted">أدخل رقم هاتف إضافي لصاحب الحالة أو ولي أمره.</small>
+                <div class="valid-tooltip">✓</div>
+                <div class="invalid-tooltip">يرجى إدخال قيمة مناسبة</div> --}}
+            </div>
             <button class="btn btn-primary covid-form-button" type="submit">إنشاء الملف</button>
         </form>
     </section>
