@@ -360,50 +360,55 @@ class IncidentController extends Controller
 
             // Status change check & handling
 
-            if($request->type != $old_status) {
+            // if($request->type != $old_status) {
 
                 // Validating input
-                $request->validate([    
-                    'date'  => ['bail', 'required', 'date_format:Y-m-d', 'regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
-                ]);
-
-                if($old_status == "suspected"){
-                    $request->validate([    
-                        'type' => ['bail', 'required','in:confirmed,closed'],
-                    ]);
-                    $type = $request->type;
-                }elseif($old_status == "confirmed"){
-                    $request->validate([    
-                        'type' => ['bail', 'required','in:closed'],
-                    ]);
-                    $type = $request->type;
-                }else{
-                    abort(500, 'Unknown error in case type');
+                $type = null;
+                if($request->type != $old_status) {
+                    if($old_status == "suspected"){
+                        $request->validate([    
+                            'type' => ['bail', 'required','in:suspected,confirmed,closed'],
+                        ]);
+                        $type = $request->type;
+                    }elseif($old_status == "confirmed"){
+                        $request->validate([    
+                            'type' => ['bail', 'required','in:confirmed,closed'],
+                        ]);
+                        $type = $request->type;
+                    }
                 }
 
                 // handling input
                 if($type == 'confirmed'){
+                    $request->validate([    
+                        'date'  => ['bail', 'required', 'date_format:Y-m-d', 'regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
+                    ]);
                     $incident->confirmed_at = $request->date;
+
+                    $incident->last_editor = Auth::user()->id;
+                    $incident->last_editor_ip = $request->ip();
                 }elseif($type == 'closed'){
                     $request->validate([
                         'close_type' => ['bail', 'required','in:falsepositive,recovery,death'],
+                        'date'  => ['bail', 'required', 'date_format:Y-m-d', 'regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
                     ]);
-                    
-                    if("close_type" == 'falsepositive'){
+
+                    $incident->closed_at = $request->date;
+                    if($request->close_type == "falsepositive"){
                         $incident->close_type = 1;
-                    }elseif("close_type" == 'recovery'){
+                    }elseif($request->close_type == "recovery"){
                         $incident->close_type = 2;
-                    }elseif("close_type" == "death"){
+                    }elseif($request->close_type == "death"){
                         $incident->close_type = 3;
                     }else{
                         abort(500, 'Unknown Error in close_type');
                     }
 
-                    $incident->closed_at = $request->date;
-                }
 
-                $incident->last_editor = Auth::user()->id;
-                $incident->last_editor_ip = $request->ip();
+                    $incident->last_editor = Auth::user()->id;
+                    $incident->last_editor_ip = $request->ip();
+
+                }
 
             // === the following code is for future proofing === //
             // === uncomment if suspected type can be changed === //
@@ -422,7 +427,7 @@ class IncidentController extends Controller
                     $incident->last_editor = Auth::user()->id;
                     $incident->last_editor_ip = $request->ip();
             */
-            }
+            // }
 
             $incident->save();
             return redirect('/incident/'.$incident->id)->withSuccess('تم تحديث معلومات الحالة بنجاح.');

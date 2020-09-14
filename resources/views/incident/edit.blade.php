@@ -66,7 +66,7 @@
                 <div class="invalid-tooltip">يرجى إدخال قيمة مناسبة</div>
             </div>
             <div class="form-group">
-                <label class="school-radio-label">نوع الحالة الآن: </label>
+                <label class="school-radio-label">نوع الحالة الآن: </label><br/>
                 @if($status == "suspected")
                     <div class="form-check form-check-inline covid-school-radio-grid">
                         <input class="form-check-input" type="radio" name="type" id="suspected" value="suspected" checked>
@@ -81,9 +81,9 @@
                     </div>
                 @endif
                 <div class="form-check form-check-inline covid-school-radio-grid">
-                    <input class="form-check-input" type="radio" name="type" id="closed" value="closed"
+                    <input class="form-check-input" type="radio" name="type" id="type" value="closed"
                     @if($status == "closed") checked disabled @endif>
-                    <label class="form-check-label" for="closed">
+                    <label class="form-check-label" for="type">
                         مغلقة
                     </label>
                 </div>
@@ -129,7 +129,7 @@
                     {{$incident->notes ?? ''}}
                 </textarea>
             </div>
-            <button class="btn btn-primary covid-form-button" type="submit">تسجيل الحالة</button>
+            <button class="btn btn-warning covid-form-button" type="submit">تحديث سجل الحالة</button>
         </form>
     </section>
 @endsection
