@@ -5,9 +5,7 @@ Editing:
 
 	- Users:
 			[ not inactive! ]
-			email: 
-				supervisor & school: only admins
-				admins: super-admin (user 1)
+			email: only super admin (user 1)
 			name:
 				supervisor & school: only admins
 				admins: super-admin (user 1)
