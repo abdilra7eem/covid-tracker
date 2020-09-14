@@ -320,28 +320,32 @@ class IncidentController extends Controller
             if( ($incident->person_id != $request->person_id) ||
                 ($incident->person_phone_primary != $request->person_phone_primary) ||
                 ($incident->person_phone_secondary != $request->person_phone_secondary) ||
-                ($incident->date != $request->date) ||
-                ($incident->notes != $request->notes)
+                ($incident->date != $request->date)
                 ){
                     $request->validate([    
                         'person_id'     => ['bail', 'required', 'integer', 'min:100000000','max:4299999999'],
                         
                         'person_phone_primary'     => ['bail', 'required', 'min:9','max:15', 'regex:/^0[0-9()- ]+$/'],
                         'person_phone_secondary'   => ['bail', 'max:10', 'regex:/^0[0-9()- ]+$/'],
-            
-                        // 'date'  => ['bail', 'required','regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
-                        'date'  => ['bail', 'required', 'date_format:Y-m-d', 'regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
-                        'notes' => ['bail', 'max:255'],
                     ]);
 
                     $incident->person_id = $request->person_id;
                     $incident->person_phone_secondary = $request->person_phone_secondary;
                     $incident->person_phone_primary = $request->person_phone_primary;
-                    $incident->date = $request->date;
-                    $incident->notes = $request->notes;
 
                     $incident->last_editor = Auth::user()->id;
                     $incident->last_editor_ip = Request::ip();
+            }
+
+            // Check and handle notes changes
+            if($incident->notes != $request->notes){
+                $request->validate([    
+                    'notes' => ['bail', 'max:255'],
+                ]);
+
+                $incident->notes = $request->notes;
+                $incident->last_editor = Auth::user()->id;
+                $incident->last_editor_ip = Request::ip();
             }
 
             // Check old status
@@ -384,6 +388,7 @@ class IncidentController extends Controller
                     $request->validate([
                         'close_type' => ['bail', 'required','in:falsepositive,recovery,death'],
                     ]);
+                    
                     if("close_type" == 'falsepositive'){
                         $incident->close_type = 1;
                     }elseif("close_type" == 'recovery'){
