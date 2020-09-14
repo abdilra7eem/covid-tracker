@@ -37,7 +37,7 @@
                 </label>
                 <input dir="ltr" class="form-control" name="person_id" type="text" 
                     placeholder="XXXXXXXXX" inputmode="numeric"
-                    minlength="9" maxlength="10"
+                    minlength="9" maxlength="9"
                     pattern="^[0-9]+$"
                     required>
                 <small class="form-text text-muted">تأكد من إدخال قيمة صحيحة. أي خطأ في هذه القيمة سيسبب أخطاء في تتبع الحالات.</small>

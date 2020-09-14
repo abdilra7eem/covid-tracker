@@ -6,9 +6,9 @@
         if($incident->closed_at != null){
             $status = "closed";
         }elseif($incident->confirmed_at != null){
-            $status = "confirmed"
+            $status = "confirmed";
         }else {
-            $status = "suspected"
+            $status = "suspected";
         }
     @endphp
 
@@ -34,7 +34,7 @@
                 <input dir="ltr" class="form-control" name="person_id" type="text" 
                     placeholder="XXXXXXXXX" inputmode="numeric"
                     value="{{$incident->person_id}}"
-                    minlength="9" maxlength="10"
+                    minlength="9" maxlength="9"
                     pattern="^[0-9]+$"
                     required @if(Auth::user()->id != 1) readonly @endif>
                 <small class="form-text text-muted">تأكد من إدخال قيمة صحيحة. أي خطأ في هذه القيمة سيسبب أخطاء في تتبع الحالات.</small>
@@ -82,11 +82,13 @@
                 @endif
                 <div class="form-check form-check-inline covid-school-radio-grid">
                     <input class="form-check-input" type="radio" name="type" id="closed" value="closed"
-                    @if($status == "confirmed") checked @endif>
-                    <label class="form-check-label" for="closed"> مغلقة</label>
+                    @if($status == "closed") checked disabled @endif>
+                    <label class="form-check-label" for="closed">
+                        مغلقة
+                    </label>
                 </div>
             </div>
-            @if(($status != "closed") || (Auth::user()->id == 1))
+            @if($status != "closed")
                 <div class="form-group" id="closeType">
                     <h3>إذا كانت الحالة ستغلق، فحدد نوع الإغلاق: </h3>
                     <div class="form-check form-check-inline covid-school-radio-grid">
@@ -110,16 +112,16 @@
                     </div>
                     <small class="form-text text-muted">إذا كان الاشتباه من جهة رسمية، فحدد الجهة في الملاحظات</small>
                 </div>
+                <div class="form-group" id="date">
+                    <label for='date'>التاريخ</label>
+                    <input dir="rtl" lang="ar" class="form-control" name="date" type="date"
+                        value="{{date('Y-m-d')}}" min="2020-07-31" max="{{date('Y-m-d')}}"
+                        required>
+                    <small class="form-text text-muted">عدّل التاريخ حسب الحالة الجديدة إذا تغيرت الحالة.</small>
+                    <div class="valid-tooltip">✓</div>
+                    <div class="invalid-tooltip">يرجى إدخال قيمة مناسبة</div>
+                </div>
             @endif
-            <div class="form-group" id="date">
-                <label for='date'>التاريخ</label>
-                <input dir="rtl" lang="ar" class="form-control" name="date" type="date"
-                    value="{{date('Y-m-d')}}" min="2020-07-31" max="{{date('Y-m-d')}}"
-                    required>
-                <small class="form-text text-muted">عدّل التاريخ حسب الحالة الجديدة إذا تغيرت الحالة.</small>
-                <div class="valid-tooltip">✓</div>
-                <div class="invalid-tooltip">يرجى إدخال قيمة مناسبة</div>
-            </div>
             <div class="form-group">
                 <h3>ملاحظات</h3>
                 <small class="form-text text-muted">سجل أيّ ملاحظات أخرى هنا ...</small>

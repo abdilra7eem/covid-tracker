@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Incident;
 use App\User;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request as Request;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -118,10 +118,10 @@ class IncidentController extends Controller
             'type'          => ['bail', 'required','in:suspected,confirmed'],
 
             'person_name'   => ['bail', 'required','min:10','max:50'],
-            'person_id'     => ['bail', 'required', 'integer', 'min:100000000','max:4299999999'],
+            'person_id'     => ['bail', 'required', 'min:9', 'max:9', 'regex:/^[0-9]+$/'],
             
-            'person_phone_primary'     => ['bail', 'required', 'min:9','max:15', 'regex:/^0[0-9()- ]+$/'],
-            'person_phone_secondary'   => ['bail', 'max:10', 'regex:/^0[0-9()- ]+$/'],
+            'person_phone_primary'     => ['bail', 'required', 'min:9','max:15', 'regex:/^0[0-9\-x\.]+$/'],
+            'person_phone_secondary'   => ['bail', 'max:10', 'regex:/^0[0-9\-x\.]+$/'],
 
             // 'date'  => ['bail', 'required','regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
             'date'  => ['bail', 'required', 'date_format:Y-m-d', 'regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
@@ -191,7 +191,7 @@ class IncidentController extends Controller
 
         $incident->notes = strip_tags($request->notes);
         $incident->last_editor = Auth::user()->id; 
-        $incident->last_editor_ip = Request::ip();
+        $incident->last_editor_ip = $request->ip();
 
         $incident->save();
         return redirect('/incident/'.$incident->id)->with('success', 'Incident Created');
@@ -312,7 +312,7 @@ class IncidentController extends Controller
                     $incident->person_name = $request->person_name;
 
                     $incident->last_editor = Auth::user()->id;
-                    $incident->last_editor_ip = Request::ip();
+                    $incident->last_editor_ip = $request->ip();
                 }
             }
 
@@ -323,10 +323,10 @@ class IncidentController extends Controller
                 ($incident->date != $request->date)
                 ){
                     $request->validate([    
-                        'person_id'     => ['bail', 'required', 'integer', 'min:100000000','max:4299999999'],
+                        'person_id'     => ['bail', 'required', 'min:9', 'max:9', 'regex:/^[0-9]+$/'],
                         
-                        'person_phone_primary'     => ['bail', 'required', 'min:9','max:15', 'regex:/^0[0-9()- ]+$/'],
-                        'person_phone_secondary'   => ['bail', 'max:10', 'regex:/^0[0-9()- ]+$/'],
+                        'person_phone_primary'     => ['bail', 'required', 'min:9','max:15', 'regex:/^0[0-9\-x\.]+$/'],
+                        'person_phone_secondary'   => ['bail', 'max:10', 'regex:/^0[0-9\-x\.]+$/'],
                     ]);
 
                     $incident->person_id = $request->person_id;
@@ -334,7 +334,7 @@ class IncidentController extends Controller
                     $incident->person_phone_primary = $request->person_phone_primary;
 
                     $incident->last_editor = Auth::user()->id;
-                    $incident->last_editor_ip = Request::ip();
+                    $incident->last_editor_ip = $request->ip();
             }
 
             // Check and handle notes changes
@@ -345,7 +345,7 @@ class IncidentController extends Controller
 
                 $incident->notes = $request->notes;
                 $incident->last_editor = Auth::user()->id;
-                $incident->last_editor_ip = Request::ip();
+                $incident->last_editor_ip = $request->ip();
             }
 
             // Check old status
@@ -403,7 +403,7 @@ class IncidentController extends Controller
                 }
 
                 $incident->last_editor = Auth::user()->id;
-                $incident->last_editor_ip = Request::ip();
+                $incident->last_editor_ip = $request->ip();
 
             // === the following code is for future proofing === //
             // === uncomment if suspected type can be changed === //
@@ -420,7 +420,7 @@ class IncidentController extends Controller
                     }
                 
                     $incident->last_editor = Auth::user()->id;
-                    $incident->last_editor_ip = Request::ip();
+                    $incident->last_editor_ip = $request->ip();
             */
             }
 
@@ -455,7 +455,7 @@ class IncidentController extends Controller
             if((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $incident->user->directorate_id)){
                 $incident->deleted = true;
                 $incident->last_editor = Auth::user()->id; 
-                $incident->last_editor_ip = Request::ip();
+                $incident->last_editor_ip = $request->ip();
 
                 $incident->save();
                 $message = 'تم حذف سجل الحالة.';
@@ -467,7 +467,7 @@ class IncidentController extends Controller
             if(Auth::user()->account_type == 1){
                 $incident->deleted = false;
                 $incident->last_editor = Auth::user()->id; 
-                $incident->last_editor_ip = Request::ip();
+                $incident->last_editor_ip = $request->ip();
 
                 $incident->save();
                 $message = 'تم استرجاع السجل المحذوف';

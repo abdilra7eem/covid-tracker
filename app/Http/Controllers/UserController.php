@@ -148,7 +148,7 @@ class UserController extends Controller
                 'email' => ['bail', 'required','min:10','max:50', 'email', 'unique:users'],
                 'phone_primary' => ['bail', 'required', 'min:9','max:18', 'regex:/^0[0-9\-x\.]+$/'],
                 'phone_secondary' => ['bail', 'max:13', 'regex:/^0[0-9\-x\.]+$/'],
-                'gov_id' => ['bail', 'required', 'min:9','max:10', 'regex:/^[0-9]+$/', 'unique:users'],
+                'gov_id' => ['bail', 'required', 'min:9','max:9', 'regex:/^[0-9]+$/', 'unique:users'],
             ]);
 
             $user = new User;
@@ -162,7 +162,7 @@ class UserController extends Controller
             $user->password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
             // dd($user);
             $user->last_editor = Auth::user()->id;
-            $user->last_editor_ip = Request::ip();
+            $user->last_editor_ip = $request->ip();
 
             $user->save();
             return redirect('/user')->with('success', 'User Created');
@@ -305,7 +305,7 @@ class UserController extends Controller
 
                 if($request->gov_id != $user->gov_id){
                     $request->validate([
-                        'gov_id' => ['bail', 'required', 'min:9','max:10', 'regex:/^[0-9]+$/', 'unique:users'],
+                        'gov_id' => ['bail', 'required', 'min:9','max:9', 'regex:/^[0-9]+$/', 'unique:users'],
                     ]);
                 }
 
@@ -326,7 +326,7 @@ class UserController extends Controller
             $user->phone_secondary = $request->phone_secondary;
 
             $user->last_editor = Auth::user()->id;
-            $user->last_editor_ip = Request::ip();
+            $user->last_editor_ip = $request->ip();
 
             $user->save();
 
@@ -371,7 +371,7 @@ class UserController extends Controller
                 $message = 'تم تفعيل الحساب وسيتمكن من إنشاء و تعديل  وعرض البيانات';
             }
             $user->last_editor = Auth::user()->id;
-            $user->last_editor_ip = Request::ip();
+            $user->last_editor_ip = $request->ip();
 
             $user->save();
             return back()->withSuccess($message);

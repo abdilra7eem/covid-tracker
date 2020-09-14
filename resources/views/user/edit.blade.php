@@ -23,7 +23,7 @@
                 </label>
                 <input dir="ltr" class="form-control" name="gov_id" type="text" 
                     value="{{$user->gov_id}}" inputmode="numeric"
-                    minlength="9" maxlength="10"
+                    minlength="9" maxlength="9"
                     pattern="^[0-9]+$"
                     @if(Auth::user()->id != 1) disabled @endif>
                 <div class="valid-tooltip">✓</div>

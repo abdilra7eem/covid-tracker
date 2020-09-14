@@ -221,7 +221,7 @@ class SchoolClosureController extends Controller
             $closure->notes = strip_tags($request->notes);
         }
         $closure->last_editor = Auth::user()->id; 
-        $closure->last_editor_ip = Request::ip();
+        $closure->last_editor_ip = $request->ip();
 
         $closure->save();
         return redirect('/schoolClosure/'.$closure->id)->withSuccess('success', 'تم إنشاء سجل الإغلاق');
@@ -358,7 +358,7 @@ class SchoolClosureController extends Controller
 
                     $schoolClosure->reopening_date = $request->date;
                     $incident->last_editor = Auth::user()->id; 
-                    $incident->last_editor_ip = Request::ip();
+                    $incident->last_editor_ip = $request->ip();
                 }
             }
 
@@ -369,7 +369,7 @@ class SchoolClosureController extends Controller
 
                 $schoolClosure->notes = strip_tags($request->notes);
                 $incident->last_editor = Auth::user()->id; 
-                $incident->last_editor_ip = Request::ip();
+                $incident->last_editor_ip = $request->ip();
             }
 
             $schoolClosure->save();
@@ -405,7 +405,7 @@ class SchoolClosureController extends Controller
             if((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $schoolClosure->user->directorate_id)){
                 $schoolClosure->deleted = true;
                 $schoolClosure->last_editor = Auth::user()->id; 
-                $schoolClosure->last_editor_ip = Request::ip();
+                $schoolClosure->last_editor_ip = $request->ip();
 
                 $schoolClosure->save();
                 $message = 'تم حذف سجل الإغلاق.';
@@ -417,7 +417,7 @@ class SchoolClosureController extends Controller
             if(Auth::user()->account_type == 1){
                 $schoolClosure->deleted = false;
                 $schoolClosure->last_editor = Auth::user()->id; 
-                $schoolClosure->last_editor_ip = Request::ip();
+                $schoolClosure->last_editor_ip = $request->ip();
 
                 $schoolClosure->save();
                 $message = 'تم استرجاع السجل المحذوف';
