@@ -22,6 +22,11 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
+    public function register()
+    {
+        return redirect('/')->withError("التسجيل مغلق. تواصل مع أحد المشرفين.");
+    }
+
     /**
      * Show the application dashboard.
      *

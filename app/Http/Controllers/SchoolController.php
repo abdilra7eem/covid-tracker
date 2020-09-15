@@ -65,7 +65,11 @@ class SchoolController extends Controller
                     ->with('school')
                     ->inRandomOrder()->paginate(25);
         } else {
-            return redirect('/school/' . Auth::user()->school->id);
+            if(isset(Auth::user()->school) && (Auth::user()->school != null)){
+                return redirect('/school/'.Auth::user()->school->id);
+            }else{
+                return redirect('/school/create')->withError('من فضلك أنشئ ملفًا لمدرستك قبل المتابعة.');
+            }
         }
         
         return view('school.index')->withSchools($schools);
@@ -129,8 +133,8 @@ class SchoolController extends Controller
             'youngest_class'        => ['bail', 'required', 'integer', 'between:1,12'],
             'oldest_class'          => ['bail', 'required', 'integer', 'between:1,12'],
             'building_year'         => ['bail', 'required', 'integer', 'between:1780,2020'],
-            'total_male_students'   => ['bail', 'required', 'integer', 'between:0,900'],
-            'total_female_students' => ['bail', 'required', 'integer', 'between:0,900'],
+            'total_male_students'   => ['bail', 'required', 'integer', 'between:0,1200'],
+            'total_female_students' => ['bail', 'required', 'integer', 'between:0,1200'],
             'total_male_staff'      => ['bail', 'required', 'integer', 'between:0,50'],
             'total_female_staff'    => ['bail', 'required', 'integer', 'between:0,50'],
             'number_of_classrooms'  => ['bail', 'required', 'integer', 'between:2,40'],
@@ -291,8 +295,8 @@ class SchoolController extends Controller
             'youngest_class'        => ['bail', 'required', 'integer', 'between:1,12'],
             'oldest_class'          => ['bail', 'required', 'integer', 'between:1,12'],
             'building_year'         => ['bail', 'required', 'integer', 'between:1780,2020'],
-            'total_male_students'   => ['bail', 'required', 'integer', 'between:0,900'],
-            'total_female_students' => ['bail', 'required', 'integer', 'between:0,900'],
+            'total_male_students'   => ['bail', 'required', 'integer', 'between:0,1200'],
+            'total_female_students' => ['bail', 'required', 'integer', 'between:0,1200'],
             'total_male_staff'      => ['bail', 'required', 'integer', 'between:0,50'],
             'total_female_staff'    => ['bail', 'required', 'integer', 'between:0,50'],
             'number_of_classrooms'  => ['bail', 'required', 'integer', 'between:2,40'],
@@ -406,7 +410,7 @@ class SchoolController extends Controller
      * @param  \App\School  $school
      * @return \Illuminate\Http\Response
      */
-    public function destroy(School $school)
+    public function destroy(Request $request, School $school)
     {
                 
         if (!Auth::user()){

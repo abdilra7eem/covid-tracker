@@ -44,6 +44,10 @@
         </table>
     </section>
     <section class="container">
-        {{ $users->links() }}
+        @if($directorate == 0)
+            {{ $users->appends(['type' => $type])->links() }}
+        @else
+            {{ $users->appends(['directorate' => $directorate])->links() }}
+        @endif
     </section>
 @endsection

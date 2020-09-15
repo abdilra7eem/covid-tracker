@@ -61,7 +61,7 @@
                     inputmode="numeric" placeholder="05X-XXX-XXXX" 
                     minlength="9" maxlength="15"
                     pattern="^0[0-9\-x\.]+$"
-                    required>
+                    >
                 <small class="form-text text-muted">أدخل رقم هاتف إضافي لصاحب الحالة أو ولي أمره.</small>
                 <div class="valid-tooltip">✓</div>
                 <div class="invalid-tooltip">يرجى إدخال قيمة مناسبة</div>

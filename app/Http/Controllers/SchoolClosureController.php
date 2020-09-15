@@ -56,40 +56,52 @@ class SchoolClosureController extends Controller
                     ->where("grade", ">", 12)
                     ->where("reopening_date", null)
                     ->orderBy("grade", "DESC")
+                    ->distinct('user_id')
+                    ->orderBy('closure_date', 'DESC')
                     ->with("user")->with("user.school")
-                    ->get()->unique("user_id");
+                    ->paginate(25);
                 $type = "complete";
-            } else {
+            } elseif($request->input("type") == "partial") {
                 $schools = SchoolClosure::where('deleted', false)
                     ->where("reopening_date", null)
                     ->orderBy("grade", "DESC")
+                    ->distinct('user_id')
+                    ->where('grade', '<', 13)
+                    ->orderBy('closure_date', 'DESC')
                     ->with("user")->with("user.school")
-                    ->get()->unique("user_id");
-                if($request->input("type") == "partial") {
-                    $type = "partial";
-                }
+                    ->paginate(25); 
+                $type = "partial";
+            }else {
+                $schools = SchoolClosure::where('deleted', false)
+                    ->where("reopening_date", null)
+                    ->orderBy("updated_at", "DESC")
+                    ->with("user")->with("user.school")
+                    ->paginate(25);
             }
         } elseif(Auth::user()->account_type == 2) {
             if($request->input("type") == "complete"){
                 $schools = SchoolClosure::where('deleted', false)
                     ->where("grade", ">", 12)
                     ->where("school_closures.reopening_date", null)
+                    ->orderBy("school_closures.grade", "DESC")
+                    ->distinct('user_id')
                     ->join("users", "school_closures.user_id", "users.id")
                     ->where("users.directorate_id", Auth::user()->directorate_id)
                     ->select("users.id as user_id", "users.*", "school_closures.id as closure_id", "school_closures.*")
-                    ->orderBy("school_closures.grade", "DESC")
                     ->with("user")->with("user.school")
-                    ->get()->unique("user_id");
+                    ->paginate(25);
+                    // ->get()->unique("user_id");
                 $type = "complete";
             } else {
                 $schools = SchoolClosure::where('deleted', false)
                     ->where("school_closures.reopening_date", null)
+                    // ->where('user_id', Auth::user()->id)
                     ->join("users", "school_closures.user_id", "users.id")
                     ->where("users.directorate_id", Auth::user()->directorate_id)
                     ->select("users.id as user_id", "users.*", "school_closures.id as closure_id", "school_closures.*")
                     ->orderBy("school_closures.grade", "DESC")
                     ->with("user")->with("user.school")
-                    ->get()->unique("user_id");
+                    ->paginate(25);
                 if($request->input("type") == "partial") {
                     $type = "partial";
                 }
@@ -99,11 +111,15 @@ class SchoolClosureController extends Controller
                 ->where("reopening_date", null)
                 ->where("user_id", Auth::user()->id)
                 ->with("user")->with("user.school")
-                ->with("user.school")
                 ->orderBy("school_closures.grade", "DESC")
-                ->get()->unique("user_id");
+                ->paginate(25);
+                // ->get()->unique("user_id");
         }
-        return view("schoolClosure.index")->withSchools($schools)->withType($type);
+        // if("type" != "all"){
+            return view("schoolClosure.index")->withSchools($schools)->withType($type);
+        // }else{
+        //     return view("schoolClosure.index")->withSchools($schools)->withType($type);
+        // }
     }
 
     /**
@@ -162,8 +178,8 @@ class SchoolClosureController extends Controller
             return redirect('/inactive');
         }
 
-        if(Auth::user()->id != 3){
-            return redirect()->withError('لا يمكنك إنشاء سجل إغلاق لأن حسابك ليس حساب مدرسة');
+        if(Auth::user()->account_type != 3){
+            return redirect('/schoolClosure')->withError('لا يمكنك إنشاء سجل إغلاق لأن حسابك ليس حساب مدرسة');
         }
 
         $request->validate([
@@ -224,7 +240,7 @@ class SchoolClosureController extends Controller
         $closure->last_editor_ip = $request->ip();
 
         $closure->save();
-        return redirect('/schoolClosure/'.$closure->id)->withSuccess('success', 'تم إنشاء سجل الإغلاق');
+        return redirect('/schoolClosure/'.$closure->id)->withSuccess('تم إنشاء سجل الإغلاق');
 
     }
 
@@ -343,6 +359,8 @@ class SchoolClosureController extends Controller
             return redirect('/incident')->with('error', 'Not Found');
         }
 
+        dd($request);
+
         // Check for correct user & handle request
         if(Auth::user()->id == $schoolClosure->user_id){
 
@@ -387,7 +405,7 @@ class SchoolClosureController extends Controller
      * @param  \App\SchoolClosure  $schoolClosure
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SchoolClosure $schoolClosure)
+    public function destroy(Request $request, SchoolClosure $schoolClosure)
     {
         if (!Auth::user()){
             abort(403, 'Not Authorized');
@@ -421,7 +439,7 @@ class SchoolClosureController extends Controller
 
                 $schoolClosure->save();
                 $message = 'تم استرجاع السجل المحذوف';
-                return back()->withSuccess($message);
+                return redirect('/schoolClosure')->withSuccess($message);
             }else{
                 return back()->withError('لا يمكنك استرجاع هذا السجل. لاسترجاعه، تواصل مع إدارة البرنامج.');
             }

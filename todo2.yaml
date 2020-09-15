@@ -18,9 +18,53 @@ Bugs:
 	- abort(403) to Soft-error messages with redirect
 	- delete is a toggle; multiple calls could result in undesireable effect. Should have a status.
 	- delete is preventing back button; should be Ajax.
-		
-	
+	- reopening: fix checkbox bug
+	#- school user: /user index hide deactivated accounts
+	#- user.show:
+		#- if school:
+			#- change 'اسم المشرف' to 'اسم المدرسة'
+			#- نوع الحساب
+			#- text-danger: الحساب لمدرسة ليس لها ملف
+	#- schoolClosure index:
+		#- add pagination
+		#- fix type=partial bug
+	#- hide buttons in printing
+	- add page titles
+
+
+Integrity:
+	- Do not allow creating new incident records (based on person_id) for:
+		- people who died
+		- people who have a record that is still not closed
+		#- problems:
+			#- what if person_id is unknown at time of creation (must be available)
+				#- when updating, create an anomaly alert ? (Do not allow creation)
+			#- information leakage based on person_id (mitigated)
+	- Do not allow creating new closure, if grade section is closed:
+		- validate grade & section for partial
+		- validate grade for >12
+
 Accountability:
 	# - last_editor_ip: migration, factory, show (for admins), create & update save.
 
-Editing: according to editin-permissions.yaml
+#Editing: according to editin-permissions.yaml
+
+Performance:
+	- try to avoide double sorting in closure
+
+UI/UX:
+	closure:
+		- filters:
+			- deleted (sort by updated_at)
+			- open (sort by reopening_date)
+		- filter links
+	school:
+		- filter:
+			- locked
+			- no data
+		- filter links
+	incident:
+		- filters & links
+	deleted:
+		- filters & links
+		

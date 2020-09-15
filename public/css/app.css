@@ -10954,7 +10954,7 @@ label {
 }
 
 .covid-school-radio-grid {
-  width: 100px;
+  width: 120px;
 }
 
 .form-check-input {
@@ -10992,5 +10992,15 @@ td[dir=ltr] {
 
 .covid-index-row {
   cursor: pointer;
+}
+
+@media print {
+  .btn {
+    display: none;
+  }
+}
+
+.dropdown-item {
+  text-align: start;
 }
 

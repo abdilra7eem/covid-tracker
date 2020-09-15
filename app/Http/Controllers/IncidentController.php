@@ -40,14 +40,11 @@ class IncidentController extends Controller
             return redirect('/inactive');
         }
 
-
         if((Auth::user()->account_type == 1) && ($request->input('type') == 'deleted')){
-            $directorates = Incident::where('deleted', true)
+            $incidents = Incident::where('deleted', true)
                 ->paginate(25);
             return view('incident.index')->withIncidents($incidents);
-        }
-
-        if (Auth::user()->account_type == 1) {
+        }elseif (Auth::user()->account_type == 1) {
             $incidents = Incident::where('deleted', false)
                 ->with('user')
                 ->inRandomOrder()->paginate(25);
@@ -106,7 +103,7 @@ class IncidentController extends Controller
         }
         
         if(Auth::user()->account_type != 3) {
-            return redirect()->withError('يمكن فقط لحساب مدرسة إنشاء سجل حالة');
+            return redirect('/incident')->withError('يمكن فقط لحساب مدرسة إنشاء سجل حالة');
         }
 
         // dd($request->notes);
@@ -121,7 +118,7 @@ class IncidentController extends Controller
             'person_id'     => ['bail', 'required', 'min:9', 'max:9', 'regex:/^[0-9]+$/'],
             
             'person_phone_primary'     => ['bail', 'required', 'min:9','max:15', 'regex:/^0[0-9\-x\.]+$/'],
-            'person_phone_secondary'   => ['bail', 'max:10', 'regex:/^0[0-9\-x\.]+$/'],
+            'person_phone_secondary'   => ['bail', 'max:15', 'regex:/^0[0-9\-x\.]+$/'],
 
             // 'date'  => ['bail', 'required','regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
             'date'  => ['bail', 'required', 'date_format:Y-m-d', 'regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
@@ -326,7 +323,7 @@ class IncidentController extends Controller
                         'person_id'     => ['bail', 'required', 'min:9', 'max:9', 'regex:/^[0-9]+$/'],
                         
                         'person_phone_primary'     => ['bail', 'required', 'min:9','max:15', 'regex:/^0[0-9\-x\.]+$/'],
-                        'person_phone_secondary'   => ['bail', 'max:10', 'regex:/^0[0-9\-x\.]+$/'],
+                        'person_phone_secondary'   => ['bail', 'max:15', 'regex:/^0[0-9\-x\.]+$/'],
                     ]);
 
                     $incident->person_id = $request->person_id;
@@ -360,9 +357,7 @@ class IncidentController extends Controller
 
             // Status change check & handling
 
-            // if($request->type != $old_status) {
-
-                // Validating input
+                // Checking and validating type
                 $type = null;
                 if($request->type != $old_status) {
                     if($old_status == "suspected"){
@@ -378,7 +373,7 @@ class IncidentController extends Controller
                     }
                 }
 
-                // handling input
+                // Validation for "confirmed" and "closed"
                 if($type == 'confirmed'){
                     $request->validate([    
                         'date'  => ['bail', 'required', 'date_format:Y-m-d', 'regex:/^202[0-9]-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/'],
@@ -404,16 +399,18 @@ class IncidentController extends Controller
                         abort(500, 'Unknown Error in close_type');
                     }
 
-
                     $incident->last_editor = Auth::user()->id;
                     $incident->last_editor_ip = $request->ip();
 
                 }
 
-            // === the following code is for future proofing === //
-            // === uncomment if suspected type can be changed === //
-            /*
-                }elseif( ($old_status == "suspected") && ($request->type == "suspected") ){
+
+                // Change suspect type
+                if( ($old_status == 'suspected') && ($request->type == "suspected") ){
+                    $request->validate([
+                        'suspect_type'  => ['bail', 'required','in:personal,doc,gov'],
+                    ]);
+
                     if($request->suspect_type == "personal"){
                         $sustype = 1;
                     }elseif($request->suspect_type == "doc"){
@@ -424,10 +421,11 @@ class IncidentController extends Controller
                         abort(500, 'Unknown Error in suspect_type');
                     }
                 
+                    $incident->suspect_type = $sustype;
                     $incident->last_editor = Auth::user()->id;
                     $incident->last_editor_ip = $request->ip();
-            */
-            // }
+                }
+
 
             $incident->save();
             return redirect('/incident/'.$incident->id)->withSuccess('تم تحديث معلومات الحالة بنجاح.');
@@ -442,7 +440,7 @@ class IncidentController extends Controller
      * @param  \App\Incident  $incident
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Incident $incident)
+    public function destroy(Request $request, Incident $incident)
     {
         if (!Auth::user()){
             return redirect('/login');
@@ -476,7 +474,7 @@ class IncidentController extends Controller
 
                 $incident->save();
                 $message = 'تم استرجاع السجل المحذوف';
-                return back()->withSuccess($message);
+                return redirect('/incident')->withSuccess($message);
             }else{
                 return back()->withError('لا يمكنك استرجاع هذا السجل. لاسترجاعه، تواصل مع إدارة البرنامج.');
             }

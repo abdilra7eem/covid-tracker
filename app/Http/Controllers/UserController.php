@@ -49,47 +49,62 @@ class UserController extends Controller
             $type = 'admins';
         }elseif($request->input('type') == 'supervisors'){
             $type = 'supervisors';
+        }elseif($request->input('type') == 'locked'){
+            $type = 'locked';
         }
 
         if(Auth::user()->account_type == 1) {
-            if($type == 'admins'){
-                $users = User::where('account_type', 1)
-                ->paginate(25);
-            } elseif($type == 'supervisors') {
-                if($directorate == 0) {
-                    $users = User::where('account_type', 2)
+            if($type == 'locked'){
+                $users = User::where('active', false)
+                    ->orderBy('updated_at', 'DESC')
                     ->paginate(25);
-                } else {
-                    $users = User::where('account_type', 2)
+            }elseif($type == 'admins'){
+                $users = User::where('account_type', 1)
+                    ->where('active', true)
+                    ->paginate(25);
+            } elseif($directorate != 0) {
+                $users = User::where('account_type', 2)
+                    ->where('active', true)
                     ->where('directorate_id', $directorate)
-                    ->paginate(25);
-                }
-            } else {
-                $users = User::where('account_type', '!=', 3)
-                ->paginate(25);
-            }
-            return view('user.index')->withUsers($users);
-        } elseif(Auth::user()->account_type == 2){
-            if($type == 'admins'){
-                $users = User::where('account_type', 1)
                     ->paginate(25);
             } elseif($type == 'supervisors') {
                 $users = User::where('account_type', 2)
-                ->where('directorate_id', Auth::user()->directorate_id)
-                ->paginate(25);
+                    ->where('active', true)
+                    ->paginate(25);
+            } else {
+                $users = User::where('account_type', '!=', 3)
+                    ->where('active', true)
+                    ->paginate(25);
+            }
+            return view('user.index')->withUsers($users)
+                ->withType($type)->withDirectorate($directorate);
+        } elseif(Auth::user()->account_type == 2){
+            if($type == 'admins'){
+                $users = User::where('account_type', 1)
+                    ->where('active', true)
+                    ->paginate(25);
+            } elseif($type == 'supervisors') {
+                $users = User::where('account_type', 2)
+                    ->where('directorate_id', Auth::user()->directorate_id)
+                    ->where('active', true)
+                    ->paginate(25);
             } else {
                 $users = User::where('account_type', '!=', 3)
                 ->where('directorate_id', Auth::user()->directorate_id)
                 ->orWhere('account_type', 1)
                 ->orderBy('account_type', 'DESC')
+                ->where('active', true)
                 ->paginate(25);
             }
-            return view('user.index')->withUsers($users);
+            return view('user.index')->withUsers($users)
+                ->withType($type)->withDirectorate($directorate);
         } elseif(Auth::user()->account_type == 3) {
             $users = User::where('account_type', 2)
                 ->where('directorate_id', Auth::user()->directorate_id)
+                ->where('active', true)
                 ->paginate(25);
-            return view('user.index')->withUsers($users);
+            return view('user.index')->withUsers($users)
+                ->withType($type)->withDirectorate($directorate);
         }
         abort(403, 'Unauthorized action.');
     }
@@ -147,7 +162,7 @@ class UserController extends Controller
                 'name' => ['bail', 'required','min:10','max:50'],
                 'email' => ['bail', 'required','min:10','max:50', 'email', 'unique:users'],
                 'phone_primary' => ['bail', 'required', 'min:9','max:18', 'regex:/^0[0-9\-x\.]+$/'],
-                'phone_secondary' => ['bail', 'max:13', 'regex:/^0[0-9\-x\.]+$/'],
+                'phone_secondary' => ['bail', 'max:15', 'regex:/^0[0-9\-x\.]+$/'],
                 'gov_id' => ['bail', 'required', 'min:9','max:9', 'regex:/^[0-9]+$/', 'unique:users'],
             ]);
 
@@ -193,7 +208,10 @@ class UserController extends Controller
         }
 
         if($user['account_type'] == 3){
-            if(($user->school == null)  && (Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $user->directorate_id) ){
+            if( ($user->school == null) && 
+                ( (Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $user->directorate_id) ) ||
+                (Auth::user()->account_type == 1) 
+                ){
                 return view('user.show')->withUser($user)
                     ->withError('هذا الحساب لمدرسة لم تنشئ ملفًا بعد. اطلب من إدارة المدرسة إنشاء سجل معلومات المدرسة.');
             }
@@ -205,7 +223,7 @@ class UserController extends Controller
         } elseif(Auth::user()->account_type == 3) {
             if($user->active == false){
                 abort(403, 'Not Authorized');
-            } elseif(($user->account_type == 2) && ($user->directorate_id == Auth::user()->directorate_id)){
+            } elseif(($user->account_type == 2) && ($user->active == true) && ($user->directorate_id == Auth::user()->directorate_id)){
                 return view('user.show')->withUser($user);
             } else {
                 abort(403, 'Not Authorized');
@@ -289,7 +307,7 @@ class UserController extends Controller
             // dd($request);
             $request->validate([
                 'phone_primary' => ['bail', 'required', 'min:9','max:18', 'regex:/^0[0-9\-x\.]+$/'],
-                'phone_secondary' => ['bail', 'max:13', 'regex:/^0[0-9\-x\.]+$/'],
+                'phone_secondary' => ['bail', 'max:15', 'regex:/^0[0-9\-x\.]+$/'],
             ]);
 
             if(Auth::user()->id == 1){
@@ -343,7 +361,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         if (!Auth::user()){
             abort(403, 'Not Authorized');
@@ -361,8 +379,9 @@ class UserController extends Controller
             abort(403, 'Not Authorized');
         }
 
+        $user = User::find($id);
+
         if( (Auth::user()->id == 1) || ((Auth::user()->account_type == 1) && ($user->account_type != 1)) || ((Auth::user()->account_type == 2) && (Auth::user()->directorate_id == $user->directorate_id) && ($user->account_type != 2)) ){
-            $user = User::find($id);
             if($user->active == true){
                 $user->active = false;
                 $message = 'تم تعطيل الحساب ولن يتمكن من إنشاء أو تعديل أو عرض أيّ بيانات';

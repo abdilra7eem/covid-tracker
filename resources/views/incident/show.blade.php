@@ -25,7 +25,7 @@
     @if(Auth::user()->account_type == 3)
         <a href="/incident/{{$incident->id}}/edit" class="btn btn-warning">تحديث السجل</a>
     @endif
-    @if((Auth::user()->account_type == 2) && ($closure->deleted == false) && ($incident->user->directorate_id == Auth::user()->directorate_id))
+    @if((Auth::user()->account_type == 2) && ($incident->deleted == false) && ($incident->user->directorate_id == Auth::user()->directorate_id))
         <form action="{{route('incident.destroy', $incident->id)}}" method="POST"
             style="display:inline;">
             @method('DELETE')

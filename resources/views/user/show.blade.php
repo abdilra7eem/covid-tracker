@@ -7,6 +7,9 @@
     @if($user->active == false)
         <p class="text-danger">هذا الحساب معطل، ولن يتمكن من عمل أيّ تعديلات على أيّ من السجلات.</p>
     @endif
+    @if( ($user->account_type == 3) && ($user->school == null) )
+        <p class="text-danger">هذا الحساب لمدرسة ليس لها ملف.</p>
+    @endif
     <a onclick="goBack()" class="btn btn-info">رجوع</a>
     @if ($user->id != 1)
         @if((Auth::user()->id == 1) || (($user->account_type != 1) && (Auth::user()->account_type == 1)) || ( (Auth::user()->account_type == 2) && ($user->account_type != 2) && ($user->directorate_id == Auth::user()->directorate_id)))
@@ -46,7 +49,13 @@
             <td>{{$user->id}}</td>
         </tr>
         <tr>
-            <td scope="row">اسم المشرف</td>
+            <td scope="row">
+                @if($user->account_type == 3)
+                    اسم المدرسة
+                @else
+                    اسم المشرف
+                @endif
+            </td>
             <td>{{$user->name}}</td>
         </tr>
         <tr>
@@ -71,6 +80,7 @@
                 <td>
                     @if($user->account_type == 1) إدارة البرنامج
                     @elseif($user->account_type == 2) مشرف
+                    @elseif($user->account_type == 3) مدرسة
                     @endif
                 </td>
             </tr>

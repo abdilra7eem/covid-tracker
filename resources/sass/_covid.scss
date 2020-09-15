@@ -89,3 +89,13 @@ td[dir="ltr"] {
 .covid-index-row {
     cursor: pointer;
 }
+
+@media print {
+    .btn {
+        display: none;
+    }
+}
+
+.dropdown-item {
+    text-align: start;
+}

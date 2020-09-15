@@ -15,6 +15,9 @@
     <section class="container covid-form-container" dir="rtl">
         <h1 class="covid-center">تحديث سجل الحالة</h1>
         <form action="/incident/{{$incident->id}}" method="POST" class="container">
+            @if($status == "closed")
+                <p class="text-danger">هذا السجل  لحالة تم إغلاقها. يمكنك فقط تحديث معلومات الاتصال والملاحظات..</p>
+            @endif
             @csrf
             @method('PUT')
             <div class="form-group">
@@ -88,6 +91,27 @@
                     </label>
                 </div>
             </div>
+            @if($status == "suspected")
+                <div class="form-group">
+                    <h3>إذا كان نوع الاشتباه المدخل سابقًا خطأ، فيمكنك تصحيحه: </h3>
+                    <div class="form-check form-check-inline covid-school-radio-grid">
+                        <input class="form-check-input" type="radio" name="suspect_type" id="personal" value="personal"
+                        @if($incident->suspect_type == 1) checked @endif>
+                        <label class="form-check-label" for="personal"> شخصي/ولي أمر</label>
+                    </div>
+                    <div class="form-check form-check-inline covid-school-radio-grid">
+                        <input class="form-check-input" type="radio" name="suspect_type" id="doc" value="doc"
+                        @if($incident->suspect_type == 2) checked @endif>
+                        <label class="form-check-label" for="doc"> طبيب خاص</label>
+                    </div>
+                    <div class="form-check form-check-inline covid-school-radio-grid">
+                        <input class="form-check-input" type="radio" name="suspect_type" id="gov" value="gov">
+                        @if($incident->suspect_type == 3) checked @endif>
+                        <label class="form-check-label" for="gov"> جهة رسمية</label>
+                    </div>
+                    <small class="form-text text-muted">إذا كان الاشتباه من جهة رسمية، فحدد الجهة في الملاحظات</small>
+                </div>
+            @endif
             @if($status != "closed")
                 <div class="form-group" id="closeType">
                     <h3>إذا كانت الحالة ستغلق، فحدد نوع الإغلاق: </h3>

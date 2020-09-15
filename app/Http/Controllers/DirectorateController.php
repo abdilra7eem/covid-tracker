@@ -269,7 +269,7 @@ class DirectorateController extends Controller
      * @param  \App\Directorate  $directorate
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Directorate $directorate)
+    public function destroy(Request $request, Directorate $directorate)
     {
         if (!Auth::user()){
             abort(403, 'Not Authorized');

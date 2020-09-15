@@ -44,10 +44,12 @@
                     </tr>
                 @endif
             </table>
-            @if($closure->reopening_date != null)
+            @if($closure->reopening_date == null)
                 <div class="form-group">
-                    <input type="checkbox" class="form-check-input" id="reopening">
-                    <label class="form-check-label" for="reopening">إنهاء الإغلاق الذي له هذا السجل</label>
+                    <input type="checkbox" class="form-check-input" id="reopening" name="reopening">
+                    <label class="form-check-label" for="reopening" style="width: calc(100% - 32px); margin: 20px; display:inline;">
+                        إنهاء الإغلاق الذي له هذا السجل
+                    </label>
                 </div>            
                 <div class="form-group">
                     <label for='reopening_date'>تاريخ انتهاء الإغلاق</label>
@@ -67,7 +69,7 @@
                     {{$closure->notes ?? ''}}
                 </textarea>
             </div>
-            <button class="btn btn-primary covid-form-button" type="submit">إنشاء الملف</button>
+            <button class="btn btn-warning covid-form-button" type="submit">تحديث السجل</button>
         </form>
     </section>
 @endsection
