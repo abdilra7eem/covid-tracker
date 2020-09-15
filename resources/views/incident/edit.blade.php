@@ -30,7 +30,7 @@
                 <div class="valid-tooltip">✓</div>
                 <div class="invalid-tooltip">يرجى إدخال قيمة مناسبة</div>
             </div>
-            <div class="form-group">
+            {{-- <div class="form-group">
                 <label for='person_id'>
                     رقم هوية صاحب الحالة
                 </label>
@@ -43,7 +43,7 @@
                 <small class="form-text text-muted">تأكد من إدخال قيمة صحيحة. أي خطأ في هذه القيمة سيسبب أخطاء في تتبع الحالات.</small>
                 <div class="valid-tooltip">✓</div>
                 <div class="invalid-tooltip">يرجى إدخال قيمة مناسبة</div>
-        </div>
+            </div> --}}
             <div class="form-group">
                 <label for='person_phone_primary'>رقم الهاتف</label>
                 <input dir="ltr" class="form-control" name="person_phone_primary" type="tel"

@@ -155,7 +155,6 @@ class IncidentController extends Controller
             $suspect_type = null;
         }
 
-
         if($request->sex == "male"){
             $male = true;
         } else {
@@ -167,6 +166,17 @@ class IncidentController extends Controller
         //         'notes' => ['bail', 'max:255', 'regex:/^[\u0600-\u06FF ]+$/'],
         //     ]);
         // }
+
+        $conflict = Incident::where('person_id', $request->person_id)
+            ->where('deleted', false)
+            ->where(function ($q) {
+                $q->where('closed_at', null)->orWhere('close_type', 3);
+            })
+            ->first();
+
+        if($conflict != null){
+            return back()->withError('لا يمكن إنشاء هذا السجل بسبب وجود تعارض مع سجل آخر. تأكد من رقم الهوية وأنك لم يسبق أن أنشأت سجلًا لنفس الحالة.');
+        }
 
         $incident = new Incident;
         $incident->user_id = Auth::user()->id;
@@ -314,19 +324,19 @@ class IncidentController extends Controller
             }
 
             // Check, Validate and Handle personal info
-            if( ($incident->person_id != $request->person_id) ||
-                ($incident->person_phone_primary != $request->person_phone_primary) ||
+            if( ($incident->person_phone_primary != $request->person_phone_primary) ||
                 ($incident->person_phone_secondary != $request->person_phone_secondary) ||
                 ($incident->date != $request->date)
+                // || ($incident->person_id != $request->person_id)
                 ){
                     $request->validate([    
-                        'person_id'     => ['bail', 'required', 'min:9', 'max:9', 'regex:/^[0-9]+$/'],
+                        // 'person_id'     => ['bail', 'required', 'min:9', 'max:9', 'regex:/^[0-9]+$/'],
                         
                         'person_phone_primary'     => ['bail', 'required', 'min:9','max:15', 'regex:/^0[0-9\-x\.]+$/'],
                         'person_phone_secondary'   => ['bail', 'max:15', 'regex:/^0[0-9\-x\.]+$/'],
                     ]);
 
-                    $incident->person_id = $request->person_id;
+                    // $incident->person_id = $request->person_id;
                     $incident->person_phone_secondary = $request->person_phone_secondary;
                     $incident->person_phone_primary = $request->person_phone_primary;
 

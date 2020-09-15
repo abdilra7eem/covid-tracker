@@ -40,7 +40,7 @@
                     minlength="9" maxlength="9"
                     pattern="^[0-9]+$"
                     required>
-                <small class="form-text text-muted">تأكد من إدخال قيمة صحيحة. أي خطأ في هذه القيمة سيسبب أخطاء في تتبع الحالات.</small>
+                <small class="form-text text-muted">تأكد من إدخال قيمة صحيحة. لن تتمكن من تعديل هذه القيمة لاحقًا. أي خطأ في هذه القيمة سيسبب أخطاء في تتبع الحالات.</small>
                 <div class="valid-tooltip">✓</div>
                 <div class="invalid-tooltip">يرجى إدخال قيمة مناسبة</div>
         </div>

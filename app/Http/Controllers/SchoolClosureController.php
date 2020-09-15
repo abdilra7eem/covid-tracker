@@ -189,13 +189,24 @@ class SchoolClosureController extends Controller
 
         $prev = SchoolClosure::where('user_id', Auth::user()->id)
             ->where('reopening_date', null)
+            ->where('grade', '>', 12)
+            ->where('deleted', false)
             ->orderBy('grade', 'DESC')
             ->first();
 
-        if($prev->grade > 12){
-            if($prev->grade >= $request->type){
-                return back()->withError('عُذرًا، لا يمكن تسجيل هذا الإغلاق. تأكد من إدخال معلومات صحيحة.');
-            }
+        if($prev->grade >= $request->type){
+            return back()->withError('عُذرًا، لا يمكن تسجيل هذا الإغلاق. تأكد من إدخال معلومات صحيحة.');
+        }
+
+        $conflict = SchoolClosure::where('user_id', Auth::user()->id)
+            ->where('grade', $request->grade)
+            ->where('grade_section', $request->grade_section)
+            ->where('reopening_date', null)
+            ->where('deleted', false)
+            ->first();
+
+        if($conflict != null){
+            return back()->withError('لا يمكن إنشاء هذا السجل بسبب وجود تعارض مع سجل آخر. هل سبق وأنشأت سجلًا لهذا الإغلاق؟.');
         }
         
         if($request->type == 1){
